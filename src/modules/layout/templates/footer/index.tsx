@@ -7,7 +7,7 @@ const Footer = () => {
     <footer>
       <FooterCTA />
       <FooterNav />
-      <MedusaCTA />
+      {/*<MedusaCTA />*/}
     </footer>
   )
 }

@@ -36,7 +36,7 @@ const MainMenu = () => {
           </button>
         </div>
         <div>
-          <h1 className="text-xl-semi uppercase">Acme</h1>
+          <h1 className="text-xl-semi uppercase">{process.env.NEXT_PUBLIC_STORE_NAME}</h1>
         </div>
         <div className="flex-1 basis-0 flex justify-end">
           <button onClick={close}>

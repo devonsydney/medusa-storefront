@@ -22,7 +22,7 @@ const CheckoutTemplate = () => {
               </a>
             </Link>
             <Link href="/">
-              <a className="text-xl-semi">ACME</a>
+              <a className="text-xl-semi">{process.env.NEXT_PUBLIC_STORE_NAME}</a>
             </Link>
             <div className="flex-1 basis-0" />
           </nav>
@@ -35,7 +35,7 @@ const CheckoutTemplate = () => {
           </div>
         </div>
         <div className="py-4 w-full flex items-center justify-center">
-          <MedusaCTA />
+          {/*<MedusaCTA />*/}
         </div>
       </div>
     </CheckoutProvider>
