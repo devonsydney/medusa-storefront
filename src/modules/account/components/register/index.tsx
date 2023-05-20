@@ -51,8 +51,7 @@ const Register = () => {
       )}
       <h1 className="text-large-semi uppercase mb-6">Become a Member of {process.env.NEXT_PUBLIC_STORE_NAME} </h1>
       <p className="text-center text-base-regular text-gray-700 mb-4">
-        Create your {process.env.NEXT_PUBLIC_STORE_NAME} Member profile, and get access to an enhanced shopping
-        experience.
+        Create your {process.env.NEXT_PUBLIC_STORE_NAME} Member profile, and get access to an enhanced shopping experience.
       </p>
       <form className="w-full flex flex-col" onSubmit={onSubmit}>
         <div className="flex flex-col w-full gap-y-2">

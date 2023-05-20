@@ -42,4 +42,5 @@ const CheckoutTemplate = () => {
   )
 }
 
+
 export default CheckoutTemplate
