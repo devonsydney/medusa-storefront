@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { Product } from "@medusajs/medusa"
-=======
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
->>>>>>> upstream/main
 import { NextPage } from "next"
 import { AppProps } from "next/app"
 import { ReactElement, ReactNode } from "react"
