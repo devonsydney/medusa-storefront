@@ -14,13 +14,13 @@ const Hero = () => {
         <UnderlineLink href="/store">Explore products</UnderlineLink>
       </div>
       <Image
-        src={process.env.NEXT_PUBLIC_STORE_HERO_IMAGE}
+        src={process.env.NEXT_PUBLIC_STORE_HERO_IMAGE || ''}
         layout="fill"
         loading="eager"
         priority={true}
         quality={90}
         objectFit="cover"
-        alt="Photo by @thevoncomplex https://unsplash.com/@thevoncomplex"
+        alt=""
         className="absolute inset-0"
         draggable="false"
       />
