@@ -30,7 +30,7 @@ const Login = () => {
 
   const onSubmit = handleSubmit(async (credentials) => {
     await medusaClient.auth
-      .authenticate(credentials)
+      .authenticate(credentials, { sales_channel_id: process.env.NEXT_PUBLIC_SALES_CHANNEL_ID! })
       .then(() => {
         refetchCustomer()
         router.push("/account")

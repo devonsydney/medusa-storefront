@@ -34,7 +34,7 @@ const Register = () => {
 
   const onSubmit = handleSubmit(async (credentials) => {
     await medusaClient.customers
-      .create(credentials)
+      .create(credentials, { sales_channel_id: process.env.NEXT_PUBLIC_SALES_CHANNEL_ID! })
       .then(() => {
         refetchCustomer()
         router.push("/account")
