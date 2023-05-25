@@ -124,6 +124,7 @@ export const fetchProductsList = async ({
     limit: 12,
     offset: pageParam,
     ...queryParams,
+    sales_channel_id: [process.env.NEXT_PUBLIC_SALES_CHANNEL_ID!]
   })
 
   return {

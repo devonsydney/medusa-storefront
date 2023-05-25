@@ -4,12 +4,14 @@ import useCountryOptions from "@lib/hooks/use-country-options"
 import ChevronDown from "@modules/common/icons/chevron-down"
 import Search from "@modules/common/icons/search"
 import X from "@modules/common/icons/x"
-import { useCollections, useMeCustomer } from "medusa-react"
+import { useMeCustomer } from "medusa-react"
+import { useNavigationCollections } from "@lib/hooks/use-layout-data"
 import Link from "next/link"
 import ReactCountryFlag from "react-country-flag"
 
 const MainMenu = () => {
-  const { collections } = useCollections()
+  const { data: collections, isLoading: loadingCollections } =
+    useNavigationCollections()
   const { customer } = useMeCustomer()
   const { countryCode } = useStore()
 
