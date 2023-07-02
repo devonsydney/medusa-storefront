@@ -7,6 +7,7 @@
 # temporary files and folders for builds
 **/node_modules
 **/build
+**/dist
 **/.yarn*/
 **/z_*/
 
