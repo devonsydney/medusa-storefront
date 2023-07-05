@@ -102,8 +102,8 @@ const Register = () => {
             <a className="underline">Privacy Policy</a>
           </Link>{" "}
           and{" "}
-          <Link href="/content/terms-of-use">
-            <a className="underline">Terms of Use</a>
+          <Link href="/content/terms-of-use" className="underline">
+            Terms of Use
           </Link>
           .
         </span>

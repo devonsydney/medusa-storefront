@@ -16,9 +16,12 @@ const FooterCTA = () => {
           <Image
             src={process.env.NEXT_PUBLIC_FOOTER_CTA_IMAGE || ''}
             alt=""
-            layout="fill"
-            objectFit="cover"
             className="absolute inset-0"
+            fill
+            sizes="100vw"
+            style={{
+              objectFit: "cover",
+            }}
           />
         </div>
       </div>
