@@ -7,6 +7,7 @@
 # temporary files and folders for builds
 **/node_modules
 **/build
+**/dist
 **/.yarn*/
 **/z_*/
 
@@ -15,6 +16,10 @@
 
 # npm files
 **/.npmrc
+
+# IDEs
+.idea
+.vscode
 
 # dependencies
 /.pnp

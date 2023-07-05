@@ -1,10 +1,11 @@
 import clsx from "clsx"
-import { useCollections } from "medusa-react"
+import { useNavigationCollections } from "@lib/hooks/use-layout-data"
 import Link from "next/link"
 import CountrySelect from "../country-select"
 
 const FooterNav = () => {
-  const { collections } = useCollections()
+  const { data: collections, isLoading: loadingCollections } =
+    useNavigationCollections()
 
   return (
     <div className="content-container flex flex-col gap-y-8 pt-16 pb-8">
@@ -24,9 +25,7 @@ const FooterNav = () => {
             >
               {collections?.map((c) => (
                 <li key={c.id}>
-                  <Link href={`/collections/${c.id}`}>
-                    <a>{c.title}</a>
-                  </Link>
+                  <Link href={`/collections/${c.id}`}>{c.title}</Link>
                 </li>
               ))}
             </ul>

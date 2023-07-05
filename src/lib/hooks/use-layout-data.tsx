@@ -13,24 +13,22 @@ type LayoutCollection = {
 }
 
 const fetchCollectionData = async (): Promise<LayoutCollection[]> => {
-  let collections: ProductCollection[] = []
-  let offset = 0
-  let count = 1
+  const nonEmptyCollections: ProductCollection[] = []
+  const { collections } = await medusaClient.collections.list()
 
-  do {
-    await medusaClient.collections
-      .list({ offset })
-      .then(({ collections: newCollections, count: newCount }) => {
-        collections = [...collections, ...newCollections]
-        count = newCount
-        offset = collections.length
-      })
-      .catch((_) => {
-        count = 0
-      })
-  } while (collections.length < count)
+  for (const collection of collections) {
+    const { products } = await medusaClient.products.list({
+      collection_id: [collection.id],
+      limit: 1, // Only need to fetch 1 product
+      sales_channel_id: [process.env.NEXT_PUBLIC_SALES_CHANNEL_ID!]
+    })
 
-  return collections.map((c) => ({
+    if (products.length > 0) {
+      nonEmptyCollections.push(collection)
+    }
+  }
+
+  return nonEmptyCollections.map((c) => ({
     id: c.id,
     title: c.title,
   }))

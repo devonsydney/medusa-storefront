@@ -1,5 +1,5 @@
 import { StoreGetProductsParams } from "@medusajs/medusa"
-import { useCollections } from "medusa-react"
+import { useNavigationCollections } from "@lib/hooks/use-layout-data"
 import { ChangeEvent } from "react"
 
 type RefinementListProps = {
@@ -11,7 +11,8 @@ const RefinementList = ({
   refinementList,
   setRefinementList,
 }: RefinementListProps) => {
-  const { collections, isLoading } = useCollections()
+  const { data: collections, isLoading: loadingCollections } =
+    useNavigationCollections()  
 
   const handleCollectionChange = (
     e: ChangeEvent<HTMLInputElement>,

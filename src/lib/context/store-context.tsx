@@ -88,16 +88,17 @@ export const StoreProvider = ({ children }: StoreProps) => {
 
   const setRegion = async (regionId: string, countryCode: string) => {
     await updateCart.mutateAsync(
-      {
-        region_id: regionId,
-      },
+      { region_id: regionId , sales_channel_id: process.env.NEXT_PUBLIC_SALES_CHANNEL_ID },      
       {
         onSuccess: ({ cart }) => {
+          console.log("setRegion onSuccess - cart:", cart)
+          console.log("cart.sales_channel_id:", cart.sales_channel_id)
           setCart(cart)
           storeCart(cart.id)
           storeRegion(regionId, countryCode)
         },
         onError: (error) => {
+          console.log("setRegion onError - error:", error)
           if (process.env.NODE_ENV === "development") {
             console.error(error)
           }
@@ -151,14 +152,17 @@ export const StoreProvider = ({ children }: StoreProps) => {
 
   const createNewCart = async (regionId?: string) => {
     await createCart.mutateAsync(
-      { region_id: regionId },
+      { region_id: regionId , sales_channel_id: process.env.NEXT_PUBLIC_SALES_CHANNEL_ID },
       {
         onSuccess: ({ cart }) => {
+          console.log("createNewCart onSuccess - cart:", cart)
+          console.log("cart.sales_channel_id:", cart.sales_channel_id)
           setCart(cart)
           storeCart(cart.id)
           ensureRegion(cart.region, cart.shipping_address?.country_code)
         },
         onError: (error) => {
+          console.log("createNewCart onError - error:", error)
           if (process.env.NODE_ENV === "development") {
             console.error(error)
           }
@@ -178,11 +182,14 @@ export const StoreProvider = ({ children }: StoreProps) => {
       },
       {
         onSuccess: ({ cart }) => {
+          console.log("resetCart onSuccess - cart:", cart)
+          console.log("cart.sales_channel_id:", cart.sales_channel_id)
           setCart(cart)
           storeCart(cart.id)
           ensureRegion(cart.region, cart.shipping_address?.country_code)
         },
         onError: (error) => {
+          console.log("resetCart onError - error:", error)
           if (process.env.NODE_ENV === "development") {
             console.error(error)
           }

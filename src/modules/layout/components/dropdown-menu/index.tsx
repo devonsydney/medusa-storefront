@@ -29,17 +29,15 @@ const DropdownMenu = () => {
       <div className="flex items-center h-full">
         <Popover className="h-full flex">
           <>
-            <Link href="/shop" passHref>
-              <a className="relative flex h-full">
-                <Popover.Button
-                  className={clsx(
-                    "relative h-full flex items-center transition-all ease-out duration-200"
-                  )}
-                  onClick={() => push("/store")}
-                >
-                  Store
-                </Popover.Button>
-              </a>
+            <Link href="/shop" className="relative flex h-full" passHref>
+              <Popover.Button
+                className={clsx(
+                  "relative h-full flex items-center transition-all ease-out duration-200"
+                )}
+                onClick={() => push("/store")}
+              >
+                Store
+              </Popover.Button>
             </Link>
 
             <Transition
@@ -63,35 +61,19 @@ const DropdownMenu = () => {
                         Collections
                       </h3>
                       <div className="flex items-start">
-                        {collections &&
-                          chunk(collections, 6).map((chunk, index) => {
-                            return (
-                              <ul
-                                key={index}
-                                className="min-w-[152px] max-w-[200px] pr-4"
-                              >
-                                {chunk.map((collection) => {
-                                  return (
-                                    <div key={collection.id} className="pb-3">
-                                      <Link
-                                        href={`/collections/${collection.id}`}
-                                      >
-                                        <a onClick={() => setOpen(false)}>
-                                          {collection.title}
-                                        </a>
-                                      </Link>
-                                    </div>
-                                  )
-                                })}
-                              </ul>
-                            )
-                          })}
+                        <ul className="min-w-[152px] max-w-[200px] pr-4">
+                          {collections &&
+                            collections.map((collection) => (
+                              <div key={collection.id} className="pb-3">
+                                <Link href={`/collections/${collection.id}`}>
+                                  <a onClick={() => setOpen(false)}>{collection.title}</a>
+                                </Link>
+                              </div>
+                            ))}
+                        </ul>
                         {loadingCollections &&
                           repeat(6).map((index) => (
-                            <div
-                              key={index}
-                              className="w-12 h-4 bg-gray-100 animate-pulse"
-                            />
+                            <div key={index} className="w-12 h-4 bg-gray-100 animate-pulse" />
                           ))}
                       </div>
                     </div>
