@@ -65,8 +65,11 @@ const DropdownMenu = () => {
                           {collections &&
                             collections.map((collection) => (
                               <div key={collection.id} className="pb-3">
-                                <Link href={`/collections/${collection.id}`}>
-                                  <a onClick={() => setOpen(false)}>{collection.title}</a>
+                                <Link
+                                  href={`/collections/${collection.id}`}
+                                  onClick={() => setOpen(false)}
+                                >
+                                  {collection.title}
                                 </Link>
                               </div>
                             ))}

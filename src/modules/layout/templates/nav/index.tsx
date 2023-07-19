@@ -71,15 +71,15 @@ const Nav = () => {
           </div>
 
           <div className="flex items-center h-full">
-            <Link href="/">
-              <a className="text-xl-semi uppercase">{process.env.NEXT_PUBLIC_STORE_NAME}</a>
+            <Link href="/" className="text-xl-semi uppercase">
+              {process.env.NEXT_PUBLIC_STORE_NAME}
             </Link>
           </div>
 
           <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
             <div className="hidden small:flex items-center gap-x-6 h-full">
               <Link href={`mailto:${process.env.NEXT_PUBLIC_STORE_EMAIL}`}>
-                <a>{process.env.NEXT_PUBLIC_STORE_EMAIL}</a>
+                {process.env.NEXT_PUBLIC_STORE_EMAIL}
               </Link>
               {process.env.FEATURE_SEARCH_ENABLED && <DesktopSearchModal />}
               <Link href="/account">

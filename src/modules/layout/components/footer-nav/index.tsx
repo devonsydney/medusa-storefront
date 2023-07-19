@@ -11,8 +11,8 @@ const FooterNav = () => {
     <div className="content-container flex flex-col gap-y-8 pt-16 pb-8">
       <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between">
         <div>
-          <Link href="/">
-            <a className="text-xl-semi uppercase">{process.env.NEXT_PUBLIC_STORE_NAME}</a>
+          <Link href="/" className="text-xl-semi uppercase">
+            {process.env.NEXT_PUBLIC_STORE_NAME}
           </Link>
         </div>
         <div className="text-small-regular grid grid-cols-1 gap-x-16">
