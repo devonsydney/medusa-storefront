@@ -19,7 +19,7 @@ const ResetPassword = () => {
 	const [resetError, setResetError] = useState<string | undefined>(undefined)
 	const router = useRouter()
 
-	const handleResetError = (e: Error) => {
+	const handleResetError = () => {
 		setResetError("An error occured. Please try again.")
 		setResetStatus("error")
 	}

@@ -19,12 +19,12 @@ const ForgotPassword = () => {
   const [authError, setAuthError] = useState<string | undefined>(undefined)
   const router = useRouter()
 
-  const handleError = (_e: Error) => {
+  const handleError = () => {
     setAuthError("An error occurred. Please try again.")
     setAuthStatus("error")
   }
 
-  const handleSuccess = (_e: Error) => {
+  const handleSuccess = () => {
     setAuthError(undefined)
     setAuthStatus("success")
   }
