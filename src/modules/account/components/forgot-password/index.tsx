@@ -15,7 +15,7 @@ const ForgotPassword = () => {
   const { loginView, refetchCustomer } = useAccount()
   const [_, setCurrentView] = loginView
   const [authError, setAuthError] = useState<string | undefined>(undefined)
-  const [success, setSuccess] = useState<string | undefined>(undefined)
+  const [success, setSuccess] = useState<boolean>(false)
   const router = useRouter()
 
   const handleError = (_e: Error) => {
@@ -24,7 +24,7 @@ const ForgotPassword = () => {
   }
 
   const handleSuccess = (_e: Error) => {
-    setAuthError(null)
+    setAuthError(undefined)
     setSuccess(true)
   }
 
