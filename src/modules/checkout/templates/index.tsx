@@ -24,8 +24,8 @@ const CheckoutTemplate = () => {
                 <span className="mt-px block small:hidden">Back</span>
               </>
             </Link>
-            <Link href="/">
-              <a className="text-xl-semi">{process.env.NEXT_PUBLIC_STORE_NAME}</a>
+            <Link href="/" className="text-xl-semi">
+              {process.env.NEXT_PUBLIC_STORE_NAME}
             </Link>
             <div className="flex-1 basis-0" />
           </nav>
