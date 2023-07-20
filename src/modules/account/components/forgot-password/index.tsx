@@ -14,18 +14,19 @@ interface ForgotPasswordCredentials extends FieldValues {
 const ForgotPassword = () => {
   const { loginView, refetchCustomer } = useAccount()
   const [_, setCurrentView] = loginView
+  type FormStatus = "idle" | "error" | "success"
+  const [authStatus, setAuthStatus] = useState<FormStatus>("idle")
   const [authError, setAuthError] = useState<string | undefined>(undefined)
-  const [success, setSuccess] = useState<boolean>(false)
   const router = useRouter()
 
   const handleError = (_e: Error) => {
-    setAuthError("Invalid email.")
-    setSuccess(false)
+    setAuthError("An error occurred. Please try again.")
+    setAuthStatus("error")
   }
 
   const handleSuccess = (_e: Error) => {
     setAuthError(undefined)
-    setSuccess(true)
+    setAuthStatus("success")
   }
 
   const {
@@ -61,17 +62,17 @@ const ForgotPassword = () => {
             errors={errors}
           />
         </div>
-        {authError && (
+        {authStatus === "error" && (
           <div>
             <span className="text-rose-500 w-full text-small-regular">
               {authError}
             </span>
           </div>
         )}
-        {success && (
+        {authStatus === "success" && (
           <div>
             <span className="text-rose-500 w-full text-small-regular">
-              Success! Please check your email for a link to reset your password.
+              <b>Success!</b> Please check your email for a link to reset your password.
             </span>
           </div>
         )}

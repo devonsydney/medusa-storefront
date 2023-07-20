@@ -14,15 +14,14 @@ interface ResetPasswordCredentials extends FieldValues {
 
 const ResetPassword = () => {
 	const { refetchCustomer } = useAccount()
+	type ResetStatus = "idle" | "error" | "success"
+	const [resetStatus, setResetStatus] = useState<ResetStatus>("idle")
 	const [resetError, setResetError] = useState<string | undefined>(undefined)
-	const [tokenError, setTokenError] = useState<string | undefined>(undefined)
 	const router = useRouter()
 
 	const handleResetError = (e: Error) => {
 		setResetError("An error occured. Please try again.")
-	}
-	const handleTokenError = () => {
-		setResetError("Token not found. Please use the forgot password link.")
+		setResetStatus("error")
 	}
 
 	const {
@@ -42,11 +41,15 @@ const ResetPassword = () => {
 					token: token
 				})
 				.then(({ customer }) => {
-					router.push("/account/login")
+			    setResetStatus("success")
+			    setTimeout(() => {
+			        router.push("/account/login")
+			    }, 2000) // 2 seconds delay
+			    //router.replace(router.asPath.split("?")[0]); // replace the current URL removing the query param
 				})
 				.catch(handleResetError)
 		} else {
-	    handleTokenError()
+	    handleResetError()
 		}
 	})
 	return (
@@ -78,17 +81,17 @@ const ResetPassword = () => {
 						errors={errors}
 					/>
 				</div>
-				{resetError && (
+				{resetStatus === "error" && (
 					<div>
 						<span className="text-rose-500 w-full text-small-regular">
 							{resetError}
 						</span>
 					</div>
 				)}
-				{tokenError && (
+				{resetStatus === "success" && (
 					<div>
 						<span className="text-rose-500 w-full text-small-regular">
-							{tokenError}
+							<b>Success!</b> Redirecting you to log in.
 						</span>
 					</div>
 				)}
