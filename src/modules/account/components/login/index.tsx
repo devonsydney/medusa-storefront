@@ -84,6 +84,15 @@ const Login = () => {
         </button>
         .
       </span>
+      <span className="text-center text-gray-700 text-small-regular">
+        <button
+          onClick={() => setCurrentView(LOGIN_VIEW.FORGOT_PASSWORD)}
+          className="underline"
+        >
+          Forgot your password
+        </button>
+        ?
+      </span>
     </div>
   )
 }
