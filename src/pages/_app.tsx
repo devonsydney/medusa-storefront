@@ -17,6 +17,7 @@ function App({
   return (
     <MedusaProvider
       baseUrl={MEDUSA_BACKEND_URL}
+      publishableApiKey={process.env.NEXT_PUBLIC_MEDUSA_API_KEY}
       queryClientProviderProps={{
         client: queryClient,
       }}
