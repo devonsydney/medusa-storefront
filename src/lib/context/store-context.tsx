@@ -88,7 +88,9 @@ export const StoreProvider = ({ children }: StoreProps) => {
 
   const setRegion = async (regionId: string, countryCode: string) => {
     await updateCart.mutateAsync(
-      { region_id: regionId , sales_channel_id: process.env.NEXT_PUBLIC_SALES_CHANNEL_ID },      
+      {
+        region_id: regionId,
+      },
       {
         onSuccess: ({ cart }) => {
           console.log("setRegion onSuccess - cart:", cart)
@@ -152,7 +154,9 @@ export const StoreProvider = ({ children }: StoreProps) => {
 
   const createNewCart = async (regionId?: string) => {
     await createCart.mutateAsync(
-      { region_id: regionId , sales_channel_id: process.env.NEXT_PUBLIC_SALES_CHANNEL_ID },
+      {
+        region_id: regionId,
+      },
       {
         onSuccess: ({ cart }) => {
           console.log("createNewCart onSuccess - cart:", cart)

@@ -37,7 +37,6 @@ export const fetchCollectionProducts = async ({
     offset: pageParam,
     collection_id: [id],
     cart_id: cartId,
-    sales_channel_id: [process.env.NEXT_PUBLIC_SALES_CHANNEL_ID!]
   })
 
   return {
