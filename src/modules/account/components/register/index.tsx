@@ -49,7 +49,7 @@ const Register = () => {
           <Spinner size={24} />
         </div>
       )}
-      <h1 className="text-large-semi uppercase mb-6">Become a Member of {process.env.NEXT_PUBLIC_STORE_NAME}{" "}</h1>
+      <h1 className="text-large-semi uppercase mb-6">Become a Member of {process.env.NEXT_PUBLIC_STORE_NAME} </h1>
       <p className="text-center text-base-regular text-gray-700 mb-4">
         Create your {process.env.NEXT_PUBLIC_STORE_NAME} Member profile, and get access to an enhanced shopping experience.
       </p>
