@@ -34,7 +34,7 @@ const Register = () => {
 
   const onSubmit = handleSubmit(async (credentials) => {
     await medusaClient.customers
-      .create(credentials) //, { sales_channel_id: process.env.NEXT_PUBLIC_SALES_CHANNEL_ID! }
+      .create(credentials, { sales_channel_id: process.env.NEXT_PUBLIC_SALES_CHANNEL_ID! })
       .then(() => {
         refetchCustomer()
         router.push("/account")
@@ -49,12 +49,9 @@ const Register = () => {
           <Spinner size={24} />
         </div>
       )}
-      <h1 className="text-large-semi uppercase mb-6">
-        Become a Member of {process.env.NEXT_PUBLIC_STORE_NAME}{" "}
-      </h1>
+      <h1 className="text-large-semi uppercase mb-6">Become a Member of {process.env.NEXT_PUBLIC_STORE_NAME}{" "}</h1>
       <p className="text-center text-base-regular text-gray-700 mb-4">
-        Create your {process.env.NEXT_PUBLIC_STORE_NAME} Member profile, and get
-        access to an enhanced shopping experience.
+        Create your {process.env.NEXT_PUBLIC_STORE_NAME} Member profile, and get access to an enhanced shopping experience.
       </p>
       <form className="w-full flex flex-col" onSubmit={onSubmit}>
         <div className="flex flex-col w-full gap-y-2">
@@ -100,8 +97,7 @@ const Register = () => {
           </div>
         )}
         <span className="text-center text-gray-700 text-small-regular mt-6">
-          By creating an account, you agree to{" "}
-          {process.env.NEXT_PUBLIC_STORE_NAME}&apos;s{" "}
+          By creating an account, you agree to {process.env.NEXT_PUBLIC_STORE_NAME}&apos;s{" "}
           <Link href="/content/privacy-policy" className="underline">
             Privacy Policy
           </Link>{" "}
