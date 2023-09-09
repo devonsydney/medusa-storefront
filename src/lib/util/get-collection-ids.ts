@@ -10,8 +10,6 @@ export const getCollectionIds = async (): Promise<string[]> => {
         const { products } = await medusaClient.products.list({
           collection_id: [id],
           limit: 1, // Only need to fetch 1 product
-          sales_channel_id: [process.env.NEXT_PUBLIC_SALES_CHANNEL_ID!]
-
         })
 
         if (products.length > 0) {
