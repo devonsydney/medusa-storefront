@@ -16,6 +16,7 @@
 
 # npm files
 **/.npmrc
+package-lock.json
 
 # IDEs
 .idea
