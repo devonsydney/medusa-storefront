@@ -2,7 +2,6 @@ import { useAccount } from "@lib/context/account-context"
 import ProfileEmail from "@modules/account/components/profile-email"
 import ProfileName from "@modules/account/components/profile-name"
 import ProfilePassword from "@modules/account/components/profile-password"
-import ProfileBillingAddress from "../components/profile-billing-address"
 import ProfilePhone from "../components/profile-phone"
 
 const ProfileTemplate = () => {
@@ -30,8 +29,6 @@ const ProfileTemplate = () => {
         <ProfilePhone customer={customer} />
         <Divider />
         <ProfilePassword customer={customer} />
-        <Divider />
-        <ProfileBillingAddress customer={customer} />
       </div>
     </div>
   )
