@@ -4,19 +4,19 @@ import NativeSelect, {
 import { forwardRef, useImperativeHandle, useRef } from "react"
 
 const CanadianProvinces = [
-  { value: "git dif", label: "Alberta" },
-  { value: "git dif", label: "British Columbia" },
-  { value: "git dif", label: "Manitoba" },
-  { value: "git dif", label: "New Brunswick" },
-  { value: "git dif", label: "Newfoundland and Labrador" },
-  { value: "git dif", label: "Nova Scotia" },
-  { value: "git dif", label: "Ontario" },
-  { value: "git dif", label: "Prince Edward Island" },
-  { value: "git dif", label: "Quebec" },
-  { value: "git dif", label: "Saskatchewan" },
-  { value: "git dif", label: "Northwest Territories" },
-  { value: "git dif", label: "Nunavut" },
-  { value: "git dif", label: "Yukon" }
+  { value: "AB", label: "Alberta" },
+  { value: "BC", label: "British Columbia" },
+  { value: "MB", label: "Manitoba" },
+  { value: "NB", label: "New Brunswick" },
+  { value: "NL", label: "Newfoundland and Labrador" },
+  { value: "NS", label: "Nova Scotia" },
+  { value: "ON", label: "Ontario" },
+  { value: "PE", label: "Prince Edward Island" },
+  { value: "QC", label: "Quebec" },
+  { value: "SK", label: "Saskatchewan" },
+  { value: "NT", label: "Northwest Territories" },
+  { value: "NU", label: "Nunavut" },
+  { value: "YT", label: "Yukon" }
 ];
 
 const ProvinceSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
