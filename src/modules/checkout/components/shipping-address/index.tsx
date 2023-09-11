@@ -4,6 +4,7 @@ import ConnectForm from "@modules/common/components/connect-form"
 import Input from "@modules/common/components/input"
 import { useMeCustomer } from "medusa-react"
 import AddressSelect from "../address-select"
+import ProvinceSelect from "../province-select"
 import CountrySelect from "../country-select"
 
 const ShippingAddress = () => {
@@ -94,25 +95,17 @@ const ShippingAddress = () => {
                 touched={touchedFields}
               />
             </div>
+            <ProvinceSelect
+              {...register("shipping_address.province", {
+                required: "Province is required",
+              })}
+              autoComplete="address-level1"
+            />            
             <CountrySelect
               {...register("shipping_address.country_code", {
                 required: "Country is required",
               })}
               autoComplete="country"
-              errors={errors}
-              touched={touchedFields}
-            />
-            <Input
-              label="State / Province"
-              {...register("shipping_address.province")}
-              autoComplete="address-level1"
-              errors={errors}
-              touched={touchedFields}
-            />
-            <Input
-              label="Phone"
-              {...register("shipping_address.phone")}
-              autoComplete="tel"
               errors={errors}
               touched={touchedFields}
             />

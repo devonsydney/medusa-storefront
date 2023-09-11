@@ -29,8 +29,17 @@ const CountrySelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
       }))
     }, [regions, cart])
 
+    const isDisabled = countryOptions.length === 1;
+
     return (
-      <NativeSelect ref={innerRef} placeholder={placeholder} {...props}>
+      <NativeSelect 
+        ref={innerRef} 
+        {...props} 
+        disabled={isDisabled}
+        defaultValue={isDisabled ? countryOptions[0].value : undefined}
+      >
+        {/* Conditionally render the placeholder */}
+        {!isDisabled && <option value="">{placeholder}</option>}
         {countryOptions.map(({ value, label }, index) => (
           <option key={index} value={value}>
             {label}
