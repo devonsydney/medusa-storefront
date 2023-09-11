@@ -109,13 +109,6 @@ const ShippingAddress = () => {
               errors={errors}
               touched={touchedFields}
             />
-            <Input
-              label="Phone"
-              {...register("shipping_address.phone")}
-              autoComplete="tel"
-              errors={errors}
-              touched={touchedFields}
-            />
           </div>
         )}
       </ConnectForm>
