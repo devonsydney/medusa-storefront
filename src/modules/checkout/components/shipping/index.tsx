@@ -75,7 +75,7 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
   }
 
   // Grab the Province from the cart
-  const currentProvince = cart?.shipping_address?.province;
+  const currentProvince = cart?.shipping_address?.province || "";
 
   // Memoized shipping method options
   const shippingMethods: ShippingOption[] = useMemo(() => {
@@ -83,13 +83,13 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
       return shipping_options
         .filter((option) => {
           // Extract everything between square brackets
-          const provincesInOptionString = option.name.match(/\[(.*?)\]/);
+          const provincesInOptionString = option.name?.match(/\[(.*?)\]/);
 
           // If there are no square brackets, include this option
           if (!provincesInOptionString) return true;
 
           // Split by comma and remove whitespace
-          const provincesInOption = provincesInOptionString[1].split(",").map(s => s.trim());
+          const provincesInOption = provincesInOptionString && provincesInOptionString[1]?.split(",").map(s => s.trim()) || [];
 
           return provincesInOption.includes(currentProvince);
         })
@@ -105,7 +105,7 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
     }
 
     return []
-  }, [shipping_options, cart])
+  }, [shipping_options, cart, currentProvince])
 
   const {
     sameAsBilling: { state: sameBilling },
@@ -145,7 +145,7 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
                         )}
                       >
                         <div className="flex items-center gap-x-4">
-                          <Radio checked={shippingMethods.length === 1 ? true : value === option.value} disabled={shippingMethods.length === 1} />
+                          <Radio checked={shippingMethods.length === 1 ? true : value === option.value} />
                           <span className="text-base-regular">
                             {option.label}
                           </span>
