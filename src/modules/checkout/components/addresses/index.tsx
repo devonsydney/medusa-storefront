@@ -46,10 +46,11 @@ const Addresses = () => {
                     {cart.shipping_address.address_2}
                   </span>
                   <span>
-                    {cart.shipping_address.postal_code},{" "}
-                    {cart.shipping_address.city}
+                    {cart.shipping_address.city},{" "}
+                    {cart.shipping_address.province?.toUpperCase()}
                   </span>
                   <span>
+                    {cart.shipping_address.postal_code},{" "}
                     {cart.shipping_address.country_code?.toUpperCase()}
                   </span>
                   <div className="mt-4 flex flex-col">

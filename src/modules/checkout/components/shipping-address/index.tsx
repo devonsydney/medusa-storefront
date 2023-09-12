@@ -75,6 +75,23 @@ const ShippingAddress = () => {
               errors={errors}
               touched={touchedFields}
             />
+            <div className="grid grid-cols-2 gap-x-2">
+              <Input
+                label="City"
+                {...register("shipping_address.city", {
+                  required: "City is required",
+                })}
+                autoComplete="address-level2"
+                errors={errors}
+                touched={touchedFields}
+              />
+              <ProvinceSelect
+                {...register("shipping_address.province", {
+                  required: "Province is required",
+                })}
+                autoComplete="address-level1"
+              />
+            </div>
             <div className="grid grid-cols-[122px_1fr] gap-x-2">
               <Input
                 label="Postal code"
@@ -85,30 +102,15 @@ const ShippingAddress = () => {
                 errors={errors}
                 touched={touchedFields}
               />
-              <Input
-                label="City"
-                {...register("shipping_address.city", {
-                  required: "City is required",
+              <CountrySelect
+                {...register("shipping_address.country_code", {
+                  required: "Country is required",
                 })}
-                autoComplete="address-level2"
+                autoComplete="country"
                 errors={errors}
                 touched={touchedFields}
               />
             </div>
-            <ProvinceSelect
-              {...register("shipping_address.province", {
-                required: "Province is required",
-              })}
-              autoComplete="address-level1"
-            />            
-            <CountrySelect
-              {...register("shipping_address.country_code", {
-                required: "Country is required",
-              })}
-              autoComplete="country"
-              errors={errors}
-              touched={touchedFields}
-            />
           </div>
         )}
       </ConnectForm>
