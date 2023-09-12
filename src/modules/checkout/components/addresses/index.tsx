@@ -50,6 +50,7 @@ const Addresses = () => {
                     {cart.shipping_address.city}
                   </span>
                   <span>
+                    {cart.shipping_address.province?.toUpperCase()},{" "}
                     {cart.shipping_address.country_code?.toUpperCase()}
                   </span>
                   <div className="mt-4 flex flex-col">
