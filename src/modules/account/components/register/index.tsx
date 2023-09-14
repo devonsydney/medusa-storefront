@@ -34,7 +34,7 @@ const Register = () => {
 
   const onSubmit = handleSubmit(async (credentials) => {
     await medusaClient.customers
-      .create(credentials, { sales_channel_id: process.env.NEXT_PUBLIC_SALES_CHANNEL_ID! })
+      .create(credentials)
       .then(() => {
         refetchCustomer()
         router.push("/account")
@@ -92,7 +92,7 @@ const Register = () => {
         {authError && (
           <div>
             <span className="text-rose-500 w-full text-small-regular">
-              These credentials do not match our records.
+              {authError}
             </span>
           </div>
         )}
