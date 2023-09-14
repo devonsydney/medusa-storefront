@@ -19,7 +19,7 @@ const Login = () => {
   const router = useRouter()
 
   const handleError = (_e: Error) => {
-    setAuthError("Invalid email or password")
+    setAuthError("Invalid email or password.")
   }
 
   const {
@@ -30,7 +30,7 @@ const Login = () => {
 
   const onSubmit = handleSubmit(async (credentials) => {
     await medusaClient.auth
-      .authenticate(credentials, { sales_channel_id: process.env.NEXT_PUBLIC_SALES_CHANNEL_ID! })
+      .authenticate(credentials)
       .then(() => {
         refetchCustomer()
         router.push("/account")
@@ -68,7 +68,7 @@ const Login = () => {
         {authError && (
           <div>
             <span className="text-rose-500 w-full text-small-regular">
-              These credentials do not match our records
+              {authError}
             </span>
           </div>
         )}
