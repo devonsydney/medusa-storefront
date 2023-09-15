@@ -174,15 +174,7 @@ const getProfileCompletion = (customer?: Omit<Customer, "password_hash">) => {
     count++
   }
 
-  if (customer.phone) {
-    count++
-  }
-
-  if (customer.billing_address) {
-    count++
-  }
-
-  return (count / 4) * 100
+  return (count / 2) * 100
 }
 
 export default Overview
