@@ -2,6 +2,7 @@ import { medusaClient } from "@lib/config"
 import { useAccount } from "@lib/context/account-context"
 import useToggleState from "@lib/hooks/use-toggle-state"
 import { Address } from "@medusajs/medusa"
+import ProvinceSelect from "@modules/checkout/components/province-select"
 import CountrySelect from "@modules/checkout/components/country-select"
 import Button from "@modules/common/components/button"
 import Input from "@modules/common/components/input"
@@ -187,42 +188,41 @@ const EditAddress: React.FC<EditAddressProps> = ({
               errors={errors}
               autoComplete="address-line2"
             />
-            <div className="grid grid-cols-[144px_1fr] gap-x-2">
+            <div className="grid grid-cols-2 gap-x-2">
+              <Input
+                label="City"
+                {...register("city", {
+                  required: "City is required",
+                })}
+                required
+                errors={errors}
+                autoComplete="address-level2"
+              />
+              <ProvinceSelect
+                {...register("province", {
+                  required: "Province is required",
+                })}
+                required
+                autoComplete="address-level1"
+              />
+            </div>
+            <div className="grid grid-cols-[122px_1fr] gap-x-2">
               <Input
                 label="Postal code"
                 {...register("postal_code", {
                   required: "Postal code is required",
                 })}
                 required
-                errors={errors}
                 autoComplete="postal-code"
-              />
-              <Input
-                label="City"
-                {...register("city", {
-                  required: "City is required",
-                })}
                 errors={errors}
+              />
+              <CountrySelect
+                {...register("country_code", { required: true })}
                 required
-                autoComplete="locality"
+                autoComplete="country"
               />
             </div>
-            <Input
-              label="Province / State"
-              {...register("province")}
-              errors={errors}
-              autoComplete="address-level1"
-            />
-            <CountrySelect
-              {...register("country_code", { required: true })}
-              autoComplete="country"
-            />
-            <Input
-              label="Phone"
-              {...register("phone")}
-              errors={errors}
-              autoComplete="phone"
-            />
+            <div></div>
           </div>
           {error && (
             <div className="text-rose-500 text-small-regular py-2">{error}</div>

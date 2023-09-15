@@ -29,17 +29,18 @@ const CountrySelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
       }))
     }, [regions, cart])
 
-    const isDisabled = countryOptions.length === 1;
+    // TODO: Fix this so the 'disabled' function works on both the profile shipping address and checkout shipping address
+    //const isDisabled = countryOptions.length === 1;
 
     return (
       <NativeSelect 
         ref={innerRef} 
+        placeholder={placeholder}
         {...props} 
-        disabled={isDisabled}
-        defaultValue={isDisabled ? countryOptions[0].value : undefined}
+        // TODO: Bring this back if it can be fixed
+        //disabled={isDisabled}
+        //defaultValue={isDisabled ? countryOptions[0].value : undefined}
       >
-        {/* Conditionally render the placeholder */}
-        {!isDisabled && <option value="">{placeholder}</option>}
         {countryOptions.map(({ value, label }, index) => (
           <option key={index} value={value}>
             {label}
