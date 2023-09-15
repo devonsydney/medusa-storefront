@@ -72,7 +72,8 @@ const ForgotPassword = () => {
         {authStatus === "success" && (
           <div>
             <span className="text-rose-500 w-full text-small-regular">
-              If you have an account, check your email for a link to reset your password.
+              If you are registered, check your email for a password reset link.
+              This link will expire in 15 minutes.
             </span>
           </div>
         )}
