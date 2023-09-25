@@ -25,6 +25,14 @@ const MobileActions: React.FC<MobileActionsProps> = ({ product, show }) => {
 
     return variantPrice || cheapestPrice || null
   }, [price])
+  const variantRankMap = useMemo(() => {
+    return product.variants.reduce<Record<string, number>>((acc, variant) => {
+      if (variant.id && variant.variant_rank !== undefined) {
+        acc[variant.id] = variant.variant_rank;
+      }
+      return acc;
+    }, {});
+  }, [product.variants]);
 
   return (
     <>
@@ -129,6 +137,7 @@ const MobileActions: React.FC<MobileActionsProps> = ({ product, show }) => {
                                 current={options[option.id]}
                                 updateOption={updateOptions}
                                 title={option.title}
+                                variantRankMap={variantRankMap}
                               />
                             </div>
                           )
