@@ -7,7 +7,8 @@ const ProductPreview = ({
   title,
   handle,
   thumbnail,
-  price,
+  cheapestPrice,
+  mostExpensivePrice,
 }: ProductPreviewType) => {
   return (
     <Link href={`/products/${handle}`}>
@@ -16,20 +17,24 @@ const ProductPreview = ({
         <div className="text-base-regular mt-2">
           <span>{title}</span>
           <div className="flex items-center gap-x-2 mt-1">
-            {price ? (
+            {cheapestPrice ? (
               <>
-                {price.price_type === "sale" && (
+                {cheapestPrice.price_type === "sale" && (
                   <span className="line-through text-gray-500">
-                    {price.original_price}
+                    {cheapestPrice.original_price}
                   </span>
                 )}
-                <span
-                  className={clsx("font-semibold", {
-                    "text-rose-500": price.price_type === "sale",
-                  })}
-                >
-                  {price.calculated_price}
-                </span>
+                {cheapestPrice && mostExpensivePrice && (
+                  <span
+                    className={clsx("font-semibold", {
+                      "text-rose-500": cheapestPrice.price_type === "sale",
+                    })}
+                  >
+                    {cheapestPrice.calculated_price}
+                    {cheapestPrice.calculated_price !== mostExpensivePrice.calculated_price && 
+                      ` - ${mostExpensivePrice.calculated_price}`}
+                  </span>
+                )}
               </>
             ) : (
               <div className="w-20 h-6 animate-pulse bg-gray-100"></div>

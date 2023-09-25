@@ -22,12 +22,23 @@ const transformProductPreview = (
     }, variants[0])
   }
 
+  let mostExpensiveVariant = undefined
+
+  if (variants?.length > 0) {
+    mostExpensiveVariant = variants.reduce((acc, curr) => {
+      if (acc.calculated_price < curr.calculated_price) {
+        return curr
+      }
+      return acc
+    }, variants[0])
+  }
+
   return {
     id: product.id!,
     title: product.title!,
     handle: product.handle!,
     thumbnail: product.thumbnail!,
-    price: cheapestVariant
+    cheapestPrice: cheapestVariant
       ? {
           calculated_price: formatAmount({
             amount: cheapestVariant.calculated_price,
@@ -46,6 +57,25 @@ const transformProductPreview = (
           price_type: cheapestVariant.calculated_price_type,
         }
       : undefined,
+    mostExpensivePrice: mostExpensiveVariant
+      ? {
+          calculated_price: formatAmount({
+            amount: mostExpensiveVariant.calculated_price,
+            region: region,
+            includeTaxes: false,
+          }),
+          original_price: formatAmount({
+            amount: mostExpensiveVariant.original_price,
+            region: region,
+            includeTaxes: false,
+          }),
+          difference: getPercentageDiff(
+            mostExpensiveVariant.original_price,
+            mostExpensiveVariant.calculated_price
+          ),
+          price_type: mostExpensiveVariant.calculated_price_type,
+        }
+      : undefined,  
   }
 }
 
