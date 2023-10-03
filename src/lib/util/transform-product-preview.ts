@@ -75,7 +75,7 @@ const transformProductPreview = (
           ),
           price_type: mostExpensiveVariant.calculated_price_type,
         }
-      : undefined,  
+      : undefined,
   }
 }
 
