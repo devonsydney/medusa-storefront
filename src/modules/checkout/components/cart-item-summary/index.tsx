@@ -21,7 +21,7 @@ const CartItemSummary: React.FC<CartItemSummaryProps> = ({ cart }) => {
       {cart.items.map((item) => (
         <div key={item.id} className="flex items-center justify-between text-small-regular text-gray-700">
             <span>{`${item.quantity}x ${item.title}`}</span>
-            <span>{getAmount(item.unit_price * item.quantity)}</span>
+            <span>{getAmount(item.subtotal)}</span>
         </div>
       ))}
     </div>

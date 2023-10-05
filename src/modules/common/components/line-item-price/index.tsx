@@ -27,7 +27,7 @@ const LineItemPrice = ({
         })}
       >
         {formatAmount({
-          amount: item.total || 0,
+          amount: hasReducedPrice ? item.subtotal - item.raw_discount_total : item.subtotal || 0,
           region: region,
           includeTaxes: false,
         })}
@@ -46,11 +46,6 @@ const LineItemPrice = ({
               })}
             </span>
           </p>
-          {style === "default" && (
-            <span className="text-rose-600">
-              -{getPercentageDiff(originalPrice, item.total || 0)}%
-            </span>
-          )}
         </>
       )}
     </div>

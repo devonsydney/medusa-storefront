@@ -32,18 +32,8 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
       return undefined
     }
 
-    switch (discounts[0].rule.type) {
-      case "percentage":
-        return `${discounts[0].rule.value}%`
-      case "fixed":
-        return `- ${formatAmount({
-          amount: discounts[0].rule.value,
-          region: region,
-        })}`
+    return `${discounts[0].code}`
 
-      default:
-        return "Free shipping"
-    }
   }, [discounts, region])
 
   const {
@@ -62,11 +52,11 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
       },
       {
         onSuccess: ({ cart }) => setCart(cart),
-        onError: () => {
+        onError: (error) => {
           setError(
             "discount_code",
             {
-              message: "Code is invalid",
+              message: error.response.data.message,
             },
             {
               shouldFocus: true,
@@ -131,6 +121,10 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
                 </Button>
               </div>
             </div>
+            {errors.discount_code && (
+              <div><span className="text-rose-500 w-full text-small-regular">
+              {errors.discount_code.message}
+              </span></div>)}
           </form>
         )}
       </div>
