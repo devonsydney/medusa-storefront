@@ -27,7 +27,7 @@ const LineItemPrice = ({
         })}
       >
         {formatAmount({
-          amount: hasReducedPrice ? item.subtotal - item.raw_discount_total : item.subtotal || 0,
+          amount: hasReducedPrice ? (item.subtotal ?? 0) - (item.raw_discount_total ?? 0) : (item.subtotal ?? 0),
           region: region,
           includeTaxes: false,
         })}

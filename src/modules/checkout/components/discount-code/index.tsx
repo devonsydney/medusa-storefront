@@ -3,7 +3,7 @@ import { Cart } from "@medusajs/medusa"
 import Button from "@modules/common/components/button"
 import Input from "@modules/common/components/input"
 import Trash from "@modules/common/icons/trash"
-import { formatAmount, useCart, useUpdateCart } from "medusa-react"
+import { useCart, useUpdateCart } from "medusa-react"
 import React, { useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { useMutation } from "@tanstack/react-query"
@@ -56,7 +56,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
           setError(
             "discount_code",
             {
-              message: error.response.data.message,
+              message: (error as any).response?.data?.message || "An error occurred",
             },
             {
               shouldFocus: true,
