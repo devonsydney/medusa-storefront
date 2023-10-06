@@ -42,6 +42,7 @@ const Payment = () => {
           <p>Enter your address to see available payment options.</p>
         </div>
       }
+      className="hidden" // hiding the section (not used)
     >
       <div>
         {cart?.payment_sessions?.length ? (
