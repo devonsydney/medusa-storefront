@@ -41,6 +41,33 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
     enabled: !!cart.id,
   })
 
+  // Grab the Province from the cart
+  const currentProvince = cart?.shipping_address?.province || "";
+
+  // Memoized shipping method options
+  const shippingMethods: ShippingOption[] = useMemo(() => {
+    let methods: ShippingOption[] = [];
+    if (shipping_options && cart?.region) {
+      methods = shipping_options
+        .filter((option) => {
+          const provincesInOptionString = option.name?.match(/\[(.*?)\]/);
+          if (!provincesInOptionString) return true;
+          const provincesInOption = provincesInOptionString && provincesInOptionString[1]?.split(",").map(s => s.trim()) || [];
+          return provincesInOption.includes(currentProvince);
+        })
+        .map((option) => ({
+          value: option.id,
+          label: option.name,
+          price: formatAmount({
+            amount: option.amount || 0,
+            region: cart.region,
+            includeTaxes: false
+          }),
+        }));
+    }
+    return methods;
+  }, [shipping_options, cart, currentProvince]);
+
   // Any time the cart changes we need to ensure that we are displaying valid shipping options
   useEffect(() => {
     const refetchShipping = async () => {
@@ -55,13 +82,12 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
       { option_id: soId },
       {
         onSuccess: ({ cart }) => setCart(cart),
-        onError: () =>
+        onError: (error) =>
           setError(
             "soId",
             {
               type: "validate",
-              message:
-                "An error occurred while adding shipping. Please try again.",
+              message: (error as any).response?.data?.message || "An error occurred while adding shipping. Please try again.",
             },
             { shouldFocus: true }
           ),
@@ -74,46 +100,13 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
     fn(value)
   }
 
-  // Grab the Province from the cart
-  const currentProvince = cart?.shipping_address?.province || "";
-
-  // Memoized shipping method options
-  const shippingMethods: ShippingOption[] = useMemo(() => {
-    if (shipping_options && cart?.region) {
-      return shipping_options
-        .filter((option) => {
-          // Extract everything between square brackets
-          const provincesInOptionString = option.name?.match(/\[(.*?)\]/);
-
-          // If there are no square brackets, include this option
-          if (!provincesInOptionString) return true;
-
-          // Split by comma and remove whitespace
-          const provincesInOption = provincesInOptionString && provincesInOptionString[1]?.split(",").map(s => s.trim()) || [];
-
-          return provincesInOption.includes(currentProvince);
-        })
-        .map((option) => ({
-          value: option.id,
-          label: option.name,
-          price: formatAmount({
-            amount: option.amount || 0,
-            region: cart.region,
-            includeTaxes: false
-          }),
-        }))
-    }
-
-    return []
-  }, [shipping_options, cart, currentProvince])
-
   const {
     sameAsBilling: { state: sameBilling },
   } = useCheckout()
 
   return (
     <StepContainer
-      index={sameBilling ? 2 : 3}
+      index={2}
       title="Delivery"
       closedState={
         <div className="px-8 pb-8 text-small-regular">
@@ -128,7 +121,7 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
           return (
             <div>
               <RadioGroup
-                value={shippingMethods.length === 1 ? shippingMethods[0].value : value}
+                value={value}
                 onChange={(value: string) => handleChange(value, onChange)}
               >
                 {shippingMethods && shippingMethods.length ? (
@@ -145,7 +138,7 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
                         )}
                       >
                         <div className="flex items-center gap-x-4">
-                          <Radio checked={shippingMethods.length === 1 ? true : value === option.value} />
+                        <Radio checked={shippingMethods.length === 1 ? true : value === option.value} />
                           <span className="text-base-regular">
                             {option.label}
                           </span>

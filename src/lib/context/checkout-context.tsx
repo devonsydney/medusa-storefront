@@ -141,17 +141,27 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   }, [cart])
 
   const shippingMethods = useMemo(() => {
+    const province = cart?.shipping_address?.province || ""
     if (shipping_options && cart?.region) {
-      return shipping_options?.map((option) => ({
-        value: option.id,
-        label: option.name,
-        price: formatAmount({
-          amount: option.amount || 0,
-          region: cart.region,
-        }),
-      }))
+      return shipping_options
+        .filter((option) => {
+          const provincesInOptionString = option.name?.match(/\[(.*?)\]/);
+          if (!provincesInOptionString) return true;
+          const provincesInOption =
+            provincesInOptionString &&
+            provincesInOptionString[1]?.split(",").map((s) => s.trim()) || [];
+          return provincesInOption.includes(province);
+        })
+        .map((option) => ({
+          value: option.id,
+          label: option.name,
+          price: formatAmount({
+            amount: option.amount || 0,
+            region: cart.region,
+          }),
+        }));
     }
-
+  
     return []
   }, [shipping_options, cart])
 
@@ -178,6 +188,21 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
     editAddresses.open()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart])
+
+  /**
+   * Selects the first shipping method whenever the cart shipping address is changed.
+   */
+  useEffect(() => {
+    if (cart?.shipping_address) {
+      // Check if the shipping option is already set to the desired value
+      if (cart.shipping_methods?.[0]?.shipping_option?.id !== shippingMethods?.[0]?.value) {
+        // If not, set the shipping option
+        if (shippingMethods?.length && shippingMethods?.[0]?.value) {
+          setShippingOption(shippingMethods[0].value);
+        }
+      }
+    }
+  }, [cart?.shipping_address, cart?.shipping_methods, shippingMethods]);
 
   /**
    * Method to set the selected shipping method for the cart. This is called when the user selects a shipping method, such as UPS, FedEx, etc.
@@ -239,14 +264,6 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
     }
   }
 
-  const prepareFinalSteps = () => {
-    initPayment()
-
-    if (shippingMethods?.length && shippingMethods?.[0]?.value) {
-      setShippingOption(shippingMethods[0].value)
-    }
-  }
-
   const setSavedAddress = (address: Address) => {
     const setValue = methods.setValue
 
@@ -303,7 +320,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
     updateCart(payload, {
       onSuccess: ({ cart }) => {
         setCart(cart)
-        prepareFinalSteps()
+        initPayment()
       },
     })
   }
