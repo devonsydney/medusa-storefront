@@ -36,12 +36,13 @@ const Payment = () => {
   return (
     <StepContainer
       title="Payment"
-      index={isSame ? 3 : 4}
+      index={3}
       closedState={
         <div className="px-8 pb-8 text-small-regular">
           <p>Enter your address to see available payment options.</p>
         </div>
       }
+      className="hidden" // hiding the section (not used)
     >
       <div>
         {cart?.payment_sessions?.length ? (
