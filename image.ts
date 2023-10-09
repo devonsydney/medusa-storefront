@@ -1,4 +1,4 @@
-export default async function localImagesLoader({
+export default function localImagesLoader({
   src,
   width,
   quality = 80,
