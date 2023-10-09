@@ -1,13 +1,15 @@
 const { withStoreConfig } = require("./store-config")
 const store = require("./store.config.json")
-
 module.exports = withStoreConfig({
-  // output: 'export', // for outputting static site files to dist folder
-  // distDir: 'dist', // for outputting static site files to dist folder
+  output: "export", // for outputting static site files to dist folder
+  distDir: "dist", // for outputting static site files to dist folder
+  trailingSlash: true,
   features: store.features,
   reactStrictMode: true,
   images: {
     domains: process.env.NEXT_PUBLIC_IMAGE_DOMAIN.split(","),
+    loader: "custom",
+    loaderFile: "./image.ts",
   },
 })
 
