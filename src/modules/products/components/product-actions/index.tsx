@@ -6,6 +6,7 @@ import OptionSelect from "@modules/products/components/option-select"
 import clsx from "clsx"
 import Link from "next/link"
 import React, { useMemo } from "react"
+import ReactMarkdown from "react-markdown"
 import { Product } from "types/medusa"
 
 type ProductActionsProps = {
@@ -42,7 +43,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
       )}
       <h3 className="text-xl-regular">{product.title}</h3>
 
-      <p className="text-base-regular">{product.description}</p>
+      <ReactMarkdown className="text-base-regular">{product.description}</ReactMarkdown>
 
       {product.variants.length > 1 && (
         <div className="my-8 flex flex-col gap-y-6">
