@@ -8,7 +8,6 @@ module.exports = withStoreConfig({
   reactStrictMode: true,
   images: {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
-    domains: process.env.NEXT_PUBLIC_IMAGE_DOMAIN.split(","),
     loader: "custom",
     loaderFile: "./image.ts",
   },
