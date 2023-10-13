@@ -29,7 +29,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ product }) => {
           ref={info}
         >
           <ProductInfo product={product} />
-          <ProductTabs product={product} />
+          {/* <ProductTabs product={product} /> */}
         </div>
       </div>
       <div className="content-container my-16 px-6 small:px-8 small:my-32">

@@ -43,6 +43,8 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
       )}
       <h3 className="text-xl-regular">{product.title}</h3>
 
+      <div className="text-base-regular"><b>{product.subtitle}</b></div>
+      <div className="text-base-regular">{product.material}</div>
       <ReactMarkdown className="text-base-regular">{product.description}</ReactMarkdown>
 
       {product.variants.length > 1 && (
