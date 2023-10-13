@@ -10,6 +10,13 @@ function withStoreConfig(nextConfig = {}) {
     }
   })
 
+  // disable exporting for yarn dev
+  if (process.env.NODE_ENV == 'development') {
+    // TODO: may want to do this for Vercel as well in future
+    delete nextConfig.output
+    delete nextConfig.distDir
+  }
+
   return nextConfig
 }
 
