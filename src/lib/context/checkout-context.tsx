@@ -18,7 +18,7 @@ import {
   useUpdateCart,
 } from "medusa-react"
 import { useRouter } from "next/router"
-import React, { createContext, useContext, useEffect, useMemo } from "react"
+import React, { createContext, useContext, useEffect, useMemo, useCallback } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import { useStore } from "./store-context"
 
@@ -161,7 +161,6 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
           }),
         }));
     }
-  
     return []
   }, [shipping_options, cart])
 
@@ -190,6 +189,20 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   }, [cart])
 
   /**
+   * Method to set the selected shipping method for the cart. This is called when the user selects a shipping method, such as UPS, FedEx, etc.
+   */
+  const setShippingOption = useCallback((soId: string) => {
+    if (cart) {
+      setShippingMethod(
+        { option_id: soId },
+        {
+          onSuccess: ({ cart }) => setCart(cart),
+        }
+      )
+    }
+  }, [cart, setShippingMethod, setCart]);
+
+  /**
    * Selects the first shipping method whenever the cart shipping address is changed.
    */
   useEffect(() => {
@@ -202,21 +215,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
         }
       }
     }
-  }, [cart?.shipping_address, cart?.shipping_methods, shippingMethods]);
-
-  /**
-   * Method to set the selected shipping method for the cart. This is called when the user selects a shipping method, such as UPS, FedEx, etc.
-   */
-  const setShippingOption = (soId: string) => {
-    if (cart) {
-      setShippingMethod(
-        { option_id: soId },
-        {
-          onSuccess: ({ cart }) => setCart(cart),
-        }
-      )
-    }
-  }
+  }, [cart?.shipping_address, cart?.shipping_methods, shippingMethods, setShippingOption]);
 
   /**
    * Method to create the payment sessions available for the cart. Uses a idempotency key to prevent duplicate requests.
