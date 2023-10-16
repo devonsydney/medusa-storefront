@@ -17,7 +17,7 @@ const LineItemPrice = ({
 }: LineItemPriceProps) => {
   const originalPrice =
     (item.variant as CalculatedVariant).original_price * item.quantity
-  const hasReducedPrice = (item.total || 0) < originalPrice
+  const hasReducedPrice = (item.subtotal || 0) < originalPrice
 
   return (
     <div className="flex flex-col text-gray-700 text-right">
@@ -27,7 +27,7 @@ const LineItemPrice = ({
         })}
       >
         {formatAmount({
-          amount: hasReducedPrice ? (item.subtotal ?? 0) - (item.raw_discount_total ?? 0) : (item.subtotal ?? 0),
+          amount: item.subtotal || 0,
           region: region,
           includeTaxes: false,
         })}
