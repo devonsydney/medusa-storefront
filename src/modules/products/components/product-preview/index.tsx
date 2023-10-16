@@ -16,23 +16,25 @@ const ProductPreview = ({
         <Thumbnail thumbnail={thumbnail} size="full" />
         <div className="text-base-regular mt-2">
           <span>{title}</span>
-          <div className="flex items-center gap-x-2 mt-1">
+          <div className="flex flex-col items-start gap-y-1 mt-1">
             {cheapestPrice ? (
               <>
-                {cheapestPrice.price_type === "sale" && (
-                  <span className="line-through text-gray-500">
-                    {cheapestPrice.original_price}
-                  </span>
-                )}
                 {cheapestPrice && mostExpensivePrice && (
                   <span
-                    className={clsx("font-semibold", {
-                      "text-rose-500": cheapestPrice.price_type === "sale",
-                    })}
+                  className={clsx("font-semibold", {
+                    "text-rose-500": cheapestPrice.price_type === "sale",
+                  })}
                   >
                     {cheapestPrice.calculated_price}
                     {cheapestPrice.calculated_price !== mostExpensivePrice.calculated_price && 
                       ` - ${mostExpensivePrice.calculated_price}`}
+                  </span>
+                )}
+                {cheapestPrice.price_type === "sale" && (
+                  <span className="line-through text-gray-500">
+                    Original: {cheapestPrice.original_price}
+                    {cheapestPrice.original_price !== mostExpensivePrice.original_price && 
+                        ` - ${mostExpensivePrice.original_price}`}
                   </span>
                 )}
               </>
