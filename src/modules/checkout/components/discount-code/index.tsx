@@ -34,7 +34,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
 
     return `${discounts[0].code}`
 
-  }, [discounts, region])
+  }, [discounts])
 
   const {
     register,
