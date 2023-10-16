@@ -30,7 +30,7 @@ const ProductPreview = ({
                       ` - ${mostExpensivePrice.calculated_price}`}
                   </span>
                 )}
-                {cheapestPrice.price_type === "sale" && (
+                {cheapestPrice.price_type === "sale" && mostExpensivePrice && (
                   <span className="line-through text-gray-500">
                     Original: {cheapestPrice.original_price}
                     {cheapestPrice.original_price !== mostExpensivePrice.original_price && 
