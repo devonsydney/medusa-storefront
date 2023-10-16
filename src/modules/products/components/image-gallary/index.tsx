@@ -53,18 +53,20 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
             <div
               ref={(image) => imageRefs.current.push(image)}
               key={image.id}
-              className="relative aspect-[29/34] w-full"
+              className="relative w-full"
               id={image.id}
             >
               <Image
                 src={image.url}
                 priority={index <= 2 ? true : false}
-                className="absolute inset-0"
+                className="w-full h-auto"
                 alt={`Product image ${index + 1}`}
-                fill
+                width={1920} // placeholder for 16:9 aspect ratio
+                height={1280} // placeholder for 16:9 aspect ratio
+                layout="responsive"
                 sizes="100vw"
                 style={{
-                  objectFit: "cover",
+                  objectFit: "contain",
                 }}
               />
             </div>
