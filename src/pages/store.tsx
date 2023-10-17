@@ -35,7 +35,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const handle = context.params?.handle as string
   const queryClient = new QueryClient()
 
-  const queryParams: StoreGetProductsParams = {}
+  const queryParams: StoreGetProductsParams = {
+    limit: 12,
+    offset: 0,
+    order: "title",
+    is_giftcard: false,
+  }
 
   await queryClient.prefetchInfiniteQuery(
     ["get_collection_products", queryParams],
