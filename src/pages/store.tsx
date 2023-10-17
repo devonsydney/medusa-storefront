@@ -5,6 +5,9 @@ import InfiniteProducts from "@modules/products/components/infinite-products"
 import RefinementList from "@modules/store/components/refinement-list"
 import { useState } from "react"
 import { NextPageWithLayout } from "types/global"
+import { fetchProductsList } from "@lib/data"
+import { GetStaticPaths, GetStaticProps } from "next"
+import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
 
 const Store: NextPageWithLayout = () => {
   const [params, setParams] = useState<StoreGetProductsParams>({})
@@ -18,6 +21,36 @@ const Store: NextPageWithLayout = () => {
       </div>
     </>
   )
+}
+
+// export const getStaticPaths: GetStaticPaths<Params> = async () => {
+//   const handles = await getProductHandles()
+//   return {
+//     paths: handles.map((handle) => ({ params: { handle } })),
+//     fallback: true,
+//   }
+// }
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const handle = context.params?.handle as string
+  const queryClient = new QueryClient()
+
+  const queryParams: StoreGetProductsParams = {}
+
+  await queryClient.prefetchInfiniteQuery(
+    ["get_collection_products", queryParams],
+    ({ pageParam }) => fetchProductsList({ pageParam, queryParams }),
+    {
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+    }
+  )
+
+  return {
+    props: {
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      notFound: false,
+    },
+  }
 }
 
 Store.getLayout = (page) => <Layout>{page}</Layout>
