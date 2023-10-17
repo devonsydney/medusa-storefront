@@ -12,8 +12,7 @@ import { AppPropsWithLayout } from "types/global"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 const ReactQueryDevtoolsProduction = React.lazy(() =>
-  // @ts-ignore
-  import("@tanstack/react-query-devtools/build/lib/index.prod.js").then(
+  import("@tanstack/react-query-devtools/build/legacy/production.js").then(
     (d) => ({
       default: d.ReactQueryDevtools,
     })
