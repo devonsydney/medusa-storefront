@@ -40,6 +40,7 @@ const InfiniteProducts = ({ params }: InfiniteProductsType) => {
       ({ pageParam }) => fetchProductsList({ pageParam, queryParams }),
       {
         getNextPageParam: (lastPage) => lastPage.nextPage,
+        keepPreviousData: true,
       }
     )
 
