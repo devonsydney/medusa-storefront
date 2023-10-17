@@ -43,7 +43,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 
   await queryClient.prefetchInfiniteQuery(
-    ["get_collection_products", queryParams],
+    ["infinite-products-store", queryParams],
     ({ pageParam }) => fetchProductsList({ pageParam, queryParams }),
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,

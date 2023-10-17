@@ -22,9 +22,9 @@ const InfiniteProducts = ({ params }: InfiniteProductsType) => {
   const queryParams = useMemo(() => {
     const p: StoreGetProductsParams = {}
 
-    if (cart?.id) {
-      p.cart_id = cart.id
-    }
+    // if (cart?.id) {
+    //   p.cart_id = cart.id
+    // }
 
     p.is_giftcard = false
 
@@ -32,11 +32,11 @@ const InfiniteProducts = ({ params }: InfiniteProductsType) => {
       ...p,
       ...params,
     }
-  }, [cart?.id, params])
+  }, [params]) //cart?.id,
 
   const { data, hasNextPage, fetchNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery(
-      [`infinite-products-store`, queryParams, cart],
+      [`infinite-products-store`, queryParams], //, cart
       ({ pageParam }) => fetchProductsList({ pageParam, queryParams }),
       {
         getNextPageParam: (lastPage) => lastPage.nextPage,
