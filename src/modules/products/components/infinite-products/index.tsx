@@ -41,6 +41,8 @@ const InfiniteProducts = ({ params }: InfiniteProductsType) => {
       {
         getNextPageParam: (lastPage) => lastPage.nextPage,
         keepPreviousData: true,
+        staleTime: Infinity,
+        refetchOnWindowFocus: false,
       }
     )
 
