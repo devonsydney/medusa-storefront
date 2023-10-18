@@ -30,7 +30,7 @@ const MainMenu = () => {
     <div className="flex flex-col flex-1">
       <div className="flex items-center justify-between w-full border-b border-gray-200 py-4 px-6">
         <div className="flex-1 basis-0">
-          {process.env.NEXT_PUBLIC_FF_COUNTRIES ==='true' ? (
+          {process.env.NEXT_PUBLIC_FF_COUNTRIES ? (
             <button
               className="flex items-center gap-x-2"
               onClick={setScreenCountry}
@@ -162,7 +162,7 @@ const MainMenu = () => {
                 </Link>
               </div>
             )}
-            {process.env.NEXT_PUBLIC_FF_COUNTRIES ==='true' && (
+            {process.env.NEXT_PUBLIC_FF_COUNTRIES && (
               <div className="flex flex-col gap-y-4">
                 <span className="text-gray-700 uppercase">Delivery</span>
                 <button
