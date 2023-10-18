@@ -13,10 +13,10 @@ import {
   useCart,
   useCartShippingOptions,
   useMeCustomer,
-  useRegions,
   useSetPaymentSession,
   useUpdateCart,
 } from "medusa-react"
+import { useRegions } from "@lib/hooks/use-layout-data"
 import { useRouter } from "next/router"
 import React, { createContext, useContext, useEffect, useMemo, useCallback } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
@@ -96,7 +96,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
     enabled: !!cart?.id,
   })
 
-  const { regions } = useRegions()
+  const { data: regions } = useRegions()
 
   const { resetCart, setRegion } = useStore()
   const { push } = useRouter()
