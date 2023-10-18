@@ -9,6 +9,7 @@ import { useCart } from "medusa-react"
 import { useEffect, useMemo } from "react"
 import { useInView } from "react-intersection-observer"
 import { useInfiniteQuery } from "@tanstack/react-query"
+import { useRegions } from "@lib/hooks/use-layout-data"
 
 type InfiniteProductsType = {
   params: StoreGetProductsParams
@@ -16,6 +17,7 @@ type InfiniteProductsType = {
 
 const InfiniteProducts = ({ params }: InfiniteProductsType) => {
   const { cart } = useCart()
+  const { data: regions } = useRegions()
 
   const { ref, inView } = useInView()
 
@@ -41,12 +43,10 @@ const InfiniteProducts = ({ params }: InfiniteProductsType) => {
       {
         getNextPageParam: (lastPage) => lastPage.nextPage,
         keepPreviousData: true,
-        staleTime: Infinity,
-        refetchOnWindowFocus: false,
       }
     )
-
-  const previews = usePreviews({ pages: data?.pages, region: cart?.region })
+  // @ts-ignore
+  const previews = usePreviews({ pages: data?.pages, region: regions[0] })
 
   useEffect(() => {
     if (inView && hasNextPage) {

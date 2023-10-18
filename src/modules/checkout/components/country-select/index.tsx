@@ -14,6 +14,7 @@ const CountrySelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
     )
 
     const { regions } = useRegions()
+
     const { cart } = useCart()
 
     const countryOptions = useMemo(() => {
@@ -33,10 +34,10 @@ const CountrySelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
     //const isDisabled = countryOptions.length === 1;
 
     return (
-      <NativeSelect 
-        ref={innerRef} 
+      <NativeSelect
+        ref={innerRef}
         placeholder={placeholder}
-        {...props} 
+        {...props}
         // TODO: Bring this back if it can be fixed
         //disabled={isDisabled}
         //defaultValue={isDisabled ? countryOptions[0].value : undefined}
