@@ -8,10 +8,7 @@ import { NextPageWithLayout } from "types/global"
 import { fetchProductsList } from "@lib/data"
 import { GetStaticProps } from "next"
 import { dehydrate, QueryClient } from "@tanstack/react-query"
-import {
-  fetchCollectionData,
-  fetchRegionsData,
-} from "@lib/hooks/use-layout-data"
+import { fetchCollectionData, fetchRegionsData } from "@lib/hooks/use-layout-data"
 
 const Store: NextPageWithLayout = () => {
   const [params, setParams] = useState<StoreGetProductsParams>({})
