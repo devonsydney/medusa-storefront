@@ -8,6 +8,7 @@ import { useMeCustomer } from "medusa-react"
 import { useNavigationCollections } from "@lib/hooks/use-layout-data"
 import Link from "next/link"
 import ReactCountryFlag from "react-country-flag"
+import Image from "next/image"
 
 const MainMenu = () => {
   const { data: collections, isLoading: loadingCollections } =
@@ -39,9 +40,17 @@ const MainMenu = () => {
             </button>
           ) : <ReactCountryFlag countryCode={countryCode || "us"} svg /> }
         </div>
-        <div>
-          <h1 className="text-xl-semi uppercase">{process.env.NEXT_PUBLIC_STORE_NAME}</h1>
-        </div>
+        <div className="flex items-center h-full gap-x-4">
+            {process.env.NEXT_PUBLIC_STORE_LOGO && (
+              <Image
+                src={process.env.NEXT_PUBLIC_STORE_LOGO}
+                alt="Logo"
+                width={40}
+                height={40}
+              />
+            )}
+            <h1 className="text-xl-semi uppercase">{process.env.NEXT_PUBLIC_STORE_NAME}</h1>
+          </div>
         <div className="flex-1 basis-0 flex justify-end">
           <button onClick={close}>
             <X size={20} />
