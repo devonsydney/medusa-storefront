@@ -2,6 +2,7 @@ import clsx from "clsx"
 import { useNavigationCollections } from "@lib/hooks/use-layout-data"
 import Link from "next/link"
 import CountrySelect from "../country-select"
+import Image from "next/image"
 
 const FooterNav = () => {
   const { data: collections, isLoading: loadingCollections } =
@@ -10,7 +11,15 @@ const FooterNav = () => {
   return (
     <div className="content-container flex flex-col gap-y-8 pt-16 pb-8">
       <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between">
-        <div>
+        <div className="flex items-center h-full gap-x-4">
+          {process.env.NEXT_PUBLIC_STORE_LOGO && (
+            <Image
+              src={process.env.NEXT_PUBLIC_STORE_LOGO}
+              alt="Logo"
+              width={40}
+              height={40}
+            />
+          )}
           <Link href="/" className="text-xl-semi uppercase">
             {process.env.NEXT_PUBLIC_STORE_NAME}
           </Link>
