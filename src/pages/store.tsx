@@ -36,9 +36,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const queryClient = new QueryClient()
 
   const queryParams: StoreGetProductsParams = {
-    limit: 12,
-    offset: 0,
-    order: "title",
     is_giftcard: false,
   }
 
