@@ -28,6 +28,7 @@ const InfiniteProducts = ({ params }: InfiniteProductsType) => {
     //   p.cart_id = cart.id
     // }
 
+    p.region_id = regions?.[0].id
     p.is_giftcard = false
 
     return {
