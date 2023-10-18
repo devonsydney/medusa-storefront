@@ -12,7 +12,7 @@ type LayoutCollection = {
   title: string
 }
 
-const fetchCollectionData = async (): Promise<LayoutCollection[]> => {
+export const fetchCollectionData = async (): Promise<LayoutCollection[]> => {
   const nonEmptyCollections: ProductCollection[] = []
   const { collections } = await medusaClient.collections.list()
 

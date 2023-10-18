@@ -8,6 +8,7 @@ import { NextPageWithLayout } from "types/global"
 import { fetchProductsList } from "@lib/data"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
+import { fetchCollectionData } from "@lib/hooks/use-layout-data"
 
 const Store: NextPageWithLayout = () => {
   const [params, setParams] = useState<StoreGetProductsParams>({})
@@ -46,6 +47,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     }
   )
+
+  await queryClient.prefetchQuery(["navigation_collections"], () =>
+    fetchCollectionData()
+  )
+
+  // const queryResults = useQuery({
+  //   queryFn: fetchCollectionData,
+  //   queryKey: ["navigation_collections"],
+  //   staleTime: Infinity,
+  //   refetchOnWindowFocus: false,
+  // })
 
   return {
     props: {
