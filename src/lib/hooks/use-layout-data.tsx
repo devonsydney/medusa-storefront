@@ -1,9 +1,9 @@
 import { medusaClient } from "@lib/config"
 import { getPercentageDiff } from "@lib/util/get-precentage-diff"
-import { Product, ProductCollection, Region } from "@medusajs/medusa"
+import { ProductCollection, Region } from "@medusajs/medusa"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
 import { useQuery } from "@tanstack/react-query"
-import { formatAmount, useCart } from "medusa-react"
+import { formatAmount } from "medusa-react"
 import { ProductPreviewType } from "types/global"
 import { CalculatedVariant } from "types/medusa"
 
@@ -60,15 +60,13 @@ export const useNavigationCollections = () => {
   return queryResults
 }
 
-const fetchFeaturedProducts = async (
-  cartId: string,
-  region: Region
+export const fetchFeaturedProducts = async (
+region: Region
 ): Promise<ProductPreviewType[]> => {
   const products = await medusaClient.products
     .list({
       is_giftcard: false,
       limit: 5,
-      cart_id: cartId,
     })
     .then(({ products }) => products)
     .catch((_) => [] as PricedProduct[])
@@ -150,17 +148,15 @@ const fetchFeaturedProducts = async (
 }
 
 export const useFeaturedProductsQuery = () => {
-  const { cart } = useCart()
+  const{ data: regions } = useRegions()
+  const region = regions?.[0]
 
-  const queryResults = useQuery(
-    ["layout_featured_products", cart?.id, cart?.region],
-    () => fetchFeaturedProducts(cart?.id!, cart?.region!),
-    {
-      enabled: !!cart?.id && !!cart?.region,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    }
-  )
+  const queryResults = useQuery({
+    queryFn: () => fetchFeaturedProducts(region!),
+    queryKey: ["featured_products"],
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  })
 
   return queryResults
 }
