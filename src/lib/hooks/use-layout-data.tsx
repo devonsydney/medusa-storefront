@@ -65,6 +65,7 @@ region: Region
 ): Promise<ProductPreviewType[]> => {
   const products = await medusaClient.products
     .list({
+      region_id: region.id,
       is_giftcard: false,
       limit: 5,
     })

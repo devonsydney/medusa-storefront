@@ -28,12 +28,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
   await queryClient.prefetchQuery(["navigation_collections"], () => fetchCollectionData())
   await queryClient.prefetchQuery(["regions"], () => fetchRegionsData())  
 
-  // grab regionId to use in query for products list
+  // grab region to use in query for products list
   const regions = queryClient.getQueryData<any>(["regions"])
-  const regionId = regions[0].id
+  const region = regions[0]
 
   // prefetch page-specific params
-  await queryClient.prefetchQuery(["featured_products"], () => fetchFeaturedProducts(regionId))
+  await queryClient.prefetchQuery(["featured_products"], () => fetchFeaturedProducts(region))
 
   return {
     props: {
