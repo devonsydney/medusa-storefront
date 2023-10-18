@@ -45,8 +45,8 @@ const InfiniteProducts = ({ params }: InfiniteProductsType) => {
         keepPreviousData: true,
       }
     )
-  // @ts-ignore
-  const previews = usePreviews({ pages: data?.pages, region: regions[0] })
+
+  const previews = usePreviews({ pages: data?.pages, region: regions?.[0] })
 
   useEffect(() => {
     if (inView && hasNextPage) {

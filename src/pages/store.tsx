@@ -10,7 +10,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
 import {
   fetchCollectionData,
-  fetchRegionData,
+  fetchRegionsData,
 } from "@lib/hooks/use-layout-data"
 
 const Store: NextPageWithLayout = () => {
@@ -55,7 +55,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     fetchCollectionData()
   )
 
-  await queryClient.prefetchQuery(["regions", "list"], () => fetchRegionData())
+  await queryClient.prefetchQuery(["regions"], () => fetchRegionsData())
 
   return {
     props: {

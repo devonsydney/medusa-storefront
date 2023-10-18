@@ -12,15 +12,15 @@ type LayoutCollection = {
   title: string
 }
 
-export const fetchRegionData = async (): Promise<Region[]> => {
+export const fetchRegionsData = async (): Promise<Region[]> => {
   const { regions } = await medusaClient.regions.list()
   return regions
 }
 
 export const useRegions = () => {
   const queryResults = useQuery({
-    queryFn: fetchCollectionData,
-    queryKey: ["regions", "list"],
+    queryFn: fetchRegionsData,
+    queryKey: ["regions"],
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   })
