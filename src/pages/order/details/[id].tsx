@@ -9,6 +9,7 @@ import { useRouter } from "next/router"
 import { ReactElement } from "react"
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
 import { NextPageWithLayout } from "types/global"
+import { fetchCollectionData, fetchRegionsData, fetchCategoryData } from "@lib/hooks/use-layout-data"
 
 const fetchOrder = async (id: string) => {
   return await medusaClient.orders.retrieve(id).then(({ order }) => order)
@@ -70,14 +71,21 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const id = context.params?.id as string
   const queryClient = new QueryClient()
+  
+  // prefetch common params
+  await queryClient.prefetchQuery(["regions"], () => fetchRegionsData())
+  await queryClient.prefetchQuery(["navigation_collections"], () => fetchCollectionData())
+  await queryClient.prefetchQuery(["navigation_categories"], () => fetchCategoryData(2))
 
+  // prefetch page-specific params
   await queryClient.prefetchQuery(["get_order_details", id], () =>
     fetchOrder(id)
   )
 
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      notFound: false,
     },
   }
 }
