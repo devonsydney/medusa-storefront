@@ -70,7 +70,7 @@ export const useNavigationCollections = () => {
   return queryResults
 }
 
-export const fetchCategoryData = async (levels: number): Promise<LayoutCategory[]> => {
+export const fetchCategoryData = async (levels: number = Infinity): Promise<LayoutCategory[]> => {
   // TODO: don't need the full parent data of each child inside this could reduce/remove it
   const response = await medusaClient.productCategories.list({
     include_descendants_tree: true,
@@ -99,14 +99,14 @@ export const fetchCategoryData = async (levels: number): Promise<LayoutCategory[
 }
 
 export const useNavigationCategories = (levels: number = Infinity) => {
-  const queryResults = useQuery(
-    ["navigation_categories", levels],
-    () => fetchCategoryData(levels),
-    {
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    }
-  )
+  // wrapper function to be able to pass parameters to useQuery
+  const fetchCategoryDataWithLevels = () => fetchCategoryData(levels);
+  const queryResults = useQuery({
+    queryFn: fetchCategoryDataWithLevels,
+    queryKey: ["navigation_categories"],
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  })
 
   return queryResults
 }
