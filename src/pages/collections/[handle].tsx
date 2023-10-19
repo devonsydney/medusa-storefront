@@ -11,6 +11,7 @@ import { ParsedUrlQuery } from "querystring"
 import { ReactElement } from "react"
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
 import { NextPageWithLayout, PrefetchedPageProps } from "../../types/global"
+import { fetchCollectionData, fetchRegionsData, fetchCategoryData } from "@lib/hooks/use-layout-data"
 
 interface Params extends ParsedUrlQuery {
   handle: string
@@ -108,9 +109,15 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const queryClient = new QueryClient()
   const handle = context.params?.handle as string
+  const queryClient = new QueryClient()
 
+  // prefetch common params
+  await queryClient.prefetchQuery(["regions"], () => fetchRegionsData())
+  await queryClient.prefetchQuery(["navigation_collections"], () => fetchCollectionData())
+  await queryClient.prefetchQuery(["navigation_categories"], () => fetchCategoryData(2))
+
+  // prefetch page-specific params
   await queryClient.prefetchQuery(["get_collection", handle], () =>
     fetchCollection(handle)
   )
@@ -123,6 +130,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
   )
 
+  // if no collection found, return not found
   const queryData = await queryClient.getQueryData([`get_collection`, handle])
 
   if (!queryData) {
