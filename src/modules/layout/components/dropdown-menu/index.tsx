@@ -77,7 +77,7 @@ const DropdownMenu = () => {
                                 <Link href={`/categories/${category.handle}`} onClick={() => setOpen(false)}>
                                   {category.name}
                                 </Link>
-                                {category.category_children && category.category_children.slice(0, 2).map((child, childIndex) => (
+                                {category.category_children && category.category_children.map((child, childIndex) => (
                                   <div key={child.id} className={`pb-1 pl-4 ${childIndex < (category.category_children ?? []).length ? 'mt-2' : ''}`}>
                                     <div>
                                       <Link href={`/categories/${child.handle}`} onClick={() => setOpen(false)}>
