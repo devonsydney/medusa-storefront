@@ -24,7 +24,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
   }, [price])
   const variantRankMap = useMemo(() => {
     return product.variants.reduce<Record<string, number>>((acc, variant) => {
-      if (variant.id && variant.variant_rank !== undefined) {
+      if (variant.id && variant.variant_rank !== undefined && variant.variant_rank !== null) {
         acc[variant.id] = variant.variant_rank;
       }
       return acc;
