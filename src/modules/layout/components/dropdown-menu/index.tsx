@@ -1,13 +1,6 @@
 import { Popover, Transition } from "@headlessui/react"
-import {
-  useFeaturedProductsQuery,
-  useNavigationCollections,
-} from "@lib/hooks/use-layout-data"
-import repeat from "@lib/util/repeat"
-import ProductPreview from "@modules/products/components/product-preview"
-import SkeletonProductPreview from "@modules/skeletons/components/skeleton-product-preview"
+import { useNavigationCollections } from "@lib/hooks/use-layout-data"
 import clsx from "clsx"
-import { chunk } from "lodash"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { useState } from "react"
@@ -15,10 +8,7 @@ import React, { useState } from "react"
 const DropdownMenu = () => {
   const [open, setOpen] = useState(false)
   const { push } = useRouter()
-  const { data: collections, isLoading: loadingCollections } =
-    useNavigationCollections()
-  const { data: products, isLoading: loadingProducts } =
-    useFeaturedProductsQuery()
+  const { data: collections } = useNavigationCollections()
 
   return (
     <div
@@ -74,21 +64,6 @@ const DropdownMenu = () => {
                               </div>
                             ))}
                         </ul>
-                        {loadingCollections &&
-                          repeat(6).map((index) => (
-                            <div key={index} className="w-12 h-4 bg-gray-100 animate-pulse" />
-                          ))}
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="grid grid-cols-3 gap-4">
-                        {products?.slice(0, 3).map((product) => (
-                          <ProductPreview {...product} key={product.id} />
-                        ))}
-                        {loadingProducts &&
-                          repeat(3).map((index) => (
-                            <SkeletonProductPreview key={index} />
-                          ))}
                       </div>
                     </div>
                   </div>
