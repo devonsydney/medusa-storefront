@@ -3,7 +3,7 @@ import getNumberOfSkeletons from "@lib/util/get-number-of-skeletons"
 import repeat from "@lib/util/repeat"
 import ProductPreview from "@modules/products/components/product-preview"
 import SkeletonProductPreview from "@modules/skeletons/components/skeleton-product-preview"
-import { fetchCollectionProducts } from "@pages/collections/[id]"
+import { fetchCollectionProducts } from "@pages/collections/[handle]"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { useCart } from "medusa-react"
 import React, { useEffect } from "react"
@@ -11,7 +11,7 @@ import { useInView } from "react-intersection-observer"
 
 type CollectionTemplateProps = {
   collection: {
-    id: string
+    handle: string
     title: string
   }
 }
@@ -30,11 +30,12 @@ const CollectionTemplate: React.FC<CollectionTemplateProps> = ({
     isLoading,
     refetch,
   } = useInfiniteQuery(
-    [`get_collection_products`, collection.id, cart?.id],
+    [`get_collection_products`, collection.handle, cart?.id],
     ({ pageParam }) =>
       fetchCollectionProducts({
         pageParam,
-        id: collection.id,
+
+        handle: collection.handle,
         cartId: cart?.id,
       }),
     {
