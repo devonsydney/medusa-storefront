@@ -11,6 +11,7 @@ import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { ReactElement } from "react"
 import { NextPageWithLayout, PrefetchedPageProps } from "types/global"
+import { fetchCollectionData, fetchRegionsData, fetchCategoryData } from "@lib/hooks/use-layout-data"
 
 interface Params extends ParsedUrlQuery {
   handle: string
@@ -83,6 +84,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const handle = context.params?.handle as string
   const queryClient = new QueryClient()
 
+  // prefetch common params
+  await queryClient.prefetchQuery(["regions"], () => fetchRegionsData())
+  await queryClient.prefetchQuery(["navigation_collections"], () => fetchCollectionData())
+  await queryClient.prefetchQuery(["navigation_categories"], () => fetchCategoryData(2))
+
+  // prefetch page-specific params
   await queryClient.prefetchQuery([`get_product`, handle], () =>
     fetchProduct(handle)
   )

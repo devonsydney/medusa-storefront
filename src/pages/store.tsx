@@ -33,12 +33,11 @@ const Store: NextPageWithLayout = () => {
 // }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const handle = context.params?.handle as string
   const queryClient = new QueryClient()
 
   // prefetch common params
-  await queryClient.prefetchQuery(["navigation_collections"], () => fetchCollectionData())
   await queryClient.prefetchQuery(["regions"], () => fetchRegionsData())
+  await queryClient.prefetchQuery(["navigation_collections"], () => fetchCollectionData())
   await queryClient.prefetchQuery(["navigation_categories"], () => fetchCategoryData(2))
 
   // grab regionId to use in query for products list
