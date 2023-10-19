@@ -35,7 +35,7 @@ const InfiniteProducts = ({ params }: InfiniteProductsType) => {
       ...p,
       ...params,
     }
-  }, [params]) //cart?.id,
+  }, [params, regions]) //cart?.id,
 
   const { data, hasNextPage, fetchNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery(
