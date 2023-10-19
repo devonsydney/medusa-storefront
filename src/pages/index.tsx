@@ -6,7 +6,7 @@ import { ReactElement } from "react"
 import { NextPageWithLayout } from "types/global"
 import { GetStaticProps } from "next"
 import { dehydrate, QueryClient } from "@tanstack/react-query"
-import { fetchCollectionData, fetchRegionsData, fetchFeaturedProducts } from "@lib/hooks/use-layout-data"
+import { fetchRegionsData, fetchCollectionData, fetchCategoryData, fetchFeaturedProducts } from "@lib/hooks/use-layout-data"
 
 const Home: NextPageWithLayout = () => {
   return (
@@ -25,8 +25,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const queryClient = new QueryClient()
 
   // prefetch common params
-  await queryClient.prefetchQuery(["navigation_collections"], () => fetchCollectionData())
   await queryClient.prefetchQuery(["regions"], () => fetchRegionsData())  
+  await queryClient.prefetchQuery(["navigation_collections"], () => fetchCollectionData())
+  await queryClient.prefetchQuery(["navigation_categories"], () => fetchCategoryData(2))
 
   // grab region to use in query for products list
   const regions = queryClient.getQueryData<any>(["regions"])

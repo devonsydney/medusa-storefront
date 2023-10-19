@@ -1,5 +1,5 @@
 import { Popover, Transition } from "@headlessui/react"
-import { useNavigationCollections } from "@lib/hooks/use-layout-data"
+import { useNavigationCollections, useNavigationCategories } from "@lib/hooks/use-layout-data"
 import clsx from "clsx"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -9,6 +9,7 @@ const DropdownMenu = () => {
   const [open, setOpen] = useState(false)
   const { push } = useRouter()
   const { data: collections } = useNavigationCollections()
+  const { data: categories } = useNavigationCategories()
 
   return (
     <div
@@ -56,11 +57,35 @@ const DropdownMenu = () => {
                             collections.map((collection) => (
                               <div key={collection.id} className="pb-3">
                                 <Link
-                                  href={`/collections/${collection.id}`}
+                                  href={`/collections/${collection.handle}`}
                                   onClick={() => setOpen(false)}
                                 >
                                   {collection.title}
                                 </Link>
+                              </div>
+                            ))}
+                        </ul>
+                      </div>
+                      <h3 className="text-base-semi text-gray-900 mb-4">
+                        Categories
+                      </h3>
+                      <div className="flex items-start">
+                        <ul className="min-w-[152px] max-w-[200px] pr-4">
+                          {categories &&
+                            categories.map((category) => (
+                              <div key={category.id} className="pb-3 pl-2">
+                                <Link href={`/categories/${category.handle}`} onClick={() => setOpen(false)}>
+                                  {category.name}
+                                </Link>
+                                {category.category_children && category.category_children.slice(0, 2).map((child, childIndex) => (
+                                  <div key={child.id} className={`pb-1 pl-4 ${childIndex < (category.category_children ?? []).length ? 'mt-2' : ''}`}>
+                                    <div>
+                                      <Link href={`/categories/${child.handle}`} onClick={() => setOpen(false)}>
+                                        {child.name}
+                                      </Link>
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
                             ))}
                         </ul>

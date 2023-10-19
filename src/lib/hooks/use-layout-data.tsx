@@ -1,8 +1,8 @@
 import { medusaClient } from "@lib/config"
 import { getPercentageDiff } from "@lib/util/get-precentage-diff"
-import { ProductCollection, Region } from "@medusajs/medusa"
+import { ProductCategory, ProductCollection, Region } from "@medusajs/medusa"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, QueryFunctionContext } from "@tanstack/react-query"
 import { formatAmount } from "medusa-react"
 import { ProductPreviewType } from "types/global"
 import { CalculatedVariant } from "types/medusa"
@@ -10,7 +10,16 @@ import { CalculatedVariant } from "types/medusa"
 type LayoutCollection = {
   id: string
   title: string
+  handle: string
 }
+
+type LayoutCategory = {
+  id: string;
+  name: string;
+  handle: string;
+  children?: LayoutCategory[];
+  category_children?: LayoutCategory[];
+};
 
 export const fetchRegionsData = async (): Promise<Region[]> => {
   const { regions } = await medusaClient.regions.list()
@@ -46,6 +55,7 @@ export const fetchCollectionData = async (): Promise<LayoutCollection[]> => {
   return nonEmptyCollections.map((c) => ({
     id: c.id,
     title: c.title,
+    handle: c.handle,
   }))
 }
 
@@ -56,6 +66,47 @@ export const useNavigationCollections = () => {
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   })
+
+  return queryResults
+}
+
+export const fetchCategoryData = async (levels: number): Promise<LayoutCategory[]> => {
+  // TODO: don't need the full parent data of each child inside this could reduce/remove it
+  const response = await medusaClient.productCategories.list({
+    include_descendants_tree: true,
+  })
+
+  const topLevelCategories = response.product_categories.filter(category => category.parent_category_id === null)
+
+  const retrieveChildren = (category: ProductCategory, currentLevel: number): LayoutCategory => {
+    const children = response.product_categories.filter(child => child.parent_category_id === category.id)
+
+    const categoryData: LayoutCategory = {
+      id: category.id,
+      name: category.name,
+      handle: category.handle,
+      category_children: [],
+    }
+
+    if (currentLevel < levels) {
+      categoryData.category_children = children.map(child => retrieveChildren(child, currentLevel + 1))
+    }
+
+    return categoryData
+  }
+
+  return topLevelCategories.map(category => retrieveChildren(category, 1))
+}
+
+export const useNavigationCategories = (levels: number = Infinity) => {
+  const queryResults = useQuery(
+    ["navigation_categories", levels],
+    () => fetchCategoryData(levels),
+    {
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  )
 
   return queryResults
 }
