@@ -5,7 +5,6 @@ import InfiniteProducts from "@modules/products/components/infinite-products"
 import RefinementList from "@modules/store/components/refinement-list"
 import { useState } from "react"
 import { NextPageWithLayout } from "types/global"
-import { fetchProductsList } from "@lib/data"
 import { GetStaticProps } from "next"
 import { dehydrate, QueryClient } from "@tanstack/react-query"
 import { fetchCollectionData, fetchRegionsData, fetchCategoryData, fetchAllProducts } from "@lib/hooks/use-layout-data"
@@ -45,9 +44,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const region = regions[0] // TODO: switch to regionId, however currently region is needed for the formatting code
 
   // prefetch page-specific params
-  await queryClient.prefetchQuery(["all_products", region], () =>
-    fetchAllProducts(region)
-  )
+  await queryClient.prefetchQuery(["all_products"], () => fetchAllProducts(region))
 
   return {
     props: {
