@@ -32,11 +32,11 @@ const fetchCollection = async (handle: string) => {
 export const fetchCollectionProducts = async ({
   pageParam = 0,
   handle,
-  cartId,
+  regionId,
 }: {
   pageParam?: number
   handle: string
-  cartId?: string
+  regionId: string
 }) => {
   // First, retrieve the collection by its handle
   const { collections } = await medusaClient.collections.list({ handle: [handle] });
@@ -47,7 +47,7 @@ export const fetchCollectionProducts = async ({
     limit: 12,
     offset: pageParam,
     collection_id: [collection.id],
-    cart_id: cartId,
+    region_id: regionId,
   })
 
   return {
@@ -122,9 +122,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
     fetchCollection(handle)
   )
 
+  // grab regionId to use in query for products list
+  const regions = queryClient.getQueryData<any>(["regions"])
+  const regionId = regions[0].id
+
+  // prefetch page-specific params
   await queryClient.prefetchInfiniteQuery(
     ["get_collection_products", handle],
-    ({ pageParam }) => fetchCollectionProducts({ pageParam, handle }),
+    ({ pageParam }) => fetchCollectionProducts({ pageParam, handle, regionId }),
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     }
