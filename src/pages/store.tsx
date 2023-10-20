@@ -8,7 +8,7 @@ import { NextPageWithLayout } from "types/global"
 import { fetchProductsList } from "@lib/data"
 import { GetStaticProps } from "next"
 import { dehydrate, QueryClient } from "@tanstack/react-query"
-import { fetchCollectionData, fetchRegionsData, fetchCategoryData } from "@lib/hooks/use-layout-data"
+import { fetchCollectionData, fetchRegionsData, fetchCategoryData, fetchAllProducts } from "@lib/hooks/use-layout-data"
 
 const Store: NextPageWithLayout = () => {
   const [params, setParams] = useState<StoreGetProductsParams>({})
@@ -18,7 +18,7 @@ const Store: NextPageWithLayout = () => {
       <Head title="Store" description="Explore all of our products." />
       <div className="flex flex-col small:flex-row small:items-start py-6">
         <RefinementList refinementList={params} setRefinementList={setParams} />
-        <InfiniteProducts params={params} />
+        <InfiniteProducts />
       </div>
     </>
   )
@@ -42,19 +42,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   // grab regionId to use in query for products list
   const regions = queryClient.getQueryData<any>(["regions"])
-  const regionId = regions[0].id
+  const region = regions[0] // TODO: switch to regionId, however currently region is needed for the formatting code
 
   // prefetch page-specific params
-  const queryParams: StoreGetProductsParams = {
-    is_giftcard: false,
-    region_id: regionId,
-  }
-  await queryClient.prefetchInfiniteQuery(
-    ["infinite-products-store", queryParams],
-    ({ pageParam }) => fetchProductsList({ pageParam, queryParams }),
-    {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-    }
+  await queryClient.prefetchQuery(["all_products", region], () =>
+    fetchAllProducts(region)
   )
 
   return {

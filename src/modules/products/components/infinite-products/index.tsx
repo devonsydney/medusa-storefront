@@ -1,83 +1,25 @@
-import { fetchProductsList } from "@lib/data"
-import usePreviews from "@lib/hooks/use-previews"
-import getNumberOfSkeletons from "@lib/util/get-number-of-skeletons"
-import repeat from "@lib/util/repeat"
-import { StoreGetProductsParams } from "@medusajs/medusa"
+import { useAllProductsQuery } from "@lib/hooks/use-layout-data"
 import ProductPreview from "@modules/products/components/product-preview"
 import SkeletonProductPreview from "@modules/skeletons/components/skeleton-product-preview"
-import { useEffect, useMemo } from "react"
-import { useInView } from "react-intersection-observer"
-import { useInfiniteQuery } from "@tanstack/react-query"
-import { useRegions } from "@lib/hooks/use-layout-data"
 
-type InfiniteProductsType = {
-  params: StoreGetProductsParams
-}
-
-const InfiniteProducts = ({ params }: InfiniteProductsType) => {
-  const { data: regions } = useRegions()
-
-  const { ref, inView } = useInView()
-
-  const queryParams = useMemo(() => {
-    const p: StoreGetProductsParams = {}
-
-    p.region_id = regions?.[0].id
-    p.is_giftcard = false
-
-    return {
-      ...p,
-      ...params,
-    }
-  }, [params, regions])
-
-  const { data, hasNextPage, fetchNextPage, isLoading, isFetchingNextPage } =
-    useInfiniteQuery(
-      [`infinite-products-store`, queryParams],
-      ({ pageParam }) => fetchProductsList({ pageParam, queryParams }),
-      {
-        getNextPageParam: (lastPage) => lastPage.nextPage,
-        keepPreviousData: true,
-      }
-    )
-
-  const previews = usePreviews({ pages: data?.pages, region: regions?.[0] })
-
-  useEffect(() => {
-    if (inView && hasNextPage) {
-      fetchNextPage()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView, hasNextPage])
+const InfiniteProducts = () => {
+  const { data } = useAllProductsQuery()
 
   return (
     <div className="flex-1 content-container">
       <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 large:grid-cols-5 gap-x-4 gap-y-8 flex-1">
-        {previews.map((p) => (
-          <li key={p.id}>
-            <ProductPreview {...p} />
-          </li>
-        ))}
-        {isLoading &&
-          !previews.length &&
-          repeat(8).map((index) => (
-            <li key={index}>
-              <SkeletonProductPreview />
-            </li>
-          ))}
-        {isFetchingNextPage &&
-          repeat(getNumberOfSkeletons(data?.pages)).map((index) => (
-            <li key={index}>
-              <SkeletonProductPreview />
-            </li>
-          ))}
+        {data
+          ? data.map((product) => (
+              <li key={product.id}>
+                <ProductPreview {...product} />
+              </li>
+            ))
+          : Array.from(Array(5).keys()).map((i) => (
+              <li key={i}>
+                <SkeletonProductPreview />
+              </li>
+            ))}
       </ul>
-      <div
-        className="py-16 flex justify-center items-center text-small-regular text-gray-700"
-        ref={ref}
-      >
-        <span ref={ref}></span>
-      </div>
     </div>
   )
 }

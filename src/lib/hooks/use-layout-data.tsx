@@ -212,3 +212,104 @@ export const useFeaturedProductsQuery = () => {
 
   return queryResults
 }
+
+export const fetchAllProducts = async (
+  region: Region
+  ): Promise<ProductPreviewType[]> => {
+    const products = await medusaClient.products
+      .list({
+        region_id: region.id,
+        is_giftcard: false,
+      })
+      .then(({ products }) => products)
+      .catch((_) => [] as PricedProduct[])
+
+    return products
+      .filter((p) => !!p.variants)
+      .map((p) => {
+        const variants = p.variants as unknown as CalculatedVariant[]
+
+        const cheapestVariant = variants.reduce((acc, curr) => {
+          if (acc.calculated_price > curr.calculated_price) {
+            return curr
+          }
+          return acc
+        }, variants[0])
+
+        const mostExpensiveVariant = variants.reduce((acc, curr) => {
+          if (acc.calculated_price < curr.calculated_price) {
+            return curr
+          }
+          return acc
+        }, variants[0])
+
+        return {
+          id: p.id!,
+          title: p.title!,
+          handle: p.handle!,
+          thumbnail: p.thumbnail!,
+          cheapestPrice: cheapestVariant
+            ? {
+                calculated_price: formatAmount({
+                  amount: cheapestVariant.calculated_price,
+                  region: region,
+                  includeTaxes: false,
+                }),
+                original_price: formatAmount({
+                  amount: cheapestVariant.original_price,
+                  region: region,
+                  includeTaxes: false,
+                }),
+                difference: getPercentageDiff(
+                  cheapestVariant.original_price,
+                  cheapestVariant.calculated_price
+                ),
+                price_type: cheapestVariant.calculated_price_type,
+              }
+            : {
+                calculated_price: "N/A",
+                original_price: "N/A",
+                difference: "N/A",
+                price_type: "default",
+              },
+          mostExpensivePrice: mostExpensiveVariant
+            ? {
+                calculated_price: formatAmount({
+                  amount: mostExpensiveVariant.calculated_price,
+                  region: region,
+                  includeTaxes: false,
+                }),
+                original_price: formatAmount({
+                  amount: mostExpensiveVariant.original_price,
+                  region: region,
+                  includeTaxes: false,
+                }),
+                difference: getPercentageDiff(
+                  mostExpensiveVariant.original_price,
+                  mostExpensiveVariant.calculated_price
+                ),
+                price_type: mostExpensiveVariant.calculated_price_type,
+              }
+            : {
+                calculated_price: "N/A",
+                original_price: "N/A",
+                difference: "N/A",
+                price_type: "default",
+              },
+        }
+      })
+  }
+
+export const useAllProductsQuery = () => {
+  const{ data: regions } = useRegions()
+  const region = regions?.[0]
+
+  const queryResults = useQuery({
+    queryFn: () => fetchAllProducts(region!),
+    queryKey: ["all_products"],
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  })
+
+  return queryResults
+}
