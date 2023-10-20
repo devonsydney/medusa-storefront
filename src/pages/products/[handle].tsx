@@ -190,7 +190,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   // grab region to use in query for products list
   const regions = queryClient.getQueryData<any>(["regions"])
-  const region = regions[0]
+  const region = regions[0] // TODO: switch to regionId, however currently region is needed for the formatting code
 
   // prefetch page-specific params
   await queryClient.prefetchQuery([`get_product`, handle], () =>
