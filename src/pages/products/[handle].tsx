@@ -11,7 +11,7 @@ import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { ReactElement } from "react"
 import { NextPageWithLayout, PrefetchedPageProps } from "types/global"
-import { fetchCollectionData, fetchRegionsData, fetchCategoryData } from "@lib/hooks/use-layout-data"
+import { fetchCollectionData, fetchRegionsData, fetchCategoryData, formatProducts } from "@lib/hooks/use-layout-data"
 import { Region } from "@medusajs/medusa"
 import { getPercentageDiff } from "@lib/util/get-precentage-diff"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
@@ -45,81 +45,7 @@ handle: string
   // filter out current product if it exists in the array and ensure 4 products returned
   const filteredProducts = products.filter((product) => product.handle !== handle).slice(0, 4)
 
-  // structure for output
-  return filteredProducts
-    .filter((p) => !!p.variants)
-    .map((p) => {
-      const variants = p.variants as unknown as CalculatedVariant[]
-
-      const cheapestVariant = variants.reduce((acc, curr) => {
-        if (acc.calculated_price > curr.calculated_price) {
-          return curr
-        }
-        return acc
-      }, variants[0])
-
-      const mostExpensiveVariant = variants.reduce((acc, curr) => {
-        if (acc.calculated_price < curr.calculated_price) {
-          return curr
-        }
-        return acc
-      }, variants[0])
-
-      return {
-        id: p.id!,
-        title: p.title!,
-        handle: p.handle!,
-        thumbnail: p.thumbnail!,
-        cheapestPrice: cheapestVariant
-          ? {
-              calculated_price: formatAmount({
-                amount: cheapestVariant.calculated_price,
-                region: region,
-                includeTaxes: false,
-              }),
-              original_price: formatAmount({
-                amount: cheapestVariant.original_price,
-                region: region,
-                includeTaxes: false,
-              }),
-              difference: getPercentageDiff(
-                cheapestVariant.original_price,
-                cheapestVariant.calculated_price
-              ),
-              price_type: cheapestVariant.calculated_price_type,
-            }
-          : {
-              calculated_price: "N/A",
-              original_price: "N/A",
-              difference: "N/A",
-              price_type: "default",
-            },
-        mostExpensivePrice: mostExpensiveVariant
-          ? {
-              calculated_price: formatAmount({
-                amount: mostExpensiveVariant.calculated_price,
-                region: region,
-                includeTaxes: false,
-              }),
-              original_price: formatAmount({
-                amount: mostExpensiveVariant.original_price,
-                region: region,
-                includeTaxes: false,
-              }),
-              difference: getPercentageDiff(
-                mostExpensiveVariant.original_price,
-                mostExpensiveVariant.calculated_price
-              ),
-              price_type: mostExpensiveVariant.calculated_price_type,
-            }
-          : {
-              calculated_price: "N/A",
-              original_price: "N/A",
-              difference: "N/A",
-              price_type: "default",
-            },
-      }
-    })
+  return formatProducts(filteredProducts, region)
 }
 
 const ProductPage: NextPageWithLayout<PrefetchedPageProps> = ({ notFound }) => {
