@@ -5,7 +5,6 @@ import repeat from "@lib/util/repeat"
 import { StoreGetProductsParams } from "@medusajs/medusa"
 import ProductPreview from "@modules/products/components/product-preview"
 import SkeletonProductPreview from "@modules/skeletons/components/skeleton-product-preview"
-import { useCart } from "medusa-react"
 import { useEffect, useMemo } from "react"
 import { useInView } from "react-intersection-observer"
 import { useInfiniteQuery } from "@tanstack/react-query"
@@ -16,17 +15,12 @@ type InfiniteProductsType = {
 }
 
 const InfiniteProducts = ({ params }: InfiniteProductsType) => {
-  const { cart } = useCart()
   const { data: regions } = useRegions()
 
   const { ref, inView } = useInView()
 
   const queryParams = useMemo(() => {
     const p: StoreGetProductsParams = {}
-
-    // if (cart?.id) {
-    //   p.cart_id = cart.id
-    // }
 
     p.region_id = regions?.[0].id
     p.is_giftcard = false
@@ -35,11 +29,11 @@ const InfiniteProducts = ({ params }: InfiniteProductsType) => {
       ...p,
       ...params,
     }
-  }, [params, regions]) //cart?.id,
+  }, [params, regions])
 
   const { data, hasNextPage, fetchNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery(
-      [`infinite-products-store`, queryParams], //, cart
+      [`infinite-products-store`, queryParams],
       ({ pageParam }) => fetchProductsList({ pageParam, queryParams }),
       {
         getNextPageParam: (lastPage) => lastPage.nextPage,
