@@ -13,8 +13,11 @@ import { ReactElement } from "react"
 import { NextPageWithLayout, PrefetchedPageProps } from "types/global"
 import { fetchCollectionData, fetchRegionsData, fetchCategoryData } from "@lib/hooks/use-layout-data"
 import { Region } from "@medusajs/medusa"
-import { formatAmount } from "medusa-react"
 import { getPercentageDiff } from "@lib/util/get-precentage-diff"
+import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
+import { formatAmount } from "medusa-react"
+import { ProductPreviewType } from "types/global"
+import { CalculatedVariant } from "types/medusa"
 
 interface Params extends ParsedUrlQuery {
   handle: string
@@ -27,19 +30,23 @@ const fetchProduct = async (handle: string) => {
 }
 
 export const fetchRelatedProducts = async (
-region: Region
+region: Region,
+handle: string
 ): Promise<ProductPreviewType[]> => {
-  console.log(handle)
   const products = await medusaClient.products
     .list({
       region_id: region.id,
       is_giftcard: false,
-      limit: 4, // TODO: make sure this doesn't pull the current product
+      limit: 5,
     })
     .then(({ products }) => products)
     .catch((_) => [] as PricedProduct[])
 
-  const productsStructured = products
+  // filter out current product if it exists in the array and ensure 4 products returned
+  const filteredProducts = products.filter((product) => product.handle !== handle).slice(0, 4)
+
+  // structure for output
+  return filteredProducts
     .filter((p) => !!p.variants)
     .map((p) => {
       const variants = p.variants as unknown as CalculatedVariant[]
@@ -113,7 +120,6 @@ region: Region
             },
       }
     })
-  return productsStructured
 }
 
 const ProductPage: NextPageWithLayout<PrefetchedPageProps> = ({ notFound }) => {
@@ -191,9 +197,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
     fetchProduct(handle)
   )
 
-  //console.log("from page ",`related-products-${handle}`,region)
-  await queryClient.prefetchQuery([`related-products-${handle}`, region], () =>
-    fetchRelatedProducts(region)
+  await queryClient.prefetchQuery([`related-products-${handle}`, region, handle], () =>
+    fetchRelatedProducts(region, handle)
   )
 
   const queryData = await queryClient.getQueryData([`get_product`, handle])

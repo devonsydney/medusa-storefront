@@ -14,8 +14,8 @@ const RelatedProducts = ({ product }: RelatedProductsProps) => {
   const region = regions?.[0]
 
   const { data } = useQuery({
-    queryFn: () => fetchRelatedProducts(region!),
-    queryKey: [`related-products-${product.handle}`, region],
+    queryFn: () => fetchRelatedProducts(region!, product.handle!),
+    queryKey: [`related-products-${product.handle}`, region, product.handle],
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   })
