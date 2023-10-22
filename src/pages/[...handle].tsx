@@ -3,49 +3,34 @@ import { ParsedUrlQuery } from "querystring";
 import { useRouter } from "next/router";
 import { dehydrate, QueryClient } from "@tanstack/react-query"
 import { getCategoryHandles } from "@lib/util/get-category-handles"
+import CategoryTemplate from "@modules/categories/templates"
+import Head from "@modules/common/components/head"
+import Layout from "@modules/layout/templates"
+import { NextPageWithLayout, PrefetchedPageProps } from "types/global"
 import { fetchCollectionData, fetchRegionsData, fetchCategoryData } from "@lib/hooks/use-layout-data"
 
 interface Params extends ParsedUrlQuery {
   handle: string[];
 }
 
-const CategoryPage = ({ categoryData }: { categoryData: LayoutCategory }) => {
+const CategoryPage: NextPageWithLayout<PrefetchedPageProps> = ({
+  categoryData,
+  notFound,
+}) => {
   const router = useRouter();
   const { handle } = router.query;
 
-  const isParentCategory = handle.length === 1;
-
   return (
-    <div>
-      {isParentCategory ? (
-        // Render parent category page
-        <div>
-          This is the category page for {categoryData.name}. Here are the children categories:
-          {categoryData?.category_children?.map((child) => (
-            <div key={child.title}>
-              <a href={`/${handle[0]}/${child.handle}`}>{child.name}</a>
-            </div>
-          ))}
-          <div>
-            Here is the category data:
-            { JSON.stringify(categoryData) }
-          </div>
-        </div>
-      ) : (
-        // Render subcategory page
-        <div>
-          This is the subcategory page for `{handle.join("/")}`.
-          <div>
-            Here is the category data:
-            { JSON.stringify(categoryData) }
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+    <>
+      <Head title={categoryData.name} description={`${categoryData.name} category`} />
+      <CategoryTemplate handle={ handle } categoryData={ categoryData } />
+    </>
+  )
+}
 
-export default CategoryPage
+CategoryPage.getLayout = (page: ReactElement) => {
+  return <Layout>{page}</Layout>
+}
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const handles = await getCategoryHandles()
@@ -91,3 +76,5 @@ export const getStaticProps: GetStaticProps = async (context) => {
     },
   }
 }
+
+export default CategoryPage
