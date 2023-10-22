@@ -101,7 +101,7 @@ export const fetchCategoryData = async (levels: number = Infinity): Promise<Layo
 
     while (stack.length > 0) {
       const { category, level } = stack.pop()!
-      if (level <= levels) {
+      if (level < levels) {
         const childCategories = product_categories.filter(child => child.parent_category_id === category.id)
         const childCategoriesData: LayoutCategory[] = []
 
