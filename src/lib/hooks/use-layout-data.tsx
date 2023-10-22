@@ -2,7 +2,7 @@ import { medusaClient } from "@lib/config"
 import { getPercentageDiff } from "@lib/util/get-percentage-diff"
 import { ProductCategory, ProductCollection, Region } from "@medusajs/medusa"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
-import { useQuery, QueryFunctionContext } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { formatAmount } from "medusa-react"
 import { ProductPreviewType } from "types/global"
 import { CalculatedVariant } from "types/medusa"
@@ -11,6 +11,7 @@ type LayoutCollection = {
   id: string
   title: string
   handle: string
+  product_handles: (string | null | undefined)[]
 }
 
 type LayoutCategory = {
@@ -38,17 +39,20 @@ export const useRegions = () => {
 }
 
 export const fetchCollectionData = async (): Promise<LayoutCollection[]> => {
-  const navigationCollections: ProductCollection[] = []
+  const navigationCollections: LayoutCollection[] = []
   const { collections } = await medusaClient.collections.list()
 
   for (const collection of collections) {
     const { products } = await medusaClient.products.list({
       collection_id: [collection.id],
     })
+    const productsInCollection = products.map((product) => ({
+      handle: product.handle,
+    }))
     if (products.length > 0) {
       navigationCollections.push({
         ...collection,
-        products,
+        product_handles: productsInCollection.map((product) => product.handle),
     })
     }
   }
@@ -57,7 +61,7 @@ export const fetchCollectionData = async (): Promise<LayoutCollection[]> => {
     id: c.id,
     title: c.title,
     handle: c.handle,
-    product_handles: c.products.map((product) => product.handle),
+    product_handles: c.product_handles,
   }))
 }
 

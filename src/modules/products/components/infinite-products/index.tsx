@@ -2,23 +2,32 @@ import { useAllProductsQuery } from "@lib/hooks/use-layout-data"
 import ProductPreview from "@modules/products/components/product-preview"
 import SkeletonProductPreview from "@modules/skeletons/components/skeleton-product-preview"
 import { useNavigationCollections, useNavigationCategories } from "@lib/hooks/use-layout-data"
+import { StoreGetProductsParams } from "@medusajs/medusa";
 
-const InfiniteProducts = ({ refinementList }) => {
+type InfiniteProductsProps = {
+  refinementList: StoreGetProductsParams
+}
+
+const InfiniteProducts = ({ refinementList }: InfiniteProductsProps) => {
   const { data: products } = useAllProductsQuery()
   const { data: collections } = useNavigationCollections()
 
   // initialise output to all products
   let filteredProducts = products
   // filter products based on collections selected in refinement list
-  if (refinementList && refinementList.collection_id && refinementList.collection_id.length > 0) {
+  if (
+    refinementList &&
+    refinementList.collection_id &&
+    refinementList.collection_id.length > 0
+  ) {
     filteredProducts = products?.filter((product) => {
-      const inSelectedCollections = refinementList.collection_id.some((collectionId) =>
-        collections.some((collection) =>
+      const inSelectedCollections = refinementList.collection_id?.some((collectionId) =>
+        collections?.some((collection) =>
           collection.id === collectionId && collection.product_handles.includes(product.handle)
         )
-      )
-      return inSelectedCollections
-    })
+      );
+      return inSelectedCollections;
+    });
   }
 
   return (
