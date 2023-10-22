@@ -38,24 +38,26 @@ export const useRegions = () => {
 }
 
 export const fetchCollectionData = async (): Promise<LayoutCollection[]> => {
-  const nonEmptyCollections: ProductCollection[] = []
+  const navigationCollections: ProductCollection[] = []
   const { collections } = await medusaClient.collections.list()
 
   for (const collection of collections) {
     const { products } = await medusaClient.products.list({
       collection_id: [collection.id],
-      limit: 1, // Only need to fetch 1 product
     })
-
     if (products.length > 0) {
-      nonEmptyCollections.push(collection)
+      navigationCollections.push({
+        ...collection,
+        products,
+    })
     }
   }
 
-  return nonEmptyCollections.map((c) => ({
+  return navigationCollections.map((c) => ({
     id: c.id,
     title: c.title,
     handle: c.handle,
+    product_handles: c.products.map((product) => product.handle),
   }))
 }
 

@@ -11,7 +11,7 @@ const RefinementList = ({
   refinementList,
   setRefinementList,
 }: RefinementListProps) => {
-  const { data: collections, isLoading: loadingCollections } =
+  const { data: collections } =
     useNavigationCollections()  
 
   const handleCollectionChange = (
