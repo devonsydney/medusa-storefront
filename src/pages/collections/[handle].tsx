@@ -101,9 +101,10 @@ CollectionPage.getLayout = (page: ReactElement) => {
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const handles = await getCollectionHandles()
+  const paths = handles.map((handle) => ({ params: { handle } }))
 
   return {
-    paths: handles.map((handle) => ({ params: { handle } })),
+    paths: paths,
     fallback: true,
   }
 }
