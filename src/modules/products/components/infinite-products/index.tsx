@@ -11,22 +11,40 @@ type InfiniteProductsProps = {
 const InfiniteProducts = ({ refinementList }: InfiniteProductsProps) => {
   const { data: products } = useAllProductsQuery()
   const { data: collections } = useNavigationCollections()
+  const { data: categories } = useNavigationCategories()
 
   // initialise output to all products
   let filteredProducts = products
-  // filter products based on collections selected in refinement list
+  // filter products based on collections and categories selected in refinement list
   if (
     refinementList &&
-    refinementList.collection_id &&
-    refinementList.collection_id.length > 0
+    (
+      (refinementList.collection_id && refinementList.collection_id.length > 0) ||
+      (refinementList.category_id && refinementList.category_id.length > 0)
+    )
   ) {
     filteredProducts = products?.filter((product) => {
-      const inSelectedCollections = refinementList.collection_id?.some((collectionId) =>
-        collections?.some((collection) =>
-          collection.id === collectionId && collection.product_handles.includes(product.handle)
+      // initialise
+      let inSelectedCollections = true
+      let inSelectedCategories = true
+      // remove the product if not in the selected collection
+      if (refinementList.collection_id && refinementList.collection_id.length > 0) {
+        inSelectedCollections = refinementList.collection_id?.some((collectionId) =>
+          collections?.some((collection) =>
+            collection.id === collectionId && collection.product_handles.includes(product.handle)
+          )
         )
-      );
-      return inSelectedCollections;
+      }
+      // remove the product if not in the selected category
+      if (refinementList.category_id && refinementList.category_id.length > 0) {
+        inSelectedCategories = refinementList.category_id?.some((categoryId) =>
+          categories?.some((category) =>
+          category.id === categoryId && category.product_handles.includes(product.handle)
+          )
+        )
+      }
+      // return the product if it's in both selected collections and categories
+      return inSelectedCollections && inSelectedCategories
     });
   }
 

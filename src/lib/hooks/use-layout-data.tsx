@@ -15,11 +15,12 @@ type LayoutCollection = {
 }
 
 type LayoutCategory = {
-  id: string;
-  name: string;
-  handle: string;
-  children?: LayoutCategory[];
-  category_children?: LayoutCategory[];
+  id: string
+  name: string
+  handle: string
+  product_handles: (string | null | undefined)[]
+  children?: LayoutCategory[]
+  category_children?: LayoutCategory[]
 };
 
 export const fetchRegionsData = async (): Promise<Region[]> => {
@@ -77,31 +78,55 @@ export const useNavigationCollections = () => {
 }
 
 export const fetchCategoryData = async (levels: number = Infinity): Promise<LayoutCategory[]> => {
-  // TODO: don't need the full parent data of each child inside this could reduce/remove it
-  const response = await medusaClient.productCategories.list({
+  const formattedCategories: LayoutCategory[] = []
+  const { product_categories } = await medusaClient.productCategories.list({
     include_descendants_tree: true,
   })
+  const topLevelCategories = product_categories.filter(category => category.parent_category_id === null)
 
-  const topLevelCategories = response.product_categories.filter(category => category.parent_category_id === null)
-
-  const retrieveChildren = (category: ProductCategory, currentLevel: number): LayoutCategory => {
-    const children = response.product_categories.filter(child => child.parent_category_id === category.id)
-
+  for (const topLevelCategory of topLevelCategories) {
+    const productsInCategory = await medusaClient.products.list({
+      category_id: [topLevelCategory.id],
+    })
+    const productHandlesInCategory = productsInCategory.products.map((product) => product.handle)
     const categoryData: LayoutCategory = {
-      id: category.id,
-      name: category.name,
-      handle: category.handle,
-      category_children: [],
+      id: topLevelCategory.id,
+      name: topLevelCategory.name,
+      handle: topLevelCategory.handle,
+      product_handles: productHandlesInCategory,
+      category_children: [] as LayoutCategory[],
     }
 
-    if (currentLevel < levels) {
-      categoryData.category_children = children.map(child => retrieveChildren(child, currentLevel + 1))
-    }
+    const stack: { category: ProductCategory; level: number }[] = [{ category: topLevelCategory, level: 1 }]
 
-    return categoryData
+    while (stack.length > 0) {
+      const { category, level } = stack.pop()!
+      if (level <= levels) {
+        const childCategories = product_categories.filter(child => child.parent_category_id === category.id)
+        const childCategoriesData: LayoutCategory[] = []
+
+        for (const childCategory of childCategories) {
+          const productsInChildCategory = await medusaClient.products.list({
+            category_id: [childCategory.id],
+          })
+          const productHandlesInChildCategory = productsInChildCategory.products.map((product) => product.handle)
+          const childCategoryData: LayoutCategory = {
+            id: childCategory.id,
+            name: childCategory.name,
+            handle: childCategory.handle,
+            product_handles: productHandlesInChildCategory,
+            category_children: [] as LayoutCategory[],
+          }
+
+          stack.push({ category: childCategory, level: level + 1 })
+          childCategoriesData.push(childCategoryData)
+        }
+        categoryData!.category_children!.push(...childCategoriesData)
+      }
+    }
+    formattedCategories.push(categoryData)
   }
-
-  return topLevelCategories.map(category => retrieveChildren(category, 1))
+  return formattedCategories
 }
 
 export const useNavigationCategories = (levels: number = Infinity) => {
