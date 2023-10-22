@@ -1,4 +1,4 @@
-import { getPercentageDiff } from "@lib/util/get-precentage-diff"
+import { getPercentageDiff } from "@lib/util/get-percentage-diff"
 import { Region } from "@medusajs/medusa"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
 import { formatAmount } from "medusa-react"
