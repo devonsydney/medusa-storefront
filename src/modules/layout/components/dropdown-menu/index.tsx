@@ -74,13 +74,13 @@ const DropdownMenu = () => {
                           {categories &&
                             categories.map((category) => (
                               <div key={category.id} className="pb-3 pl-2">
-                                <Link href={`/categories/${category.handle}`} onClick={() => setOpen(false)}>
+                                <Link href={`/${category.handle}`} onClick={() => setOpen(false)}>
                                   {category.name}
                                 </Link>
                                 {category.category_children && category.category_children.map((child, childIndex) => (
                                   <div key={child.id} className={`pb-1 pl-4 ${childIndex < (category.category_children ?? []).length ? 'mt-2' : ''}`}>
                                     <div>
-                                      <Link href={`/categories/${child.handle}`} onClick={() => setOpen(false)}>
+                                      <Link href={`/${category.handle}/${child.handle}`} onClick={() => setOpen(false)}>
                                         {child.name}
                                       </Link>
                                     </div>
