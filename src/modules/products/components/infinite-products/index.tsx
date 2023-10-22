@@ -27,7 +27,8 @@ const InfiniteProducts = ({ refinementList }: InfiniteProductsProps) => {
       // initialise
       let inSelectedCollections = true
       let inSelectedCategories = true
-      // remove the product if not in the selected collection
+      let inSelectedChildCategories = true
+      // check if product is in selected collection
       if (refinementList.collection_id && refinementList.collection_id.length > 0) {
         inSelectedCollections = refinementList.collection_id?.some((collectionId) =>
           collections?.some((collection) =>
@@ -35,16 +36,26 @@ const InfiniteProducts = ({ refinementList }: InfiniteProductsProps) => {
           )
         )
       }
-      // remove the product if not in the selected category
+      // check if product is in selected category (top level)
       if (refinementList.category_id && refinementList.category_id.length > 0) {
         inSelectedCategories = refinementList.category_id?.some((categoryId) =>
           categories?.some((category) =>
-          category.id === categoryId && category.product_handles.includes(product.handle)
+            category.id === categoryId && category.product_handles.includes(product.handle)
           )
         )
       }
-      // return the product if it's in both selected collections and categories
-      return inSelectedCollections && inSelectedCategories
+      // check if product is in selected category (child level)
+      if (refinementList.category_id && refinementList.category_id.length > 0) {
+        inSelectedChildCategories = refinementList.category_id?.some((categoryId) =>
+          categories?.some((category) =>
+            category.category_children?.some((childCategory) =>
+              childCategory.id === categoryId && childCategory.product_handles.includes(product.handle)
+            )
+          )
+        )
+      }
+      // return the product if it's in both selected collections and top/child categories
+      return inSelectedCollections && (inSelectedCategories || inSelectedChildCategories)
     });
   }
 
