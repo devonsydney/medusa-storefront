@@ -1,5 +1,5 @@
 import { medusaClient } from "@lib/config"
-import { getPercentageDiff } from "@lib/util/get-precentage-diff"
+import { getPercentageDiff } from "@lib/util/get-percentage-diff"
 import { ProductCategory, ProductCollection, Region } from "@medusajs/medusa"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
 import { useQuery, QueryFunctionContext } from "@tanstack/react-query"
