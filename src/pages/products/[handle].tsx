@@ -13,11 +13,8 @@ import { ReactElement } from "react"
 import { NextPageWithLayout, PrefetchedPageProps } from "types/global"
 import { fetchCollectionData, fetchRegionsData, fetchCategoryData, formatProducts } from "@lib/hooks/use-layout-data"
 import { Region } from "@medusajs/medusa"
-import { getPercentageDiff } from "@lib/util/get-precentage-diff"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
-import { formatAmount } from "medusa-react"
 import { ProductPreviewType } from "types/global"
-import { CalculatedVariant } from "types/medusa"
 
 interface Params extends ParsedUrlQuery {
   handle: string
