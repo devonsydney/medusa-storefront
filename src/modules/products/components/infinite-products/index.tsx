@@ -19,7 +19,7 @@ const InfiniteProducts = ({ refinementList }) => {
       )
       return inSelectedCollections
     })
-  } 
+  }
 
   return (
     <div className="flex-1 content-container">

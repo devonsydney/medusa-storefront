@@ -11,6 +11,7 @@ import { fetchCollectionData, fetchRegionsData, fetchCategoryData, fetchAllProdu
 
 const Store: NextPageWithLayout = () => {
   const [params, setParams] = useState<StoreGetProductsParams>({})
+  
   return (
     <>
       <Head title="Store" description="Explore all of our products." />
