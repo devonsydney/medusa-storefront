@@ -47,8 +47,10 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
               key={v.value}
               className={clsx(
                 "border-gray-200 border text-xsmall-regular h-[50px] transition-all duration-200",
-                { "border-gray-900": v.value === current }
+                { "border-gray-900": v.value === current },
+                { "bg-gray-200": !v.in_stock } 
               )}
+              disabled={!v.in_stock}
             >
               {v.value}
             </button>
