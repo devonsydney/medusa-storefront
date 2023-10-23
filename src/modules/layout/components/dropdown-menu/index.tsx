@@ -45,7 +45,8 @@ const DropdownMenu = () => {
                 static
                 className="absolute top-full inset-x-0 text-sm text-gray-700 z-30 border-y border-gray-200"
               >
-                <div className="relative bg-white py-8">
+                <div className="grid grid-cols-[auto,1fr]">
+                  <div className="bg-white py-8">
                   <div className="flex items-start content-container">
                     <div className="flex flex-col flex-1 max-w-[30%]">
                       <h3 className="text-base-semi text-gray-900 mb-4">
@@ -91,6 +92,9 @@ const DropdownMenu = () => {
                         </ul>
                       </div>
                     </div>
+                  </div>
+                </div>
+                  <div className="col-span-1 bg-white bg-opacity-50">
                   </div>
                 </div>
               </Popover.Panel>
