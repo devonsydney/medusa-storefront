@@ -27,7 +27,7 @@ const DropdownMenu = () => {
                 )}
                 onClick={() => push("/store")}
               >
-                Store
+                All Products
               </Popover.Button>
             </Link>
 
@@ -49,24 +49,6 @@ const DropdownMenu = () => {
                   <div className="flex items-start content-container">
                     <div className="flex flex-col flex-1 max-w-[30%]">
                       <h3 className="text-base-semi text-gray-900 mb-4">
-                        Collections
-                      </h3>
-                      <div className="flex items-start">
-                        <ul className="min-w-[152px] max-w-[200px] pr-4">
-                          {collections &&
-                            collections.map((collection) => (
-                              <div key={collection.id} className="pb-3">
-                                <Link
-                                  href={`/collections/${collection.handle}`}
-                                  onClick={() => setOpen(false)}
-                                >
-                                  {collection.title}
-                                </Link>
-                              </div>
-                            ))}
-                        </ul>
-                      </div>
-                      <h3 className="text-base-semi text-gray-900 mb-4">
                         Categories
                       </h3>
                       <div className="flex items-start">
@@ -86,6 +68,24 @@ const DropdownMenu = () => {
                                     </div>
                                   </div>
                                 ))}
+                              </div>
+                            ))}
+                        </ul>
+                      </div>
+                      <h3 className="text-base-semi text-gray-900 mb-4">
+                        Collections
+                      </h3>
+                      <div className="flex items-start">
+                        <ul className="min-w-[152px] max-w-[200px] pr-4">
+                          {collections &&
+                            collections.map((collection) => (
+                              <div key={collection.id} className="pb-3">
+                                <Link
+                                  href={`/collections/${collection.handle}`}
+                                  onClick={() => setOpen(false)}
+                                >
+                                  {collection.title}
+                                </Link>
                               </div>
                             ))}
                         </ul>
