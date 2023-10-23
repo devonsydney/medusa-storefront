@@ -1,4 +1,9 @@
 import React from "react"
+import ProductPreview from "@modules/products/components/product-preview"
+import Link from "next/link"
+import UnderlineLink from "@modules/common/components/underline-link"
+import { LayoutCategory } from "@lib/hooks/use-layout-data"
+
 
 type CategoryTemplateProps = {
   handle: string
@@ -9,33 +14,46 @@ const CategoryTemplate: React.FC<CategoryTemplateProps> = ({
   handle,
   categoryData
 }) => {
-  const isParentCategory = handle.length === 1;
+
   return (
-    <div>
-      {isParentCategory ? (
-        // Render parent category page
-        <div>
-          This is the category page for {categoryData.name}. Here are the children categories:
-          {categoryData?.category_children?.map((child) => (
-            <div key={child.title}>
-              <a href={`/${handle[0]}/${child.handle}`}>{child.name}</a>
-            </div>
-          ))}
-          <div>
-            Here is the category data:
-            { JSON.stringify(categoryData) }
-          </div>
-        </div>
-      ) : (
-        // Render subcategory page
-        <div>
-          This is the subcategory page for {categoryData.name}.
-          <div>
-            Here is the category data:
-            { JSON.stringify(categoryData) }
-          </div>
+    <div className="content-container py-6">
+      <div className="flex flex-row mb-8 text-2xl-semi gap-4">
+        {categoryData.parent_name &&
+          <span className="text-gray-500">
+            <Link className="mr-4 hover:text-black" href={`/${categoryData.parent_handle}`}>
+              {categoryData.parent_name}
+            </Link>
+            /
+          </span>
+        }
+        <h1>{categoryData.name}</h1>
+      </div>
+      {categoryData.description && (
+        <div className="mb-8 text-base-regular">
+          <p>{categoryData.description}</p>
         </div>
       )}
+      {categoryData.category_children && (
+        <div className="mb-8 text-base-large">
+          <ul className="grid grid-cols-1 gap-2">
+            {categoryData.category_children?.map((c: LayoutCategory) => (
+              <li key={c.id}>
+                <UnderlineLink href={`/${handle[0]}/${c.handle}`}>{c.name}</UnderlineLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {/* <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-4 gap-y-8">
+        {previews.map((p) => (
+          <li key={p.id}>
+            <ProductPreview {...p} />
+          </li>
+        ))}
+      </ul> */}
+      <div className="py-16 flex justify-center items-center text-small-regular text-gray-700">
+        <span></span>
+      </div>
     </div>
   )
 }

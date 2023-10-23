@@ -14,13 +14,16 @@ type LayoutCollection = {
   product_handles: (string | null | undefined)[]
 }
 
-type LayoutCategory = {
+export type LayoutCategory = {
   id: string
   name: string
   handle: string
+  description: string
   product_handles: (string | null | undefined)[]
   children?: LayoutCategory[]
   category_children?: LayoutCategory[]
+  parent_name: string | undefined
+  parent_handle: string | undefined
 };
 
 export const fetchRegionsData = async (): Promise<Region[]> => {
@@ -93,8 +96,12 @@ export const fetchCategoryData = async (levels: number = Infinity): Promise<Layo
       id: topLevelCategory.id,
       name: topLevelCategory.name,
       handle: topLevelCategory.handle,
+      description: topLevelCategory.description,
       product_handles: productHandlesInCategory,
       category_children: [] as LayoutCategory[],
+      parent_name: topLevelCategory.parent_category?.name,
+      parent_handle: topLevelCategory.parent_category?.handle,
+
     }
 
     const stack: { category: ProductCategory; level: number }[] = [{ category: topLevelCategory, level: 1 }]
@@ -114,8 +121,11 @@ export const fetchCategoryData = async (levels: number = Infinity): Promise<Layo
             id: childCategory.id,
             name: childCategory.name,
             handle: childCategory.handle,
+            description: childCategory.description,
             product_handles: productHandlesInChildCategory,
             category_children: [] as LayoutCategory[],
+            parent_name: childCategory.parent_category?.name,
+            parent_handle: childCategory.parent_category?.handle,
           }
 
           stack.push({ category: childCategory, level: level + 1 })
