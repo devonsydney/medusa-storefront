@@ -26,7 +26,7 @@ const MobileActions: React.FC<MobileActionsProps> = ({ product, show }) => {
     return variantPrice || cheapestPrice || null
   }, [price])
   const variantMap = useMemo(() => {
-    return product.variants.reduce<Array<{ variant_id: string, variant_rank: number }>>((acc, variant) => {
+    return product.variants.reduce<Array<{ variant_id: string, variant_rank: number, inventory_quantity?: number }>>((acc, variant) => {
       if (variant.id && variant.variant_rank !== undefined && variant.variant_rank !== null) {
         acc.push({ variant_id: variant.id, variant_rank: variant.variant_rank, inventory_quantity: variant.inventory_quantity })
       }

@@ -8,7 +8,7 @@ type OptionSelectProps = {
   current: string
   updateOption: (option: Record<string, string>) => void
   title: string
-  variantMap: Record<string, number>
+  variantMap: Array<{ variant_id: string, variant_rank: number, inventory_quantity?: number }>
 }
 
 const OptionSelect: React.FC<OptionSelectProps> = ({
@@ -25,8 +25,8 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
       variant_rank: 0,
       inventory_quantity: 0,
     };
-    const inStock = inventory_quantity > 0;
-
+    const inStock = inventory_quantity ?? 0 > 0;
+    
     return {
       ...value,
       variant_rank,
