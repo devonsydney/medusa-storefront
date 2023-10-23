@@ -8,6 +8,7 @@ import clsx from "clsx"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import Image from "next/image"
 
 const Nav = () => {
   const { pathname } = useRouter()
@@ -65,12 +66,25 @@ const Nav = () => {
             <div className="block small:hidden">
               <Hamburger setOpen={toggle} />
             </div>
-            <div className="hidden small:block h-full">
-              <DropdownMenu />
+            <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-start">
+              <div className="hidden small:flex items-center gap-x-6 h-full">
+                <DropdownMenu />
+                <Link href="/specials">
+                  Specials
+                </Link>
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center h-full">
+          <div className="flex items-center h-full gap-x-4">
+            {process.env.NEXT_PUBLIC_STORE_LOGO && (
+              <Image
+                src={process.env.NEXT_PUBLIC_STORE_LOGO}
+                alt="Logo"
+                width={40}
+                height={40}
+              />
+            )}
             <Link href="/" className="text-xl-semi uppercase">
               {process.env.NEXT_PUBLIC_STORE_NAME}
             </Link>
@@ -79,7 +93,10 @@ const Nav = () => {
           <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
             <div className="hidden small:flex items-center gap-x-6 h-full">
               <Link href={`mailto:${process.env.NEXT_PUBLIC_STORE_EMAIL}`}>
-                {process.env.NEXT_PUBLIC_STORE_EMAIL}
+                Contact
+              </Link>
+              <Link href="/faq">
+                FAQ
               </Link>
               {process.env.FEATURE_SEARCH_ENABLED && <DesktopSearchModal />}
               <Link href="/account">

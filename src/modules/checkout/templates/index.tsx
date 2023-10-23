@@ -5,6 +5,7 @@ import Link from "next/link"
 import CheckoutLoader from "../components/checkout-loader"
 import CheckoutForm from "./checkout-form"
 import CheckoutSummary from "./checkout-summary"
+import Image from "next/image"
 
 const CheckoutTemplate = () => {
   return (
@@ -24,9 +25,21 @@ const CheckoutTemplate = () => {
                 <span className="mt-px block small:hidden">Back</span>
               </>
             </Link>
-            <Link href="/" className="text-xl-semi uppercase">
-              {process.env.NEXT_PUBLIC_STORE_NAME}
-            </Link>
+            <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between">
+              <div className="flex items-center h-full gap-x-4">
+                {process.env.NEXT_PUBLIC_STORE_LOGO && (
+                  <Image
+                    src={process.env.NEXT_PUBLIC_STORE_LOGO}
+                    alt="Logo"
+                    width={40}
+                    height={40}
+                  />
+                )}
+                <Link href="/" className="text-xl-semi uppercase">
+                  {process.env.NEXT_PUBLIC_STORE_NAME}
+                </Link>
+              </div>
+            </div>
             <div className="flex-1 basis-0" />
           </nav>
         </div>
