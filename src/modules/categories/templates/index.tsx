@@ -4,9 +4,8 @@ import Link from "next/link"
 import UnderlineLink from "@modules/common/components/underline-link"
 import { LayoutCategory } from "@lib/hooks/use-layout-data"
 
-
 type CategoryTemplateProps = {
-  handle: string
+  handle: string | string[] | undefined;
   categoryData: any
 }
 
@@ -38,7 +37,7 @@ const CategoryTemplate: React.FC<CategoryTemplateProps> = ({
           <ul className="grid grid-cols-1 gap-2">
             {categoryData.category_children?.map((c: LayoutCategory) => (
               <li key={c.id}>
-                <UnderlineLink href={`/${handle[0]}/${c.handle}`}>{c.name}</UnderlineLink>
+                <UnderlineLink href={`/${handle?.[0]}/${c.handle}`}>{c.name}</UnderlineLink>
               </li>
             ))}
           </ul>

@@ -101,7 +101,6 @@ export const fetchCategoryData = async (levels: number = Infinity): Promise<Layo
       category_children: [] as LayoutCategory[],
       parent_name: "",
       parent_handle: "",
-
     }
 
     const stack: { category: ProductCategory; level: number }[] = [{ category: topLevelCategory, level: 1 }]
