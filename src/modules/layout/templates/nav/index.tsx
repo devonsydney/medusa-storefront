@@ -67,11 +67,11 @@ const Nav = () => {
               <Hamburger setOpen={toggle} />
             </div>
             <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-start">
-              <div className="hidden small:flex items-center gap-x-6 h-full">
+            <div className="hidden small:flex items-center gap-x-6 h-full">
                 <DropdownMenu />
-                <Link href="/specials">
+                { false && <Link href="/specials">
                   Specials
-                </Link>
+                </Link>}
               </div>
             </div>
           </div>
