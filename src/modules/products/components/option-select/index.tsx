@@ -8,7 +8,7 @@ type OptionSelectProps = {
   current: string
   updateOption: (option: Record<string, string>) => void
   title: string
-  variantRankMap: Record<string, number>
+  variantMap: Record<string, number>
 }
 
 const OptionSelect: React.FC<OptionSelectProps> = ({
@@ -16,32 +16,41 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
   current,
   updateOption,
   title,
-  variantRankMap
+  variantMap
 }) => {
-  const rankedFilteredOptions = [...option.values]
-  .sort((a, b) => {
-    const rankA = variantRankMap[a.variant_id];
-    const rankB = variantRankMap[b.variant_id];
-    return rankA - rankB;
+  const sortedOptions = option.values
+  .map((value) => {
+    const { variant_id } = value;
+    const { variant_rank, inventory_quantity } = variantMap.find((v) => v.variant_id === variant_id) || {
+      variant_rank: 0,
+      inventory_quantity: 0,
+    };
+    const inStock = inventory_quantity > 0;
+
+    return {
+      ...value,
+      variant_rank,
+      inventory_quantity,
+      in_stock: inStock,
+    };
   })
-  .map((v) => v.value)
-  .filter(onlyUnique)
+  .sort((a, b) => a.variant_rank - b.variant_rank);
 
   return (
     <div className="flex flex-col gap-y-3">
       <span className="text-base-semi">Select {title}</span>
       <div className="grid grid-cols-3 lg:grid-cols-6 gap-2">
-        {rankedFilteredOptions.map((v) => {
+        {sortedOptions.map((v) => {
           return (
             <button
-              onClick={() => updateOption({ [option.id]: v })}
-              key={v}
+              onClick={() => updateOption({ [option.id]: v.value })}
+              key={v.value}
               className={clsx(
                 "border-gray-200 border text-xsmall-regular h-[50px] transition-all duration-200",
-                { "border-gray-900": v === current }
+                { "border-gray-900": v.value === current }
               )}
             >
-              {v}
+              {v.value}
             </button>
           )
         })}
