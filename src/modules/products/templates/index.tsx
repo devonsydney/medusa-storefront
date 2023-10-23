@@ -14,10 +14,8 @@ type ProductTemplateProps = {
 }
 
 const ProductTemplate: React.FC<ProductTemplateProps> = ({ product }) => {
-  const info = useRef<HTMLDivElement>(null)
-
-  const inView = useIntersection(info, "0px")
-
+  const addToCartRef = useRef<HTMLDivElement>(null)
+  const inView = useIntersection(addToCartRef, "0px")
   return (
     <ProductProvider product={product}>
       <div className="content-container flex flex-col small:flex-row small:items-start py-6 relative">
@@ -26,9 +24,8 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ product }) => {
         </div>
         <div
           className="small:sticky small:top-20 w-full py-8 small:py-0 small:max-w-[344px] medium:max-w-[400px] flex flex-col gap-y-12"
-          ref={info}
         >
-          <ProductInfo product={product} />
+          <ProductInfo product={product} addToCartRef={addToCartRef}/>
           {/* <ProductTabs product={product} /> */}
         </div>
       </div>

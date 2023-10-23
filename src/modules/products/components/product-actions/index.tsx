@@ -11,9 +11,10 @@ import { Product } from "types/medusa"
 
 type ProductActionsProps = {
   product: PricedProduct
+  addToCartRef: React.RefObject<HTMLDivElement>
 }
 
-const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
+const ProductActions: React.FC<ProductActionsProps> = ({ product, addToCartRef }) => {
   const { updateOptions, addToCart, options, inStock, variant } =
     useProductActions()
   const price = useProductPrice({ id: product.id!, variantId: variant?.id })
@@ -65,7 +66,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
         </div>
       )}
 
-      <div className="mb-4">
+      <div ref={addToCartRef} className="mb-4">
         {selectedPrice ? (
           <div className="flex flex-col text-gray-700">
             <span
