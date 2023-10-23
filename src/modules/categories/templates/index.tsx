@@ -16,7 +16,6 @@ const CategoryTemplate: React.FC<CategoryTemplateProps> = ({
   categoryData,
   categoryProducts
 }) => {
-  console.log("categoryProducts in TEMPLATE",categoryProducts)
   return (
     <div className="content-container py-6">
       <div className="flex flex-row mb-8 text-2xl-semi gap-4">

@@ -28,7 +28,7 @@ export const fetchCategoryProducts = async (
   const categories = await medusaClient.productCategories.list({ handle })
   const category = categories.product_categories[0];
   const categoryId = category.id
-  
+
   // use the ID of the retrieved category to list the products
   const { products } = await medusaClient.products.list({
     category_id: [categoryId],
@@ -48,7 +48,7 @@ const CategoryPage: NextPageWithLayout<PrefetchedPageProps> = ({
   // fetch regions to format products
   const{ data: regions } = useRegions()
   const region = regions?.[0]
-  
+
   // fetch category data for page
   const { data: categories, isError, isSuccess } = useQuery(
     ["navigation_categories"],
@@ -61,7 +61,7 @@ const CategoryPage: NextPageWithLayout<PrefetchedPageProps> = ({
           ? categories.find((category) => category.handle === handles[0])?.category_children?.find((child) => child.handle === handles[1])
           : undefined)
     : undefined;
-  
+
   const { data: categoryProducts } = useQuery(
     [`category-products-${handle}`, region, handle],
     () => fetchCategoryProducts(region!, handle!)
@@ -130,7 +130,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   // if no collection found, return not found
   const queryData = await queryClient.getQueryData([`category-products-${handle}`, region, handle])
   if (!queryData) {
-    console.log("products not found")
     return {
       props: {
         notFound: true,
