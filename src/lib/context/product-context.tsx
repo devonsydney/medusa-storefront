@@ -86,10 +86,21 @@ export const ProductProvider = ({
     return variants.find((v) => v.id === variantId)
   }, [options, variantRecord, variants])
 
-  // if product only has one variant, then select it
+  // if product has one variant in stock, select it. otherwise, set the last in-stock variant
   useEffect(() => {
     if (variants.length === 1) {
-      setOptions(variantRecord[variants[0].id])
+      if (variants[0].inventory_quantity > 0) {
+        setOptions(variantRecord[variants[0].id])
+      }
+    } else if (variants.length > 1) {
+      for (let i = variants.length - 1; i >= 0; i--) {
+        const variant = variants[i]
+        const variantOptions = variantRecord[variant.id]
+        if (variantOptions && variant.inventory_quantity > 0) {
+          setOptions(variantOptions)
+          break
+        }
+      }
     }
   }, [variants, variantRecord])
 
