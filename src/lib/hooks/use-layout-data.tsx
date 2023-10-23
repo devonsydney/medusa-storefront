@@ -208,6 +208,8 @@ export const useAllProductsQuery = () => {
   return queryResults
 }
 
+
+
 export const formatProducts = (products: PricedProduct[], region: Region): ProductPreviewType[] => {
   return products
     .filter((p) => !!p.variants)

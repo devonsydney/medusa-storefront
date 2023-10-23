@@ -1,7 +1,9 @@
+import { medusaClient } from "@lib/config"
 import { GetStaticPaths, GetStaticProps } from "next";
 import { IS_BROWSER } from "@lib/constants"
 import { ParsedUrlQuery } from "querystring";
 import { useRouter } from "next/router";
+import { Region } from "@medusajs/medusa"
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
 import { getCategoryHandles } from "@lib/util/get-category-handles"
 import SkeletonCategoryPage from "@modules/skeletons/templates/skeleton-category-page"
@@ -9,33 +11,61 @@ import CategoryTemplate from "@modules/categories/templates"
 import Head from "@modules/common/components/head"
 import Layout from "@modules/layout/templates"
 import { NextPageWithLayout, PrefetchedPageProps } from "../types/global"
-
-import { fetchCollectionData, fetchRegionsData, fetchCategoryData } from "@lib/hooks/use-layout-data"
+import { useRegions, fetchCollectionData, fetchRegionsData, fetchCategoryData, formatProducts } from "@lib/hooks/use-layout-data"
 import { ReactElement } from 'react';
+import { ProductPreviewType } from "types/global"
+
 
 interface Params extends ParsedUrlQuery {
   handle: string[] ;
+}
+
+export const fetchCategoryProducts = async (
+  region: Region,
+  handle: string,
+  ): Promise<ProductPreviewType[]> => {
+  // retrieve the category by its handle
+  const categories = await medusaClient.productCategories.list({ handle })
+  const category = categories.product_categories[0];
+  const categoryId = category.id
+  
+  // use the ID of the retrieved category to list the products
+  const { products } = await medusaClient.products.list({
+    category_id: [categoryId],
+    region_id: region.id,
+  })
+
+  return formatProducts(products, region)
 }
 
 const CategoryPage: NextPageWithLayout<PrefetchedPageProps> = ({
   notFound,
 }) => {
   const router = useRouter()
-  const handle = router.query.handle || undefined
+  const handles = router.query.handle || undefined
+  const handle = handles?.[handles.length - 1]
 
+  // fetch regions to format products
+  const{ data: regions } = useRegions()
+  const region = regions?.[0]
+  
   // fetch category data for page
-  const { data, isError, isSuccess } = useQuery(
+  const { data: categories, isError, isSuccess } = useQuery(
     ["navigation_categories"],
     () => fetchCategoryData(2)
   )
-  const categoryData = data 
-    ? (handle && handle.length === 1 && handle[0] !== undefined
-        ? data.find((category) => category.handle === handle[0])
-        : (handle && handle[1] !== undefined)
-          ? data.find((category) => category.handle === handle[0])?.category_children?.find((child) => child.handle === handle[1])
+  const categoryData = categories 
+    ? (handles && handles.length === 1 && handles[0] !== undefined
+        ? categories.find((category) => category.handle === handles[0])
+        : (handles && handles[1] !== undefined)
+          ? categories.find((category) => category.handle === handles[0])?.category_children?.find((child) => child.handle === handles[1])
           : undefined)
     : undefined;
-
+  
+  const { data: categoryProducts } = useQuery(
+    [`category-products-${handle}`, region, handle],
+    () => fetchCategoryProducts(region!, handle!)
+  )
   if (notFound) {
     if (IS_BROWSER) {
       router.replace("/404")
@@ -52,7 +82,11 @@ const CategoryPage: NextPageWithLayout<PrefetchedPageProps> = ({
     return (
       <>
         <Head title={categoryData?.name ?? ''} description={`${categoryData?.name ?? ''} category`} />
-        <CategoryTemplate handle={handle} categoryData={categoryData ?? { handle: '', name: '' }} />
+        <CategoryTemplate
+          handle={handles}
+          categoryData={categoryData ?? { handle: '', name: '' }}
+          categoryProducts={categoryProducts}
+        />
       </>
     )
   }
@@ -75,7 +109,8 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const handle = context.params?.handle as string[];
+  const handles = context.params?.handle as string[]
+  const handle = handles[handles.length - 1]
   const queryClient = new QueryClient()
   
   // prefetch common params
@@ -83,14 +118,25 @@ export const getStaticProps: GetStaticProps = async (context) => {
   await queryClient.prefetchQuery(["navigation_collections"], () => fetchCollectionData())
   await queryClient.prefetchQuery(["navigation_categories"], () => fetchCategoryData(2))
 
-  /* TODO: add a search for handle in navigation_categories
-  if (!handleExists) {
+  // grab regionId to use in query for products list
+  const regions = queryClient.getQueryData<any>(["regions"])
+  const region = regions[0] // TODO: switch to regionId, however currently region is needed for the formatting code
+
+  // prefetch page-specific params
+  await queryClient.prefetchQuery([`category-products-${handle}`, region, handle], () =>
+    fetchCategoryProducts(region, handle)
+  )
+
+  // if no collection found, return not found
+  const queryData = await queryClient.getQueryData([`category-products-${handle}`, region, handle])
+  if (!queryData) {
+    console.log("products not found")
     return {
       props: {
         notFound: true,
       },
     }
-  } */
+  }
 
   return {
     props: {

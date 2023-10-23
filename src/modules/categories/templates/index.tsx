@@ -3,17 +3,20 @@ import ProductPreview from "@modules/products/components/product-preview"
 import Link from "next/link"
 import UnderlineLink from "@modules/common/components/underline-link"
 import { LayoutCategory } from "@lib/hooks/use-layout-data"
+import { ProductPreviewType } from "types/global"
 
 type CategoryTemplateProps = {
-  handle: string | string[] | undefined;
+  handle: string | string[] | undefined
   categoryData: any
+  categoryProducts: ProductPreviewType[] | undefined
 }
 
 const CategoryTemplate: React.FC<CategoryTemplateProps> = ({
   handle,
-  categoryData
+  categoryData,
+  categoryProducts
 }) => {
-
+  console.log("categoryProducts in TEMPLATE",categoryProducts)
   return (
     <div className="content-container py-6">
       <div className="flex flex-row mb-8 text-2xl-semi gap-4">
@@ -43,13 +46,13 @@ const CategoryTemplate: React.FC<CategoryTemplateProps> = ({
           </ul>
         </div>
       )}
-      {/* <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-4 gap-y-8">
-        {previews.map((p) => (
+      <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-4 gap-y-8">
+        {categoryProducts?.map((p) => (
           <li key={p.id}>
             <ProductPreview {...p} />
           </li>
         ))}
-      </ul> */}
+      </ul>
       <div className="py-16 flex justify-center items-center text-small-regular text-gray-700">
         <span></span>
       </div>
