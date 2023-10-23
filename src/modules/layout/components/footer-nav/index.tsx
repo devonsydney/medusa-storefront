@@ -10,7 +10,6 @@ const FooterNav = () => {
     useNavigationCategories()
 
   return (
-    
     <div className="content-container flex flex-col gap-y-8 pt-16 pb-8">
       <div className="flex flex-row gap-x-16 w-full justify-between">
         <div className="flex flex-col gap-y-6 gap-x-16 xsmall:flex-row items-start justify-start">
