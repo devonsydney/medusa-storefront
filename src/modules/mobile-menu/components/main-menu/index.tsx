@@ -73,18 +73,6 @@ const MainMenu = () => {
 
         <div className="flex flex-col flex-1 text-large-regular text-gray-900">
           <ul className="flex flex-col gap-y-2">
-            <li className="bg-gray-50 p-4">
-              <Link href="/store">
-                <button
-                  className="flex items-center justify-between w-full"
-                  onClick={close}
-                >
-                  <span className="sr-only">Go to Store</span>
-                  <span>All Products</span>
-                  <ChevronDown className="-rotate-90" />
-                </button>
-              </Link>
-            </li>
             {categories ? (
                <>
                  <div className="flex flex-col gap-y-8 text-small-regular gap-y-4">
