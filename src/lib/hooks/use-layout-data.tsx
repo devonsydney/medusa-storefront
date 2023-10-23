@@ -99,8 +99,8 @@ export const fetchCategoryData = async (levels: number = Infinity): Promise<Layo
       description: topLevelCategory.description,
       product_handles: productHandlesInCategory,
       category_children: [] as LayoutCategory[],
-      parent_name: topLevelCategory.parent_category?.name,
-      parent_handle: topLevelCategory.parent_category?.handle,
+      parent_name: "",
+      parent_handle: "",
 
     }
 
