@@ -10,7 +10,7 @@ import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { ReactElement } from "react"
 import { NextPageWithLayout, PrefetchedPageProps } from "types/global"
-import { fetchCollectionData, fetchRegionsData, fetchCategoryData, fetchProduct, fetchRelatedProducts } from "@lib/hooks/use-layout-data"
+import { fetchCollectionData, fetchRegionsData, fetchCategoryData, fetchProduct, fetchRelatedProducts, useRegions } from "@lib/hooks/use-layout-data"
 
 interface Params extends ParsedUrlQuery {
   handle: string
@@ -20,10 +20,15 @@ const ProductPage: NextPageWithLayout<PrefetchedPageProps> = ({ notFound }) => {
   const { query, isFallback, replace } = useRouter()
   const handle = typeof query.handle === "string" ? query.handle : ""
 
+  // fetch regionId to format product
+  const{ data: regions } = useRegions()
+  const region = regions?.[0]
+  const regionId = region?.id
+
   // get product statically (without inventory data)
   const { data: product, isError, isLoading, isSuccess } = useQuery(
     [`get_product`, handle],
-    () => fetchProduct(handle),
+    () => fetchProduct(regionId!, handle),
     {
       enabled: handle.length > 0,
       keepPreviousData: true,
@@ -33,7 +38,7 @@ const ProductPage: NextPageWithLayout<PrefetchedPageProps> = ({ notFound }) => {
   // grab product dynamically (with inventory)
   const { data: productWithInventory } = useQuery(
     [`product_inventory`, handle],
-    () => fetchProduct(handle, true),
+    () => fetchProduct(regionId!, handle, true),
     {
       enabled: handle.length > 0,
       keepPreviousData: true,
@@ -97,10 +102,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
   // grab region to use in query for products list
   const regions = queryClient.getQueryData<any>(["regions"])
   const region = regions[0] // TODO: switch to regionId, however currently region is needed for the formatting code
+  const regionId = region.id
 
   // prefetch page-specific params
   await queryClient.prefetchQuery([`get_product`, handle], () =>
-    fetchProduct(handle)
+    fetchProduct(regionId, handle)
   )
 
   await queryClient.prefetchQuery([`related-products-${handle}`, region, handle], () =>

@@ -208,8 +208,16 @@ export const useAllProductsQuery = () => {
   return queryResults
 }
 
-export const fetchProduct = async (handle: string, dynamic: boolean = false) => {
-  const { products } = await medusaClient.products.list({ handle })
+export const fetchProduct = async (
+  regionId: string,
+  handle: string,
+  dynamic: boolean = false
+) => {
+  const { products } = await medusaClient.products
+    .list({
+      handle: handle,
+      region_id: regionId,
+    })
   const product = products[0]
 
   // if static, overwrite dynamic data (inventory quantity levels)
