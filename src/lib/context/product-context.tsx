@@ -1,7 +1,7 @@
 import { canBuy } from "@lib/util/can-buy"
 import { findCheapestPrice } from "@lib/util/prices"
 import isEqual from "lodash/isEqual"
-import { formatVariantPrice, useCart } from "medusa-react"
+import { formatVariantPrice } from "medusa-react"
 import React, {
   createContext,
   useContext,
@@ -12,6 +12,7 @@ import React, {
 import { Product, Variant } from "types/medusa"
 import { useStore } from "./store-context"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
+import { useRegions } from "@lib/hooks/use-layout-data"
 
 interface ProductContext {
   formattedPrice: string
@@ -44,7 +45,9 @@ export const ProductProvider = ({
   const [inStock, setInStock] = useState<boolean>(true)
 
   const { addItem } = useStore()
-  const { cart } = useCart()
+  const { data: regions } = useRegions()
+  const region = regions?.[0]
+
   const variants = product.variants as unknown as Variant[]
 
   useEffect(() => {
@@ -110,15 +113,15 @@ export const ProductProvider = ({
 
   // memoized function to get the price of the current variant
   const formattedPrice = useMemo(() => {
-    if (variant && cart?.region) {
-      return formatVariantPrice({ variant, region: cart.region })
-    } else if (cart?.region) {
-      return findCheapestPrice(variants, cart.region)
+    if (variant && region) {
+      return formatVariantPrice({ variant, region })
+    } else if (region) {
+      return findCheapestPrice(variants, region)
     } else {
       // if no variant is selected, or we couldn't find a price for the region/currency
       return "N/A"
     }
-  }, [variant, variants, cart])
+  }, [variant, variants, region])
 
   useEffect(() => {
     if (variant) {
