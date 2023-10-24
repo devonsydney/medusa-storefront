@@ -80,6 +80,45 @@ export const useNavigationCollections = () => {
   return queryResults
 }
 
+export const fetchCollection = async (handle: string) => {
+  return await medusaClient.collections
+    .list({ handle: [handle] })
+    .then(({ collections }) => {
+      const collection = collections[0];
+      return {
+        handle: collection.handle,
+        title: collection.title,
+      };
+    });
+}
+
+export const fetchCollectionProducts = async ({
+  pageParam = 0,
+  handle,
+  regionId,
+}: {
+  pageParam?: number
+  handle: string
+  regionId: string
+}) => {
+  // First, retrieve the collection by its handle
+  const { collections } = await medusaClient.collections.list({ handle: [handle] });
+  const collection = collections[0];
+
+  // Then, use the ID of the retrieved collection to list the products
+  const { products, count, offset } = await medusaClient.products.list({
+    limit: 12,
+    offset: pageParam,
+    collection_id: [collection.id],
+    region_id: regionId,
+  })
+
+  return {
+    response: { products, count },
+    nextPage: count > offset + 12 ? offset + 12 : null,
+  }
+}
+
 export const fetchCategoryData = async (levels: number = Infinity): Promise<LayoutCategory[]> => {
   const formattedCategories: LayoutCategory[] = []
   const { product_categories } = await medusaClient.productCategories.list({
@@ -149,6 +188,24 @@ export const useNavigationCategories = (levels: number = Infinity) => {
   })
 
   return queryResults
+}
+
+export const fetchCategoryProducts = async (
+  region: Region,
+  handle: string,
+  ): Promise<ProductPreviewType[]> => {
+  // retrieve the category by its handle
+  const categories = await medusaClient.productCategories.list({ handle })
+  const category = categories.product_categories[0];
+  const categoryId = category.id
+
+  // use the ID of the retrieved category to list the products
+  const { products } = await medusaClient.products.list({
+    category_id: [categoryId],
+    region_id: region.id,
+  })
+
+  return formatProducts(products, region)
 }
 
 export const fetchFeaturedProducts = async (

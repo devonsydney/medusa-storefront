@@ -1,9 +1,7 @@
-import { medusaClient } from "@lib/config"
 import { GetStaticPaths, GetStaticProps } from "next";
 import { IS_BROWSER } from "@lib/constants"
 import { ParsedUrlQuery } from "querystring";
 import { useRouter } from "next/router";
-import { Region } from "@medusajs/medusa"
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
 import { getCategoryHandles } from "@lib/util/get-category-handles"
 import SkeletonCategoryPage from "@modules/skeletons/templates/skeleton-category-page"
@@ -11,31 +9,11 @@ import CategoryTemplate from "@modules/categories/templates"
 import Head from "@modules/common/components/head"
 import Layout from "@modules/layout/templates"
 import { NextPageWithLayout, PrefetchedPageProps } from "../types/global"
-import { useRegions, fetchCollectionData, fetchRegionsData, fetchCategoryData, formatProducts } from "@lib/hooks/use-layout-data"
+import { useRegions, fetchCollectionData, fetchRegionsData, fetchCategoryData, fetchCategoryProducts } from "@lib/hooks/use-layout-data"
 import { ReactElement } from 'react';
-import { ProductPreviewType } from "types/global"
-
 
 interface Params extends ParsedUrlQuery {
   handle: string[] ;
-}
-
-export const fetchCategoryProducts = async (
-  region: Region,
-  handle: string,
-  ): Promise<ProductPreviewType[]> => {
-  // retrieve the category by its handle
-  const categories = await medusaClient.productCategories.list({ handle })
-  const category = categories.product_categories[0];
-  const categoryId = category.id
-
-  // use the ID of the retrieved category to list the products
-  const { products } = await medusaClient.products.list({
-    category_id: [categoryId],
-    region_id: region.id,
-  })
-
-  return formatProducts(products, region)
 }
 
 const CategoryPage: NextPageWithLayout<PrefetchedPageProps> = ({

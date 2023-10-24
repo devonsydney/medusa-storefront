@@ -1,4 +1,3 @@
-import { medusaClient } from "@lib/config"
 import { IS_BROWSER } from "@lib/constants"
 import { getCollectionHandles } from "@lib/util/get-collection-handles"
 import CollectionTemplate from "@modules/collections/templates"
@@ -11,49 +10,10 @@ import { ParsedUrlQuery } from "querystring"
 import { ReactElement } from "react"
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
 import { NextPageWithLayout, PrefetchedPageProps } from "../../types/global"
-import { fetchCollectionData, fetchRegionsData, fetchCategoryData } from "@lib/hooks/use-layout-data"
+import { fetchCollectionData, fetchRegionsData, fetchCategoryData, fetchCollection, fetchCollectionProducts } from "@lib/hooks/use-layout-data"
 
 interface Params extends ParsedUrlQuery {
   handle: string
-}
-
-const fetchCollection = async (handle: string) => {
-  return await medusaClient.collections
-    .list({ handle: [handle] })
-    .then(({ collections }) => {
-      const collection = collections[0];
-      return {
-        handle: collection.handle,
-        title: collection.title,
-      };
-    });
-}
-
-export const fetchCollectionProducts = async ({
-  pageParam = 0,
-  handle,
-  regionId,
-}: {
-  pageParam?: number
-  handle: string
-  regionId: string
-}) => {
-  // First, retrieve the collection by its handle
-  const { collections } = await medusaClient.collections.list({ handle: [handle] });
-  const collection = collections[0];
-
-  // Then, use the ID of the retrieved collection to list the products
-  const { products, count, offset } = await medusaClient.products.list({
-    limit: 12,
-    offset: pageParam,
-    collection_id: [collection.id],
-    region_id: regionId,
-  })
-
-  return {
-    response: { products, count },
-    nextPage: count > offset + 12 ? offset + 12 : null,
-  }
 }
 
 const CollectionPage: NextPageWithLayout<PrefetchedPageProps> = ({
