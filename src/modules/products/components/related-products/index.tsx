@@ -2,8 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import ProductPreview from "../product-preview"
 import SkeletonProductPreview from "@modules/skeletons/components/skeleton-product-preview"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
-import { useRegions } from "@lib/hooks/use-layout-data"
-import { fetchRelatedProducts } from "@pages/products/[handle]"
+import { useRegions, fetchRelatedProducts } from "@lib/hooks/use-layout-data"
 
 type RelatedProductsProps = {
   product: PricedProduct

@@ -208,7 +208,37 @@ export const useAllProductsQuery = () => {
   return queryResults
 }
 
+export const fetchProduct = async (handle: string, dynamic: boolean = false) => {
+  const { products } = await medusaClient.products.list({ handle })
+  const product = products[0]
 
+  // if static, overwrite dynamic data (inventory quantity levels)
+  if (product && !dynamic) {
+    product.variants.forEach((variant) => {
+      variant.inventory_quantity = 100 // force to in stock initially
+    })
+  }
+  return product
+}
+
+export const fetchRelatedProducts = async (
+region: Region,
+handle: string
+): Promise<ProductPreviewType[]> => {
+  const products = await medusaClient.products
+    .list({
+      region_id: region.id,
+      is_giftcard: false,
+      limit: 5,
+    })
+    .then(({ products }) => products)
+    .catch((_) => [] as PricedProduct[])
+
+  // filter out current product if it exists in the array and ensure 4 products returned
+  const filteredProducts = products.filter((product) => product.handle !== handle).slice(0, 4)
+
+  return formatProducts(filteredProducts, region)
+}
 
 export const formatProducts = (products: PricedProduct[], region: Region): ProductPreviewType[] => {
   return products
