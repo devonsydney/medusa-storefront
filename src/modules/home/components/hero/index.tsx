@@ -15,11 +15,9 @@ const Hero = () => {
       </div>
       <Image
         src={process.env.NEXT_PUBLIC_STORE_HERO_IMAGE || ''}
-        layout="fill"
         loading="eager"
         priority={true}
         quality={90}
-        objectFit="cover"
         alt=""
         className="absolute inset-0"
         draggable="false"

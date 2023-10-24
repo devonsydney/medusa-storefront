@@ -63,7 +63,6 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
                 alt={`Product image ${index + 1}`}
                 width={1920} // placeholder for 16:9 aspect ratio
                 height={1280} // placeholder for 16:9 aspect ratio
-                layout="responsive"
                 sizes="100vw"
                 style={{
                   objectFit: "contain",
