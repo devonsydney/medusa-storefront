@@ -11,7 +11,7 @@ type useProductPriceProps = {
 
 const useProductPrice = ({ product, variantId }: useProductPriceProps) => {
   const { data: regions } = useRegions()
-  const region = regions?.[0]  
+  const region = regions?.[0]
 
   const getPercentageDiff = (original: number, calculated: number) => {
     const diff = original - calculated
