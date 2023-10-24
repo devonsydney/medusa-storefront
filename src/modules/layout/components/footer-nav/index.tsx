@@ -14,17 +14,21 @@ const FooterNav = () => {
     <div className="content-container flex flex-col gap-y-8 pt-16 pb-8">
       <div className="flex flex-row gap-x-16 w-full justify-between">
         <div className="flex flex-col gap-y-6 gap-x-4 xsmall:flex-row items-start justify-start">
-          {process.env.NEXT_PUBLIC_STORE_LOGO && (
-            <Image
-              src={process.env.NEXT_PUBLIC_STORE_LOGO}
-              alt="Logo"
-              width={40}
-              height={40}
-            />
-          )}
-          <Link href="/" className="text-xl-semi uppercase">
-            {process.env.NEXT_PUBLIC_STORE_NAME}
-          </Link>
+          <Link href="/">
+              <div className="flex items-center h-full gap-x-4">
+                {process.env.NEXT_PUBLIC_STORE_LOGO && (
+                  <Image
+                    src={process.env.NEXT_PUBLIC_STORE_LOGO}
+                    alt="Logo"
+                    width={40}
+                    height={40}
+                  />
+                )}
+                <div className="text-xl-semi uppercase" style={{ whiteSpace: "nowrap" }}>
+                  {process.env.NEXT_PUBLIC_STORE_NAME}
+                </div>
+              </div>
+            </Link>
         </div>
         <div>
           <div className="flex flex-col gap-y-6 gap-x-16 xsmall:flex-row items-start justify-end">
