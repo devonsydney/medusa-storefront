@@ -22,12 +22,16 @@ const Description: React.FC<DescriptionProps> = ({
 
   return (
     <div>
-      <ReactMarkdown className="text-base-regular">
-        {shouldRenderFullDescription ? description : `${description!.slice(0, length)}...`}
-      </ReactMarkdown>
-      {!shouldRenderFullDescription && (
+      {description ? (
+        <ReactMarkdown className="text-base-regular">
+          {shouldRenderFullDescription
+            ? description
+            : `${description.slice(0, length)}...`}
+        </ReactMarkdown>
+      ) : null}
+      {!shouldRenderFullDescription && description && (
         <div className="text-base-regular py-2">
-          <button className="italic" onClick={toggleDescription} >
+          <button className="italic" onClick={toggleDescription}>
             Read full description ...
           </button>
         </div>
