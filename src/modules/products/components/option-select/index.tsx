@@ -41,7 +41,7 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
       <span className="text-base-semi">Select {title}</span>
       <div className="grid grid-cols-3 lg:grid-cols-6 gap-2">
         {sortedOptions.map((v) => {
-          const showInventoryQuantity = v.inventory_quantity !== undefined && v.inventory_quantity < 20;
+          const lowStock =  v.inventory_quantity !== undefined && v.inventory_quantity > 0 && v.inventory_quantity < 20
           return (
             <button
               onClick={() => updateOption({ [option.id]: v.value })}
@@ -55,8 +55,8 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
             >
               <div className="flex flex-col items-center">
                 <span>{v.value}</span>
-                {showInventoryQuantity && (
-                  <span className="text-xxxs text-red-500">({v.inventory_quantity} left)</span>
+                {lowStock && (
+                  <span className="text-xxxs text-red-500">low stock</span>
                 )}
               </div>
             </button>
