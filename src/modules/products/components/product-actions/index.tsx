@@ -6,7 +6,6 @@ import OptionSelect from "@modules/products/components/option-select"
 import clsx from "clsx"
 import Link from "next/link"
 import React, { useMemo } from "react"
-import ReactMarkdown from "react-markdown"
 import { Product } from "types/medusa"
 import Description from "@modules/common/components/description"
 
