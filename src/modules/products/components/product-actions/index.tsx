@@ -17,7 +17,7 @@ type ProductActionsProps = {
 const ProductActions: React.FC<ProductActionsProps> = ({ product, addToCartRef }) => {
   const { updateOptions, addToCart, options, inStock, variant } =
     useProductActions()
-  const price = useProductPrice({ id: product.id!, variantId: variant?.id })
+  const price = useProductPrice({ product, variantId: variant?.id })
   const selectedPrice = useMemo(() => {
     const { variantPrice, cheapestPrice } = price
 

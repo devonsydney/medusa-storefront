@@ -1,34 +1,17 @@
-import { formatAmount, useProducts } from "medusa-react"
-import { useEffect, useMemo } from "react"
+import { formatAmount } from "medusa-react"
+import { useMemo } from "react"
 import { CalculatedVariant } from "types/medusa"
 import { useRegions } from "@lib/hooks/use-layout-data"
-
+import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
 
 type useProductPriceProps = {
-  id: string
+  product: PricedProduct
   variantId?: string
 }
 
-const useProductPrice = ({ id, variantId }: useProductPriceProps) => {
+const useProductPrice = ({ product, variantId }: useProductPriceProps) => {
   const { data: regions } = useRegions()
-  const region = regions?.[0]
-  const regionId = region?.id
-
-  const { products, isLoading, isError, refetch } = useProducts(
-    {
-      id: id,
-      region_id: regionId
-    },
-    { enabled: !!regionId }
-  )
-
-  useEffect(() => {
-    if (regionId) {
-      refetch()
-    }
-  }, [regionId, refetch])
-
-  const product = products?.[0]
+  const region = regions?.[0]  
 
   const getPercentageDiff = (original: number, calculated: number) => {
     const diff = original - calculated
@@ -103,8 +86,6 @@ const useProductPrice = ({ id, variantId }: useProductPriceProps) => {
     product,
     cheapestPrice,
     variantPrice,
-    isLoading,
-    isError,
   }
 }
 
