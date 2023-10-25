@@ -25,7 +25,24 @@ const Description: React.FC<DescriptionProps> = ({
   return (
     <div>
       {description ? (
-        <Markdown className="text-base-regular" remarkPlugins={[remarkBreaks,remarkGfm]}>
+        <Markdown
+          className="text-base-regular"
+          remarkPlugins={[remarkBreaks,remarkGfm]}
+          components={{
+            h1(props) {
+              const {node, ...rest} = props
+              return <h1 className="text-xl-semi pt-4 pb-2" {...rest} />
+            },
+            h2(props2) {
+              const {node, ...rest} = props2
+              return <h2 className="text-large-semi pt-3 pb-2" {...rest}/>
+            },
+            h3(props3) {
+              const {node, ...rest} = props3
+              return <h3 className="text-base-semi pt-2 pb-1" {...rest}/>
+            }
+          }}
+        >
           {shouldRenderFullDescription
             ? description
             : `${description.slice(0, length)}...`}
