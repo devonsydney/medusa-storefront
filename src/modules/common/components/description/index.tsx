@@ -1,5 +1,7 @@
 import React, { useState } from "react"
-import ReactMarkdown from "react-markdown"
+import Markdown from "react-markdown"
+import remarkBreaks from 'remark-breaks'
+import remarkGfm from 'remark-gfm'
 
 type DescriptionProps = {
   description: string | null | undefined
@@ -23,11 +25,11 @@ const Description: React.FC<DescriptionProps> = ({
   return (
     <div>
       {description ? (
-        <ReactMarkdown className="text-base-regular">
+        <Markdown className="text-base-regular" remarkPlugins={[remarkBreaks,remarkGfm]}>
           {shouldRenderFullDescription
             ? description
             : `${description.slice(0, length)}...`}
-        </ReactMarkdown>
+        </Markdown>
       ) : null}
       {!shouldRenderFullDescription && description && (
         <div className="text-base-regular py-2">
