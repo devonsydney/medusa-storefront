@@ -21,7 +21,7 @@ const CheckoutForm = () => {
           <Shipping cart={cart} />
         </div>
 
-        <div>
+        <div className="hidden">
           <Payment />
         </div>
 
