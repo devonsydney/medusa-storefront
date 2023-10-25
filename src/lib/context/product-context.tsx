@@ -52,6 +52,7 @@ export const ProductProvider = ({
 
   useEffect(() => {
     // initialize the option state
+    // TODO: replace this initialisation code so it doesn't auto-select the first variant
     const optionObj: Record<string, string> = {}
     for (const option of (product.options || [])) {
       Object.assign(optionObj, { [option.id]: undefined })
