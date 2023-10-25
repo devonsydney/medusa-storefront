@@ -7,7 +7,7 @@ import clsx from "clsx"
 import Link from "next/link"
 import React, { useMemo } from "react"
 import { Product } from "types/medusa"
-import Description from "@modules/common/components/description"
+import MarkdownContent from "@modules/common/components/markdown-content"
 
 type ProductActionsProps = {
   product: PricedProduct
@@ -46,7 +46,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, addToCartRef }
 
       <div className="text-base-regular"><b>{product.subtitle}</b></div>
       <div className="text-base-regular">{product.material}</div>
-      <Description description={product.description} length={350} buffer={50}/>
+      <MarkdownContent markdown={product.description} forceFull={true} length={350} buffer={50}/>
 
       {product.variants.length > 1 && (
         <div className="my-8 flex flex-col gap-y-6">
