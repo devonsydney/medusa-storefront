@@ -54,7 +54,9 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ paymentSession }) => {
         <PayPalPaymentButton notReady={notReady} session={paymentSession} />
       )
     default:
-      return <Button disabled>Select a payment method</Button>
+    // return <Button disabled>Select a payment method</Button> // always use manual payment
+    // TODO: add a 'loading' state here that shows Checkout or a spinner while loading
+    return <Button disabled>Checkout</Button>
   }
 }
 
