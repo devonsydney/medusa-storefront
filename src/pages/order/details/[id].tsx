@@ -1,33 +1,17 @@
-import { medusaClient } from "@lib/config"
 import { IS_BROWSER } from "@lib/constants"
 import Head from "@modules/common/components/head"
 import Layout from "@modules/layout/templates"
 import OrderDetailsTemplate from "@modules/order/templates/order-details-template"
 import SkeletonOrderConfirmed from "@modules/skeletons/templates/skeleton-order-confirmed"
-import { GetStaticPaths, GetStaticProps } from "next"
 import { useRouter } from "next/router"
-import { ReactElement } from "react"
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
+import { ReactElement  } from "react"
 import { NextPageWithLayout } from "types/global"
-import { fetchCollectionData, fetchRegionsData, fetchCategoryData } from "@lib/hooks/use-layout-data"
-
-const fetchOrder = async (id: string) => {
-  return await medusaClient.orders.retrieve(id).then(({ order }) => order)
-}
+import { useOrder } from "medusa-react"
 
 const Confirmed: NextPageWithLayout = () => {
   const router = useRouter()
-
   const id = typeof router.query?.id === "string" ? router.query.id : ""
-
-  const { isSuccess, data, isLoading, isError } = useQuery(
-    ["get_order_details", id],
-    () => fetchOrder(id),
-    {
-      enabled: id.length > 0,
-      staleTime: 60 * 60 * 1000, // 1 hour
-    }
-  )
+  const { order, isLoading, isSuccess, isError} = useOrder(id)
 
   if (isLoading) {
     return <SkeletonOrderConfirmed />
@@ -41,53 +25,23 @@ const Confirmed: NextPageWithLayout = () => {
     return <SkeletonOrderConfirmed />
   }
 
-  if (isSuccess) {
+  if (isSuccess && order) {
     return (
       <>
         <Head
-          title={`Order #${data.display_id}`}
+          title={`Order #${order?.display_id}`}
           description="View your order"
         />
-
-        <OrderDetailsTemplate order={data} />
+        <OrderDetailsTemplate order={order} />
       </>
     )
-  }
+   }
 
   return <></>
 }
 
 Confirmed.getLayout = (page: ReactElement) => {
   return <Layout>{page}</Layout>
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: "blocking",
-  }
-}
-
-export const getStaticProps: GetStaticProps = async (context) => {
-  const id = context.params?.id as string
-  const queryClient = new QueryClient()
-  
-  // prefetch common params
-  await queryClient.prefetchQuery(["regions"], () => fetchRegionsData())
-  await queryClient.prefetchQuery(["navigation_collections"], () => fetchCollectionData())
-  await queryClient.prefetchQuery(["navigation_categories"], () => fetchCategoryData(2))
-
-  // prefetch page-specific params
-  await queryClient.prefetchQuery(["get_order_details", id], () =>
-    fetchOrder(id)
-  )
-
-  return {
-    props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-      notFound: false,
-    },
-  }
 }
 
 export default Confirmed
