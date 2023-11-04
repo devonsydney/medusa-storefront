@@ -46,7 +46,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, addToCartRef }
 
       <div className="text-base-regular"><b>{product.subtitle}</b></div>
       <div className="text-base-regular">{product.material}</div>
-      <MarkdownContent markdown={product.description} forceFull={true} length={350} buffer={50}/>
+      <MarkdownContent markdown={product.description} forceFull={false} length={350} buffer={50}/>
 
       {product.variants.length > 1 && (
         <div className="my-8 flex flex-col gap-y-6">
