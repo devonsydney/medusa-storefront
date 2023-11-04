@@ -33,12 +33,12 @@ const AccountLayout: React.FC = ({ children }) => {
             <h3 className="text-xl-semi mb-4">Got questions?</h3>
             <span className="text-small-regular">
               You can find frequently asked questions and answers on our
-              customer service page.
+              FAQ page.
             </span>
           </div>
           <div>
-            <UnderlineLink href="/customer-service">
-              Customer Service
+            <UnderlineLink href="/faq">
+              FAQ
             </UnderlineLink>
           </div>
         </div>
