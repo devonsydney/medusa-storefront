@@ -79,7 +79,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   const { countryCode } = useStore()
 
   const methods = useForm<CheckoutFormValues>({
-    defaultValues: mapFormValues(customer, cart, countryCode),
+    defaultValues: mapFormValues(null, customer, cart, countryCode),
     reValidateMode: "onChange",
   })
 
@@ -169,7 +169,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
    */
   useEffect(() => {
     if (cart?.id) {
-      methods.reset(mapFormValues(customer, cart, countryCode))
+      methods.reset(mapFormValues(methods.getValues, customer, cart, countryCode))
     }
   }, [customer, cart, methods, countryCode])
 
@@ -378,87 +378,125 @@ export const useCheckout = () => {
  * 3. Default values - null
  */
 const mapFormValues = (
+  getValues: (() => CheckoutFormValues) | null,
   customer?: Omit<Customer, "password_hash">,
   cart?: Omit<Cart, "refundable_amount" | "refunded_total">,
   currentCountry?: string
 ): CheckoutFormValues => {
   const customerShippingAddress = customer?.shipping_addresses?.[0]
   const customerBillingAddress = customer?.billing_address
+  const currentValues = getValues ? getValues() : null
 
   return {
     shipping_address: {
       first_name:
         cart?.shipping_address?.first_name ||
         customerShippingAddress?.first_name ||
+        currentValues?.shipping_address?.first_name ||
         "",
       last_name:
         cart?.shipping_address?.last_name ||
         customerShippingAddress?.last_name ||
+        currentValues?.shipping_address?.last_name ||
         "",
       address_1:
         cart?.shipping_address?.address_1 ||
         customerShippingAddress?.address_1 ||
+        currentValues?.shipping_address?.address_1 ||
         "",
       address_2:
         cart?.shipping_address?.address_2 ||
         customerShippingAddress?.address_2 ||
+        currentValues?.shipping_address?.address_2 ||
         "",
-      city: cart?.shipping_address?.city || customerShippingAddress?.city || "",
+      city:
+        cart?.shipping_address?.city ||
+        customerShippingAddress?.city ||
+        currentValues?.shipping_address?.city ||
+        "",
       country_code:
         currentCountry ||
         cart?.shipping_address?.country_code ||
         customerShippingAddress?.country_code ||
+        currentValues?.shipping_address?.country_code ||
         "",
       province:
         cart?.shipping_address?.province ||
         customerShippingAddress?.province ||
+        currentValues?.shipping_address?.province ||
         "",
       company:
         cart?.shipping_address?.company ||
         customerShippingAddress?.company ||
+        currentValues?.shipping_address?.company ||
         "",
       postal_code:
         cart?.shipping_address?.postal_code ||
         customerShippingAddress?.postal_code ||
+        currentValues?.shipping_address?.postal_code ||
         "",
       phone:
-        cart?.shipping_address?.phone || customerShippingAddress?.phone || "",
+        cart?.shipping_address?.phone ||
+        customerShippingAddress?.phone ||
+        currentValues?.shipping_address?.phone ||
+        "",
     },
     billing_address: {
       first_name:
         cart?.billing_address?.first_name ||
         customerBillingAddress?.first_name ||
+        currentValues?.billing_address?.first_name ||
         "",
       last_name:
         cart?.billing_address?.last_name ||
         customerBillingAddress?.last_name ||
+        currentValues?.billing_address?.last_name ||
         "",
       address_1:
         cart?.billing_address?.address_1 ||
         customerBillingAddress?.address_1 ||
+        currentValues?.billing_address?.address_1 ||
         "",
       address_2:
         cart?.billing_address?.address_2 ||
         customerBillingAddress?.address_2 ||
+        currentValues?.billing_address?.address_2 ||
         "",
-      city: cart?.billing_address?.city || customerBillingAddress?.city || "",
+      city:
+        cart?.billing_address?.city ||
+        customerBillingAddress?.city ||
+        currentValues?.billing_address?.city ||
+        "",
       country_code:
-        cart?.shipping_address?.country_code ||
+        cart?.billing_address?.country_code ||
         customerBillingAddress?.country_code ||
+        currentValues?.billing_address?.country_code ||
         "",
       province:
-        cart?.shipping_address?.province ||
+        cart?.billing_address?.province ||
         customerBillingAddress?.province ||
+        currentValues?.billing_address?.province ||
         "",
       company:
-        cart?.billing_address?.company || customerBillingAddress?.company || "",
+        cart?.billing_address?.company ||
+        customerBillingAddress?.company ||
+        currentValues?.billing_address?.company ||
+        "",
       postal_code:
         cart?.billing_address?.postal_code ||
         customerBillingAddress?.postal_code ||
+        currentValues?.billing_address?.postal_code ||
         "",
       phone:
-        cart?.billing_address?.phone || customerBillingAddress?.phone || "",
+        cart?.billing_address?.phone ||
+        customerBillingAddress?.phone ||
+        currentValues?.billing_address?.phone ||
+        "",
     },
-    email: cart?.email || customer?.email || "",
+    email:
+      cart?.email ||
+      customer?.email ||
+      currentValues?.email ||
+      "",
   }
 }
