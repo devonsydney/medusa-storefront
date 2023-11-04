@@ -55,7 +55,7 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
             >
               <div className="flex flex-col items-center">
                 <span>{v.value}</span>
-                {lowStock && (
+                {lowStock && false && ( // TODO: disabled, put behind a feature flag?
                   <span className="text-xxxs text-red-500">low stock</span>
                 )}
               </div>
