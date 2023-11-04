@@ -131,48 +131,52 @@ export const fetchCategoryData = async (levels: number = Infinity): Promise<Layo
       category_id: [topLevelCategory.id],
     })
     const productHandlesInCategory = productsInCategory.products.map((product) => product.handle)
-    const categoryData: LayoutCategory = {
-      id: topLevelCategory.id,
-      name: topLevelCategory.name,
-      handle: topLevelCategory.handle,
-      description: topLevelCategory.description,
-      product_handles: productHandlesInCategory,
-      category_children: [] as LayoutCategory[],
-      parent_name: "",
-      parent_handle: "",
-    }
-
-    const stack: { category: ProductCategory; level: number }[] = [{ category: topLevelCategory, level: 1 }]
-
-    while (stack.length > 0) {
-      const { category, level } = stack.pop()!
-      if (level < levels) {
-        const childCategories = product_categories.filter(child => child.parent_category_id === category.id)
-        const childCategoriesData: LayoutCategory[] = []
-
-        for (const childCategory of childCategories) {
-          const productsInChildCategory = await medusaClient.products.list({
-            category_id: [childCategory.id],
-          })
-          const productHandlesInChildCategory = productsInChildCategory.products.map((product) => product.handle)
-          const childCategoryData: LayoutCategory = {
-            id: childCategory.id,
-            name: childCategory.name,
-            handle: childCategory.handle,
-            description: childCategory.description,
-            product_handles: productHandlesInChildCategory,
-            category_children: [] as LayoutCategory[],
-            parent_name: childCategory.parent_category?.name,
-            parent_handle: childCategory.parent_category?.handle,
-          }
-
-          stack.push({ category: childCategory, level: level + 1 })
-          childCategoriesData.push(childCategoryData)
-        }
-        categoryData!.category_children!.push(...childCategoriesData)
+    if (productHandlesInCategory.length > 0) { // Only add the category if it has products
+      const categoryData: LayoutCategory = {
+        id: topLevelCategory.id,
+        name: topLevelCategory.name,
+        handle: topLevelCategory.handle,
+        description: topLevelCategory.description,
+        product_handles: productHandlesInCategory,
+        category_children: [] as LayoutCategory[],
+        parent_name: "",
+        parent_handle: "",
       }
+
+      const stack: { category: ProductCategory; level: number }[] = [{ category: topLevelCategory, level: 1 }]
+
+      while (stack.length > 0) {
+        const { category, level } = stack.pop()!
+        if (level < levels) {
+          const childCategories = product_categories.filter(child => child.parent_category_id === category.id)
+          const childCategoriesData: LayoutCategory[] = []
+
+          for (const childCategory of childCategories) {
+            const productsInChildCategory = await medusaClient.products.list({
+              category_id: [childCategory.id],
+            })
+            const productHandlesInChildCategory = productsInChildCategory.products.map((product) => product.handle)
+            if (productHandlesInChildCategory.length > 0) { // Only add the child category if it has products
+              const childCategoryData: LayoutCategory = {
+                id: childCategory.id,
+                name: childCategory.name,
+                handle: childCategory.handle,
+                description: childCategory.description,
+                product_handles: productHandlesInChildCategory,
+                category_children: [] as LayoutCategory[],
+                parent_name: childCategory.parent_category?.name,
+                parent_handle: childCategory.parent_category?.handle,
+              }
+
+              stack.push({ category: childCategory, level: level + 1 })
+              childCategoriesData.push(childCategoryData)
+            }
+          }
+          categoryData!.category_children!.push(...childCategoriesData)
+        }
+      }
+      formattedCategories.push(categoryData)
     }
-    formattedCategories.push(categoryData)
   }
   return formattedCategories
 }
