@@ -109,7 +109,7 @@ export const ProductProvider = ({
 
   // if the a selected variant has inventory_quantity < quantity selected, reduce quantity selected
   useEffect(() => {
-    if (variant && quantity > variant.inventory_quantity) {
+    if (variant && quantity >= variant.inventory_quantity) {
       setQuantity(variant.inventory_quantity - 1);
     }
   }, [variant, quantity]);
