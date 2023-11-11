@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "next dev -p 8000",
     "build": "next build",
+    "types": "tsc --noEmit",
     "start": "node server.js",
     "lint": "next lint",
     "cypress": "cypress open",
@@ -29,6 +30,7 @@
     "@stripe/react-stripe-js": "^1.7.2",
     "@stripe/stripe-js": "^1.29.0",
     "@tanstack/react-query": "^4.22.4",
+    "@tanstack/react-query-devtools": "^5.0.0",
     "child_process": "^1.0.2",
     "clsx": "^1.1.1",
     "fs": "^0.0.1-security",
@@ -42,7 +44,9 @@
     "react-instantsearch-hooks-web": "^6.29.0",
     "react-intersection-observer": "^9.3.4",
     "react-markdown": "^9.0.0",
-    "react-server-dom-webpack": "^0.0.1"
+    "react-server-dom-webpack": "^0.0.1",
+    "remark-breaks": "^4.0.0",
+    "remark-gfm": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.5",

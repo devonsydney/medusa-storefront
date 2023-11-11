@@ -1,4 +1,4 @@
-import { useRegions } from "medusa-react"
+import { useRegions } from "@lib/hooks/use-layout-data"
 import { useMemo } from "react"
 
 type CountryOption = {
@@ -8,7 +8,7 @@ type CountryOption = {
 }
 
 const useCountryOptions = () => {
-  const { regions } = useRegions()
+  const { data: regions } = useRegions()
 
   const options: CountryOption[] | undefined = useMemo(() => {
     return regions

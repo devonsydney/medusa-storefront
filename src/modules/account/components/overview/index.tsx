@@ -81,7 +81,7 @@ const Overview = ({ orders, customer }: OverviewProps) => {
                 <h3 className="text-large-semi">Profile</h3>
                 <div className="flex items-end gap-x-2">
                   <span className="text-3xl-semi leading-none">
-                    {getProfileCompletion(customer)}%
+                    {Math.round(getProfileCompletion(customer))}%
                   </span>
                   <span className="uppercase text-base-regular text-gray-500">
                     Completed
@@ -160,6 +160,12 @@ const Overview = ({ orders, customer }: OverviewProps) => {
 }
 
 const getProfileCompletion = (customer?: Omit<Customer, "password_hash">) => {
+  // profile completion calculation:
+  // email (1 point)
+  // first name & last name (1 point)
+  // at least one address (1 point)
+  // total 3 points
+
   let count = 0
 
   if (!customer) {
@@ -174,7 +180,11 @@ const getProfileCompletion = (customer?: Omit<Customer, "password_hash">) => {
     count++
   }
 
-  return (count / 2) * 100
+  if (customer.shipping_addresses.length > 0) {
+    count++
+  }
+
+  return (count / 3) * 100
 }
 
 export default Overview

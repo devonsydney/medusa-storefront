@@ -19,20 +19,20 @@ type MobileActionsProps = {
 const MobileActions: React.FC<MobileActionsProps> = ({ product, show }) => {
   const { variant, addToCart, options, inStock, updateOptions } = useProductActions()
   const { state, open, close } = useToggleState()
-  const price = useProductPrice({ id: product.id!, variantId: variant?.id })
+  const price = useProductPrice({ product, variantId: variant?.id })
   const selectedPrice = useMemo(() => {
     const { variantPrice, cheapestPrice } = price
 
     return variantPrice || cheapestPrice || null
   }, [price])
-  const variantRankMap = useMemo(() => {
-    return product.variants.reduce<Record<string, number>>((acc, variant) => {
-      if (variant.id && variant.variant_rank !== undefined) {
-        acc[variant.id] = variant.variant_rank;
+  const variantMap = useMemo(() => {
+    return product.variants.reduce<Array<{ variant_id: string, variant_rank: number, inventory_quantity?: number }>>((acc, variant) => {
+      if (variant.id && variant.variant_rank !== undefined && variant.variant_rank !== null) {
+        acc.push({ variant_id: variant.id, variant_rank: variant.variant_rank, inventory_quantity: variant.inventory_quantity })
       }
-      return acc;
-    }, {});
-  }, [product.variants]);
+      return acc
+    }, [])
+  }, [product.variants])
 
   return (
     <>
@@ -137,7 +137,7 @@ const MobileActions: React.FC<MobileActionsProps> = ({ product, show }) => {
                                 current={options[option.id]}
                                 updateOption={updateOptions}
                                 title={option.title}
-                                variantRankMap={variantRankMap}
+                                variantMap={variantMap}
                               />
                             </div>
                           )

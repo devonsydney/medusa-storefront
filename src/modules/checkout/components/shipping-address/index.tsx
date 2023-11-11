@@ -22,16 +22,19 @@ const ShippingAddress = () => {
       <ConnectForm<CheckoutFormValues>>
         {({ register, formState: { errors, touchedFields } }) => (
           <div className="grid grid-cols-1 gap-y-2">
-            <Input
-              label="Email"
-              {...register("email", {
-                required: "Email is required",
-                pattern: emailRegex,
-              })}
-              autoComplete="email"
-              errors={errors}
-              touched={touchedFields}
-            />
+            <div className={customer?.email ? 'bg-gray-100' : ''}>
+              <Input
+                label="Email"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: emailRegex,
+                })}
+                autoComplete="email"
+                errors={errors}
+                touched={touchedFields}
+                disabled={!!customer?.email}
+              />
+            </div>
             <div className="grid grid-cols-2 gap-x-2">
               <Input
                 label="First name"

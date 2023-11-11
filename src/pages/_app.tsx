@@ -7,6 +7,7 @@ import { Hydrate } from "@tanstack/react-query"
 import { CartProvider, MedusaProvider } from "medusa-react"
 import "styles/globals.css"
 import { AppPropsWithLayout } from "types/global"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 function App({
   Component,
@@ -33,6 +34,7 @@ function App({
               </StoreProvider>
             </CartProvider>
           </MobileMenuProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
         </CartDropdownProvider>
       </Hydrate>
     </MedusaProvider>

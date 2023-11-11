@@ -3,15 +3,15 @@ import getNumberOfSkeletons from "@lib/util/get-number-of-skeletons"
 import repeat from "@lib/util/repeat"
 import ProductPreview from "@modules/products/components/product-preview"
 import SkeletonProductPreview from "@modules/skeletons/components/skeleton-product-preview"
-import { fetchCollectionProducts } from "@pages/collections/[id]"
+import { fetchCollectionProducts } from "@lib/hooks/use-layout-data"
 import { useInfiniteQuery } from "@tanstack/react-query"
-import { useCart } from "medusa-react"
 import React, { useEffect } from "react"
 import { useInView } from "react-intersection-observer"
+import { useRegions } from "@lib/hooks/use-layout-data"
 
 type CollectionTemplateProps = {
   collection: {
-    id: string
+    handle: string
     title: string
   }
 }
@@ -19,8 +19,8 @@ type CollectionTemplateProps = {
 const CollectionTemplate: React.FC<CollectionTemplateProps> = ({
   collection,
 }) => {
-  const { cart } = useCart()
   const { ref, inView } = useInView()
+  const { data: regions } = useRegions()
 
   const {
     data: infiniteData,
@@ -28,29 +28,22 @@ const CollectionTemplate: React.FC<CollectionTemplateProps> = ({
     fetchNextPage,
     isFetchingNextPage,
     isLoading,
-    refetch,
   } = useInfiniteQuery(
-    [`get_collection_products`, collection.id, cart?.id],
+    [`get_collection_products`, collection.handle],
     ({ pageParam }) =>
       fetchCollectionProducts({
         pageParam,
-        id: collection.id,
-        cartId: cart?.id,
+        handle: collection.handle,
+        regionId: regions?.[0].id || ""
       }),
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     }
   )
 
-  useEffect(() => {
-    if (cart?.region_id) {
-      refetch()
-    }
-  }, [cart?.region_id, refetch])
-
   const previews = usePreviews({
     pages: infiniteData?.pages,
-    region: cart?.region,
+    region: regions?.[0],
   })
 
   useEffect(() => {

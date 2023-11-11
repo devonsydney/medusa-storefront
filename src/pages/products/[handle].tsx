@@ -1,4 +1,3 @@
-import { medusaClient } from "@lib/config"
 import { IS_BROWSER } from "@lib/constants"
 import { getProductHandles } from "@lib/util/get-product-handles"
 import Head from "@modules/common/components/head"
@@ -11,29 +10,40 @@ import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { ReactElement } from "react"
 import { NextPageWithLayout, PrefetchedPageProps } from "types/global"
+import { fetchCollectionData, fetchRegionsData, fetchCategoryData, fetchProduct, fetchRelatedProducts, useRegions } from "@lib/hooks/use-layout-data"
 
 interface Params extends ParsedUrlQuery {
   handle: string
-}
-
-const fetchProduct = async (handle: string) => {
-  return await medusaClient.products
-    .list({ handle })
-    .then(({ products }) => products[0])
 }
 
 const ProductPage: NextPageWithLayout<PrefetchedPageProps> = ({ notFound }) => {
   const { query, isFallback, replace } = useRouter()
   const handle = typeof query.handle === "string" ? query.handle : ""
 
-  const { data, isError, isLoading, isSuccess } = useQuery(
+  // fetch regionId to format product
+  const{ data: regions } = useRegions()
+  const region = regions?.[0]
+  const regionId = region?.id
+
+  // get product statically (without inventory data)
+  const { data: product, isError, isLoading, isSuccess } = useQuery(
     [`get_product`, handle],
-    () => fetchProduct(handle),
+    () => fetchProduct(regionId!, handle),
     {
       enabled: handle.length > 0,
       keepPreviousData: true,
     }
   )
+
+  // grab product dynamically (with inventory)
+  const { data: productWithInventory } = useQuery(
+    [`product_inventory`, handle],
+    () => fetchProduct(regionId!, handle, true),
+    {
+      enabled: handle.length > 0,
+      keepPreviousData: true,
+    }
+  )  
 
   if (notFound) {
     if (IS_BROWSER) {
@@ -43,7 +53,7 @@ const ProductPage: NextPageWithLayout<PrefetchedPageProps> = ({ notFound }) => {
     return <SkeletonProductPage />
   }
 
-  if (isFallback || isLoading || !data) {
+  if (isFallback || isLoading || !product) {
     return <SkeletonProductPage />
   }
 
@@ -51,15 +61,16 @@ const ProductPage: NextPageWithLayout<PrefetchedPageProps> = ({ notFound }) => {
     replace("/404")
   }
 
+  // use the static product initially and then replace with dynamic once received
   if (isSuccess) {
     return (
       <>
         <Head
-          description={data.description}
-          title={data.title}
-          image={data.thumbnail}
+          description={product.description}
+          title={product.title}
+          image={product.thumbnail}
         />
-        <ProductTemplate product={data} />
+        <ProductTemplate product={productWithInventory || product} />
       </>
     )
   }
@@ -83,8 +94,23 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const handle = context.params?.handle as string
   const queryClient = new QueryClient()
 
+  // prefetch common params
+  await queryClient.prefetchQuery(["regions"], () => fetchRegionsData())
+  await queryClient.prefetchQuery(["navigation_collections"], () => fetchCollectionData())
+  await queryClient.prefetchQuery(["navigation_categories"], () => fetchCategoryData(2))
+
+  // grab region to use in query for products list
+  const regions = queryClient.getQueryData<any>(["regions"])
+  const region = regions[0] // TODO: switch to regionId, however currently region is needed for the formatting code
+  const regionId = region.id
+
+  // prefetch page-specific params
   await queryClient.prefetchQuery([`get_product`, handle], () =>
-    fetchProduct(handle)
+    fetchProduct(regionId, handle)
+  )
+
+  await queryClient.prefetchQuery([`related-products-${handle}`, region, handle], () =>
+    fetchRelatedProducts(region, handle)
   )
 
   const queryData = await queryClient.getQueryData([`get_product`, handle])
@@ -99,7 +125,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
       notFound: false,
     },
   }

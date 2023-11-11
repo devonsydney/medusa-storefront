@@ -1,13 +1,6 @@
 import { Popover, Transition } from "@headlessui/react"
-import {
-  useFeaturedProductsQuery,
-  useNavigationCollections,
-} from "@lib/hooks/use-layout-data"
-import repeat from "@lib/util/repeat"
-import ProductPreview from "@modules/products/components/product-preview"
-import SkeletonProductPreview from "@modules/skeletons/components/skeleton-product-preview"
+import { useNavigationCollections, useNavigationCategories } from "@lib/hooks/use-layout-data"
 import clsx from "clsx"
-import { chunk } from "lodash"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { useState } from "react"
@@ -15,10 +8,8 @@ import React, { useState } from "react"
 const DropdownMenu = () => {
   const [open, setOpen] = useState(false)
   const { push } = useRouter()
-  const { data: collections, isLoading: loadingCollections } =
-    useNavigationCollections()
-  const { data: products, isLoading: loadingProducts } =
-    useFeaturedProductsQuery()
+  const { data: collections } = useNavigationCollections()
+  const { data: categories } = useNavigationCategories()
 
   return (
     <div
@@ -29,14 +20,14 @@ const DropdownMenu = () => {
       <div className="flex items-center h-full">
         <Popover className="h-full flex">
           <>
-            <Link href="/shop" className="relative flex h-full" passHref>
+            <Link href="/store" className="relative flex h-full" passHref>
               <Popover.Button
                 className={clsx(
                   "relative h-full flex items-center transition-all ease-out duration-200"
                 )}
                 onClick={() => push("/store")}
               >
-                Store
+                All Products
               </Popover.Button>
             </Link>
 
@@ -54,9 +45,34 @@ const DropdownMenu = () => {
                 static
                 className="absolute top-full inset-x-0 text-sm text-gray-700 z-30 border-y border-gray-200"
               >
-                <div className="relative bg-white py-8">
+                <div className="grid grid-cols-[auto,1fr]">
+                  <div className="bg-white py-8">
                   <div className="flex items-start content-container">
                     <div className="flex flex-col flex-1 max-w-[30%]">
+                      <h3 className="text-base-semi text-gray-900 mb-4">
+                        Categories
+                      </h3>
+                      <div className="flex items-start">
+                        <ul className="min-w-[152px] max-w-[200px] pr-4">
+                          {categories &&
+                            categories.map((category) => (
+                              <div key={category.id} className="pb-3 pl-2">
+                                <Link href={`/${category.handle}`} onClick={() => setOpen(false)}>
+                                  {category.name}
+                                </Link>
+                                {category.category_children && category.category_children.map((child, childIndex) => (
+                                  <div key={child.id} className={`pb-1 pl-4 ${childIndex < (category.category_children ?? []).length ? 'mt-2' : ''}`}>
+                                    <div>
+                                      <Link href={`/${category.handle}/${child.handle}`} onClick={() => setOpen(false)}>
+                                        {child.name}
+                                      </Link>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ))}
+                        </ul>
+                      </div>
                       <h3 className="text-base-semi text-gray-900 mb-4">
                         Collections
                       </h3>
@@ -66,7 +82,7 @@ const DropdownMenu = () => {
                             collections.map((collection) => (
                               <div key={collection.id} className="pb-3">
                                 <Link
-                                  href={`/collections/${collection.id}`}
+                                  href={`/collections/${collection.handle}`}
                                   onClick={() => setOpen(false)}
                                 >
                                   {collection.title}
@@ -74,23 +90,11 @@ const DropdownMenu = () => {
                               </div>
                             ))}
                         </ul>
-                        {loadingCollections &&
-                          repeat(6).map((index) => (
-                            <div key={index} className="w-12 h-4 bg-gray-100 animate-pulse" />
-                          ))}
                       </div>
                     </div>
-                    <div className="flex-1">
-                      <div className="grid grid-cols-3 gap-4">
-                        {products?.slice(0, 3).map((product) => (
-                          <ProductPreview {...product} key={product.id} />
-                        ))}
-                        {loadingProducts &&
-                          repeat(3).map((index) => (
-                            <SkeletonProductPreview key={index} />
-                          ))}
-                      </div>
-                    </div>
+                  </div>
+                </div>
+                  <div className="col-span-1 bg-white bg-opacity-50">
                   </div>
                 </div>
               </Popover.Panel>

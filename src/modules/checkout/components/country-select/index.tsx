@@ -1,7 +1,8 @@
 import NativeSelect, {
   NativeSelectProps,
 } from "@modules/common/components/native-select"
-import { useCart, useRegions } from "medusa-react"
+import { useCart } from "medusa-react"
+import { useRegions } from "@lib/hooks/use-layout-data"
 import { forwardRef, useImperativeHandle, useMemo, useRef } from "react"
 
 const CountrySelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
@@ -13,7 +14,8 @@ const CountrySelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
       () => innerRef.current
     )
 
-    const { regions } = useRegions()
+    const { data: regions } = useRegions()
+
     const { cart } = useCart()
 
     const countryOptions = useMemo(() => {
@@ -33,10 +35,10 @@ const CountrySelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
     //const isDisabled = countryOptions.length === 1;
 
     return (
-      <NativeSelect 
-        ref={innerRef} 
+      <NativeSelect
+        ref={innerRef}
         placeholder={placeholder}
-        {...props} 
+        {...props}
         // TODO: Bring this back if it can be fixed
         //disabled={isDisabled}
         //defaultValue={isDisabled ? countryOptions[0].value : undefined}

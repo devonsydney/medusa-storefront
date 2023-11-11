@@ -5,14 +5,14 @@ import ChevronDown from "@modules/common/icons/chevron-down"
 import Search from "@modules/common/icons/search"
 import X from "@modules/common/icons/x"
 import { useMeCustomer } from "medusa-react"
-import { useNavigationCollections } from "@lib/hooks/use-layout-data"
+import { useNavigationCollections, useNavigationCategories } from "@lib/hooks/use-layout-data"
 import Link from "next/link"
 import ReactCountryFlag from "react-country-flag"
 import Image from "next/image"
 
 const MainMenu = () => {
-  const { data: collections, isLoading: loadingCollections } =
-    useNavigationCollections()
+  const { data: collections } = useNavigationCollections()
+  const { data: categories } = useNavigationCategories()
   const { customer } = useMeCustomer()
   const { countryCode } = useStore()
 
@@ -73,11 +73,37 @@ const MainMenu = () => {
 
         <div className="flex flex-col flex-1 text-large-regular text-gray-900">
           <ul className="flex flex-col gap-y-2">
+            {categories ? (
+               <>
+                 <div className="flex flex-col gap-y-8 text-small-regular gap-y-4">
+                   <span className="text-gray-700 uppercase">Categories</span>
+                 </div>
+                 {categories.map((category) => (
+                   <li key={category.id} className="bg-gray-50 p-4">
+                     <Link href={`/${category.handle}`}>
+                       <button
+                         className="flex items-center justify-between w-full"
+                         onClick={close}
+                       >
+                         <span className="sr-only">
+                           Go to {category.name} category
+                         </span>
+                         <span>{category.name}</span>
+                         <ChevronDown className="-rotate-90" />
+                       </button>
+                     </Link>
+                   </li>
+                 ))}
+               </>
+             ) : null}
             {collections ? (
               <>
+              <div className="flex flex-col gap-y-8 text-small-regular gap-y-4">
+                <span className="text-gray-700 uppercase">Collections</span>
+              </div>
                 {collections.map((collection) => (
                   <li key={collection.id} className="bg-gray-50 p-4">
-                    <Link href={`/collections/${collection.id}`}>
+                    <Link href={`/collections/${collection.handle}`}>
                       <button
                         className="flex items-center justify-between w-full"
                         onClick={close}
@@ -107,7 +133,6 @@ const MainMenu = () => {
             </li>
           </ul>
         </div>
-
         <div className="flex flex-col">
           <div className="flex flex-col gap-y-8 text-small-regular">
             <div className="flex flex-col gap-y-4">

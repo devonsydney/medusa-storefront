@@ -6,7 +6,7 @@ import Radio from "@modules/common/components/radio"
 import Spinner from "@modules/common/icons/spinner"
 import clsx from "clsx"
 import { formatAmount, useCart, useCartShippingOptions } from "medusa-react"
-import React, { useEffect, useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import StepContainer from "../step-container"
 
@@ -35,6 +35,7 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
       soId: cart.shipping_methods?.[0]?.shipping_option_id,
     },
   })
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch shipping options
   const { shipping_options, refetch } = useCartShippingOptions(cart.id, {
@@ -75,6 +76,7 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
     }
 
     refetchShipping()
+    setIsLoading(false)
   }, [cart, refetch])
 
   const submitShippingOption = (soId: string) => {
@@ -103,6 +105,10 @@ const Shipping: React.FC<ShippingProps> = ({ cart }) => {
   const {
     sameAsBilling: { state: sameBilling },
   } = useCheckout()
+
+  if (isLoading) {
+    return null
+  }
 
   return (
     <StepContainer

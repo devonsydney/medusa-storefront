@@ -1,7 +1,7 @@
 import { canBuy } from "@lib/util/can-buy"
 import { findCheapestPrice } from "@lib/util/prices"
 import isEqual from "lodash/isEqual"
-import { formatVariantPrice, useCart } from "medusa-react"
+import { formatVariantPrice } from "medusa-react"
 import React, {
   createContext,
   useContext,
@@ -12,6 +12,7 @@ import React, {
 import { Product, Variant } from "types/medusa"
 import { useStore } from "./store-context"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
+import { useRegions } from "@lib/hooks/use-layout-data"
 
 interface ProductContext {
   formattedPrice: string
@@ -44,7 +45,9 @@ export const ProductProvider = ({
   const [inStock, setInStock] = useState<boolean>(true)
 
   const { addItem } = useStore()
-  const { cart } = useCart()
+  const { data: regions } = useRegions()
+  const region = regions?.[0]
+
   const variants = product.variants as unknown as Variant[]
 
   useEffect(() => {
@@ -86,12 +89,30 @@ export const ProductProvider = ({
     return variants.find((v) => v.id === variantId)
   }, [options, variantRecord, variants])
 
-  // if product only has one variant, then select it
+  // if product has one variant in stock, select it. otherwise, set the last in-stock variant
   useEffect(() => {
     if (variants.length === 1) {
-      setOptions(variantRecord[variants[0].id])
+      if (variants[0].inventory_quantity > 0) {
+        setOptions(variantRecord[variants[0].id])
+      }
+    } else if (variants.length > 1) {
+      for (let i = variants.length - 1; i >= 0; i--) {
+        const variant = variants[i]
+        const variantOptions = variantRecord[variant.id]
+        if (variantOptions && variant.inventory_quantity > 0) {
+          setOptions(variantOptions)
+          break
+        }
+      }
     }
   }, [variants, variantRecord])
+
+  // if the a selected variant has inventory_quantity < quantity selected, reduce quantity selected
+  useEffect(() => {
+    if (variant && quantity >= variant.inventory_quantity) {
+      setQuantity(variant.inventory_quantity - 1);
+    }
+  }, [variant, quantity]);
 
   const disabled = useMemo(() => {
     return !variant
@@ -99,15 +120,15 @@ export const ProductProvider = ({
 
   // memoized function to get the price of the current variant
   const formattedPrice = useMemo(() => {
-    if (variant && cart?.region) {
-      return formatVariantPrice({ variant, region: cart.region })
-    } else if (cart?.region) {
-      return findCheapestPrice(variants, cart.region)
+    if (variant && region) {
+      return formatVariantPrice({ variant, region })
+    } else if (region) {
+      return findCheapestPrice(variants, region)
     } else {
       // if no variant is selected, or we couldn't find a price for the region/currency
       return "N/A"
     }
-  }, [variant, variants, cart])
+  }, [variant, variants, region])
 
   useEffect(() => {
     if (variant) {

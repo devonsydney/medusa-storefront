@@ -4,8 +4,7 @@ import noop from "@lib/util/noop"
 import Spinner from "@modules/common/icons/spinner"
 
 const CheckoutLoader = () => {
-  const { isLoading } = useCheckout()
-
+  const { isLoading } = useCheckout() // isLoading state after the user clicks "Checkout"
   return (
     <Transition show={isLoading}>
       <Dialog onClose={noop} className="relative z-[100]">

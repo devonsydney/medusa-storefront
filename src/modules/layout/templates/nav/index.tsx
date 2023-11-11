@@ -67,29 +67,29 @@ const Nav = () => {
               <Hamburger setOpen={toggle} />
             </div>
             <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-start">
-              <div className="hidden small:flex items-center gap-x-6 h-full">
+            <div className="hidden small:flex items-center gap-x-6 h-full">
                 <DropdownMenu />
-                <Link href="/specials">
+                { false && <Link href="/specials">
                   Specials
-                </Link>
+                </Link>}
               </div>
             </div>
           </div>
-
-          <div className="flex items-center h-full gap-x-4">
-            {process.env.NEXT_PUBLIC_STORE_LOGO && (
-              <Image
-                src={process.env.NEXT_PUBLIC_STORE_LOGO}
-                alt="Logo"
-                width={40}
-                height={40}
-              />
-            )}
-            <Link href="/" className="text-xl-semi uppercase">
-              {process.env.NEXT_PUBLIC_STORE_NAME}
-            </Link>
-          </div>
-
+          <Link href="/">
+            <div className="flex items-center h-full gap-x-4">
+              {process.env.NEXT_PUBLIC_STORE_LOGO && (
+                <Image
+                  src={process.env.NEXT_PUBLIC_STORE_LOGO}
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                />
+              )}
+              <div className="text-xl-semi uppercase">
+                {process.env.NEXT_PUBLIC_STORE_NAME}
+              </div>
+            </div>
+          </Link>
           <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
             <div className="hidden small:flex items-center gap-x-6 h-full">
               <Link href={`mailto:${process.env.NEXT_PUBLIC_STORE_EMAIL}`}>
