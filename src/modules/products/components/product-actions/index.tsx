@@ -6,7 +6,6 @@ import OptionSelect from "@modules/products/components/option-select"
 import clsx from "clsx"
 import Link from "next/link"
 import React, { useMemo } from "react"
-import { Product } from "types/medusa"
 import MarkdownContent from "@modules/common/components/markdown-content"
 
 type ProductActionsProps = {
@@ -15,9 +14,9 @@ type ProductActionsProps = {
 }
 
 const ProductActions: React.FC<ProductActionsProps> = ({ product, addToCartRef }) => {
-  const { updateOptions, addToCart, options, inStock, variant } =
-    useProductActions()
+  const { updateOptions, addToCart, increaseQuantity, decreaseQuantity, options, inStock, variant, quantity } = useProductActions()
   const price = useProductPrice({ product, variantId: variant?.id })
+
   const selectedPrice = useMemo(() => {
     const { variantPrice, cheapestPrice } = price
 
@@ -49,7 +48,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, addToCartRef }
       <MarkdownContent markdown={product.description} forceFull={false} length={350} buffer={50}/>
 
       {product.variants.length > 1 && (
-        <div className="my-8 flex flex-col gap-y-6">
+        <div className="mb-1 flex flex-col gap-y-6">
           {(product.options || []).map((option) => {
             return (
               <div key={option.id}>
@@ -65,6 +64,32 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, addToCartRef }
           })}
         </div>
       )}
+
+      <div className="mb-6 text-base-regular flex items-center gap-x-2">
+        <button
+          onClick={decreaseQuantity}
+          disabled={quantity === 1}
+          className={clsx(
+            "border-gray-200 border text-xsmall-regular h-[25px] w-[25px] transition-all duration-200",
+            { "border-gray-900": quantity === 1 },
+            { "bg-gray-200": quantity === 1 }
+          )}
+        >
+          -
+        </button>
+        <span> {quantity} </span>
+        <button
+          onClick={increaseQuantity}
+          disabled={quantity === Math.min(8, (variant?.inventory_quantity ?? 1 ) - 1 || 0)}
+          className={clsx(
+            "border-gray-200 border text-xsmall-regular h-[25px] w-[25px] transition-all duration-200",
+            { "border-gray-900": quantity === Math.min(8, (variant?.inventory_quantity ?? 1 ) - 1 || 0) },
+            { "bg-gray-200": quantity === Math.min(8, (variant?.inventory_quantity ?? 1 ) - 1 || 0) }
+          )}
+        >
+          +
+        </button>
+      </div>
 
       <div ref={addToCartRef} className="mb-4">
         {selectedPrice ? (
@@ -96,7 +121,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, addToCartRef }
       </div>
 
       <Button onClick={addToCart}>
-        {!inStock ? "Out of stock" : "Add to cart"}
+        {!inStock ? "Out of stock" : `Add ${quantity > 1 ? `${quantity}` : ""} to cart`}
       </Button>
     </div>
   )
