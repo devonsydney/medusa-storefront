@@ -19,6 +19,9 @@ const CheckoutSummary = () => {
         <CartTotals cart={cart} />
         <PaymentButton paymentSession={cart?.payment_session} />
       </div>
+      {process.env.NEXT_PUBLIC_CHECKOUT_INSTRUCTIONS && (
+        <div className="p-6 bg-white text-base-regular" dangerouslySetInnerHTML={{ __html: process.env.NEXT_PUBLIC_CHECKOUT_INSTRUCTIONS }} />
+      )}
       <div className="p-6 bg-white">
         <DiscountCode cart={cart} />
       </div>
