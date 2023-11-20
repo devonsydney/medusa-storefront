@@ -10,8 +10,8 @@ const FooterCTA = () => {
             {process.env.NEXT_PUBLIC_FOOTER_CTA_TITLE}
           </h3>
           <div className="mt-6">
-            <UnderlineLink href="/collections/specials">
-              Explore specials
+            <UnderlineLink href={`/${process.env.NEXT_PUBLIC_FOOTER_CTA_LINK || "collections/specials"}`}>
+              Explore {process.env.NEXT_PUBLIC_FOOTER_CTA_LINK_TEXT || "Explore specials"}
             </UnderlineLink>
           </div>
         </div>
