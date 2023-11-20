@@ -242,12 +242,14 @@ export const useFeaturedProductsQuery = () => {
 }
 
 export const fetchAllProducts = async (
-  region: Region
+  region: Region,
+  sortOrder: string | undefined
   ): Promise<ProductPreviewType[]> => {
     const products = await medusaClient.products
       .list({
         region_id: region.id,
         is_giftcard: false,
+        order: sortOrder,
       })
       .then(({ products }) => products)
       .catch((_) => [] as PricedProduct[])
@@ -260,7 +262,7 @@ export const useAllProductsQuery = () => {
   const region = regions?.[0]
 
   const queryResults = useQuery({
-    queryFn: () => fetchAllProducts(region!),
+    queryFn: () => fetchAllProducts(region!, process.env.NEXT_PUBLIC_PRODUCTS_ORDER),
     queryKey: ["all_products"],
     staleTime: Infinity,
     refetchOnWindowFocus: false,

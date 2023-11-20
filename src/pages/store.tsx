@@ -44,7 +44,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const region = regions[0] // TODO: switch to regionId, however currently region is needed for the formatting code
 
   // prefetch page-specific params
-  await queryClient.prefetchQuery(["all_products"], () => fetchAllProducts(region))
+  await queryClient.prefetchQuery(["all_products"], () => fetchAllProducts(region,process.env.NEXT_PUBLIC_PRODUCTS_ORDER))
 
   return {
     props: {

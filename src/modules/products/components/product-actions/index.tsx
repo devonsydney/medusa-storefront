@@ -91,6 +91,11 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, addToCartRef }
         </button>
       </div>
 
+      <div className="mb-4 text-base-regular text-center bg-gray-200 p-4 rounded-md shadow-md">
+        Adding <span className="font-bold">{quantity}</span> {Object.values(options).join(', ')} <span className="font-bold">{product.title}</span> to cart
+      </div>
+
+
       <div ref={addToCartRef} className="mb-4">
         {selectedPrice ? (
           <div className="flex flex-col text-gray-700">
