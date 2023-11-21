@@ -32,12 +32,12 @@ const FooterNav = () => {
         </div>
         <div>
           <div className="flex flex-col gap-y-6 gap-x-16 xsmall:flex-row items-start justify-end">
-            <div className="text-small-regular grid grid-cols-1 gap-x-16">
-              <div className="flex flex-col gap-y-2">
-                <span className="text-base-semi">Categories</span>
-                  <ul className="grid grid-cols-1 gap-y-2">
-                    {categories &&
-                      categories.map((category) => (
+            {(categories?.length || 0 > 0) && (
+              <div className="text-small-regular grid grid-cols-1 gap-x-16">
+                <div className="flex flex-col gap-y-2">
+                  <span className="text-base-semi">Categories</span>
+                    <ul className="grid grid-cols-1 gap-y-2">
+                      {categories?.map((category) => (
                         <div key={category.id} className="pb-2 pl-2">
                           <Link href={`/${category.handle}`}>
                             {category.name}
@@ -53,25 +53,28 @@ const FooterNav = () => {
                           ))}
                         </div>
                       ))}
+                    </ul>
+                </div>
+              </div>
+            )}
+            {(collections?.length || 0 > 0) && (
+              <div className="text-small-regular grid grid-cols-1 gap-x-16">
+                <div className="flex flex-col gap-y-2">
+                  <span className="text-base-semi">Collections</span>
+                  <ul
+                    className={clsx("grid grid-cols-1 gap-y-2", {
+                      "grid-cols-2": (collections?.length || 0) > 4,
+                    })}
+                  >
+                    {collections?.map((c) => (
+                      <li key={c.id}>
+                        <Link href={`/collections/${c.handle}`}>{c.title}</Link>
+                      </li>
+                    ))}
                   </ul>
+                </div>
               </div>
-            </div>
-            <div className="text-small-regular grid grid-cols-1 gap-x-16">
-              <div className="flex flex-col gap-y-2">
-                <span className="text-base-semi">Collections</span>
-                <ul
-                  className={clsx("grid grid-cols-1 gap-y-2", {
-                    "grid-cols-2": (collections?.length || 0) > 4,
-                  })}
-                >
-                  {collections?.map((c) => (
-                    <li key={c.id}>
-                      <Link href={`/collections/${c.handle}`}>{c.title}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            )}
             {false && (
               <div className="text-small-regular grid grid-cols-1 gap-x-16">
                 <div className="flex flex-col gap-y-2">
