@@ -73,12 +73,12 @@ const MainMenu = () => {
 
         <div className="flex flex-col flex-1 text-large-regular text-gray-900">
           <ul className="flex flex-col gap-y-2">
-            {categories ? (
+            {(categories?.length || 0 > 0) ? (
                <>
                  <div className="flex flex-col gap-y-8 text-small-regular gap-y-4">
                    <span className="text-gray-700 uppercase">Categories</span>
                  </div>
-                 {categories.map((category) => (
+                 {categories?.map((category) => (
                    <li key={category.id} className="bg-gray-50 p-4">
                      <Link href={`/${category.handle}`}>
                        <button
@@ -96,12 +96,12 @@ const MainMenu = () => {
                  ))}
                </>
              ) : null}
-            {collections ? (
+            <div className="flex flex-col gap-y-8 text-small-regular gap-y-4">
+              <span className="text-gray-700 uppercase">Collections</span>
+            </div>
+            {(collections?.length || 0 > 0) ? (
               <>
-              <div className="flex flex-col gap-y-8 text-small-regular gap-y-4">
-                <span className="text-gray-700 uppercase">Collections</span>
-              </div>
-                {collections.map((collection) => (
+                {collections?.map((collection) => (
                   <li key={collection.id} className="bg-gray-50 p-4">
                     <Link href={`/collections/${collection.handle}`}>
                       <button
