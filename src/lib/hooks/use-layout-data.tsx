@@ -262,7 +262,7 @@ export const useAllProductsQuery = () => {
   const region = regions?.[0]
 
   const queryResults = useQuery({
-    queryFn: () => fetchAllProducts(region!, process.env.NEXT_PUBLIC_PRODUCTS_ORDER),
+    queryFn: () => fetchAllProducts(region!, process.env.NEXT_PUBLIC_STORE_PRODUCTS_ORDER),
     queryKey: ["all_products"],
     staleTime: Infinity,
     refetchOnWindowFocus: false,

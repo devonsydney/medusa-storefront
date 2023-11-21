@@ -26,7 +26,7 @@ const RelatedProducts = ({ product }: RelatedProductsProps) => {
           Related products
         </span>}
         <p className="text-2xl-regular text-gray-900 max-w-lg">
-          You may want to check out the related products below.
+          {process.env.NEXT_PUBLIC_STORE_RELATED_PRODUCTS_TEXT ? process.env.NEXT_PUBLIC_STORE_RELATED_PRODUCTS_TEXT : `You may want to check out the related products below.`}
         </p>
       </div>
 
