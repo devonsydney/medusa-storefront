@@ -43,7 +43,7 @@ const DropdownMenu = () => {
             >
               <Popover.Panel
                 static
-                className="absolute top-full inset-x-0 text-sm text-gray-700 z-30 border-y border-gray-200"
+                className="absolute top-full left-0 text-sm text-gray-700 z-30"
               >
                 <div className="grid grid-cols-[auto,1fr]">
                   <div className="bg-white py-8">
