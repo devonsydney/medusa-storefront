@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query"
 import { formatAmount } from "medusa-react"
 import { ProductPreviewType } from "types/global"
 import { CalculatedVariant } from "types/medusa"
+import { shuffle } from "lodash"
 
 type LayoutCollection = {
   id: string
@@ -296,19 +297,54 @@ export const fetchRelatedProducts = async (
 region: Region,
 handle: string
 ): Promise<ProductPreviewType[]> => {
-  const products = await medusaClient.products
+  const { products: currentProducts } = await medusaClient.products.list({
+    handle: handle,
+    expand: "categories"
+  })
+  const currentProduct = currentProducts[0]
+  const productCategories = currentProduct?.categories?.filter(category => category.parent_category_id === null)
+  const productCategoryIDs = productCategories?.map(category => category.id);
+  const categoryProducts = await medusaClient.products
     .list({
       region_id: region.id,
       is_giftcard: false,
-      limit: 5,
+      category_id: productCategoryIDs // from the same product category
     })
     .then(({ products }) => products)
     .catch((_) => [] as PricedProduct[])
 
   // filter out current product if it exists in the array and ensure 4 products returned
-  const filteredProducts = products.filter((product) => product.handle !== handle).slice(0, 4)
+  const otherProducts = categoryProducts.filter((product) => product.handle !== handle);
 
-  return formatProducts(filteredProducts, region)
+  // if otherProducts is greater than 4, randomly select 4 products from the remaining list to get relatedProducts
+  if (otherProducts.length > 4) {
+    const relatedProducts = shuffle(otherProducts).slice(0, 4);
+    return formatProducts(relatedProducts, region)
+  }
+  // if otherProducts is 4, return it as relatedProducts
+  else if (otherProducts.length === 4) {
+    return formatProducts(otherProducts, region)
+  }
+  // if otherProducts is less than 4, pull another set of products from the whole store at random to fill in the list
+  else {
+    const additionalProducts = await medusaClient.products
+      .list({
+        region_id: region.id,
+        is_giftcard: false,
+      })
+      .then(({ products }) => products)
+      .catch((_) => [] as PricedProduct[])
+
+    // filter out current product and other products
+    const additionalOtherProducts = additionalProducts.filter((product) => product.handle !== handle && !otherProducts.some(op => op.handle === product.handle));
+
+    // randomly select products from the remaining list to fill up to 4 products
+    const selectedAdditionalProducts = shuffle(additionalOtherProducts).slice(0, 4 - otherProducts.length);
+
+    // add the additional products to otherProducts to get relatedProducts
+    const relatedProducts = [...otherProducts, ...selectedAdditionalProducts];
+    return formatProducts(relatedProducts, region)
+  }
 }
 
 export const formatProducts = (products: PricedProduct[], region: Region): ProductPreviewType[] => {
