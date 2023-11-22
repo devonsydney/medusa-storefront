@@ -8,6 +8,7 @@ import { CartProvider, MedusaProvider } from "medusa-react"
 import "styles/globals.css"
 import { AppPropsWithLayout } from "types/global"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import VersionProvider from "@lib/util/check-version"
 
 function App({
   Component,
@@ -37,6 +38,7 @@ function App({
           <ReactQueryDevtools initialIsOpen={false} />
         </CartDropdownProvider>
       </Hydrate>
+      <VersionProvider />
     </MedusaProvider>
   )
 }
