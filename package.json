@@ -9,12 +9,13 @@
   ],
   "scripts": {
     "dev": "next dev -p 8000",
-    "build": "next build",
+    "build": "next build && yarn run version",
     "types": "tsc --noEmit",
     "start": "node server.js",
     "lint": "next lint",
     "cypress": "cypress open",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "version": "node -e \"require('fs').writeFileSync('dist/version.json', JSON.stringify({ version: Date.now() }))\""
   },
   "resolutions": {
     "webpack": "^5",
