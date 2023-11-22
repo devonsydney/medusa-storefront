@@ -73,12 +73,14 @@ const Register = () => {
             autoComplete="email"
             errors={errors}
           />
-          <Input
-            label="Phone"
-            {...register("phone")}
-            autoComplete="tel"
-            errors={errors}
-          />
+          {process.env.NEXT_PUBLIC_FF_PHONE &&
+            <Input
+              label="Phone"
+              {...register("phone")}
+              autoComplete="tel"
+              errors={errors}
+            />
+          }
           <Input
             label="Password"
             {...register("password", {

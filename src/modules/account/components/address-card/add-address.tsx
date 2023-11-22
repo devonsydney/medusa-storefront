@@ -168,6 +168,16 @@ const AddAddress: React.FC = () => {
                 autoComplete="country"
               />
             </div>
+            {process.env.NEXT_PUBLIC_FF_PHONE &&
+              <div className="grid gap-x-2">
+                <Input
+                  label="Phone"
+                  {...register("phone")}
+                  errors={errors}
+                  autoComplete="phone"
+                />
+              </div>
+            }
             <div></div>
           </div>
           {error && (

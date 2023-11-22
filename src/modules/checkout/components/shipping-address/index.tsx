@@ -114,6 +114,17 @@ const ShippingAddress = () => {
                 touched={touchedFields}
               />
             </div>
+            {process.env.NEXT_PUBLIC_FF_PHONE &&
+              <div>
+                <Input
+                  label="Phone"
+                  {...register("shipping_address.phone")}
+                  autoComplete="tel"
+                  errors={errors}
+                  touched={touchedFields}
+                />
+              </div>
+            }
           </div>
         )}
       </ConnectForm>

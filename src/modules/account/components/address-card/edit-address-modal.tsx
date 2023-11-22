@@ -128,6 +128,11 @@ const EditAddress: React.FC<EditAddressProps> = ({
               {address.province && `${address.province}, `}
               {address.country_code?.toUpperCase()}
             </span>
+            {process.env.NEXT_PUBLIC_FF_PHONE &&
+              <span>
+                {address.phone}
+              </span>
+            }
           </div>
         </div>
         <div className="flex items-center gap-x-4">
@@ -222,6 +227,16 @@ const EditAddress: React.FC<EditAddressProps> = ({
                 autoComplete="country"
               />
             </div>
+            {process.env.NEXT_PUBLIC_FF_PHONE &&
+              <div className="grid gap-x-2">
+                <Input
+                  label="Phone"
+                  {...register("phone")}
+                  errors={errors}
+                  autoComplete="phone"
+                />
+              </div>
+            }
             <div></div>
           </div>
           {error && (
