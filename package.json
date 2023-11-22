@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "dev": "next dev -p 8000",
-    "build": "next build && yarn version",
+    "build": "next build && yarn run version",
     "types": "tsc --noEmit",
     "start": "node server.js",
     "lint": "next lint",
