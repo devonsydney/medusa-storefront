@@ -38,7 +38,6 @@ function VersionChecker() {
 
     // Event listener for Next.js navigation
     const handleRouteChange = () => {
-      console.log("running handleRouteChange...")
       checkVersionAndUpdate();
     };
 
