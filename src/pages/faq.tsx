@@ -23,7 +23,7 @@ const FAQ: NextPageWithLayout = ({}) => {
   return (
     <>
       <Head title="FAQ" description="Frequently asked questions." />
-      <div className="flex justify-center py-4">
+      <div className="flex justify-center py-4 px-4">
         <div className="max-w-4xl mx-auto mb-6">
           <div></div>
           <MarkdownContent markdown={markdown} />
