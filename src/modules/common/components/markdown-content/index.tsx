@@ -31,6 +31,15 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
           className="text-base-regular"
           remarkPlugins={[remarkBreaks,remarkGfm]}
           components={{
+            p({ node, ...props }) {
+              const children = Array.isArray(props.children) ? props.children : [""];
+              const lastChild = children[children.length - 1];
+              if (lastChild === `\\`) {
+                const newChildren = [...children.slice(0, -1), <p>&nbsp;</p>];
+                return <>{newChildren}</>;
+              }
+              return <p {...props} />;
+            },
             h1(props) {
               const {node, ...rest} = props
               return <h1 className="text-xl-semi pt-4 pb-2" {...rest} />
@@ -52,6 +61,9 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
               const { node, ...rest } = props;
               const className = "list-decimal ml-4";
               return <ol className={className} {...rest} />
+            },
+            hr() {
+              return <hr style={{ margin: '1em 0' }} />;
             }
           }}
         >
