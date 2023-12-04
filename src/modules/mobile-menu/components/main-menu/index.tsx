@@ -146,16 +146,30 @@ const MainMenu = () => {
                   <ChevronDown className="-rotate-90" />
                 </button>
               </Link>
-              <Link href={`/faq`} passHref>
-                <button
-                  className="flex items-center justify-between border-b border-gray-200 py-2 w-full"
-                  onClick={close}
-                >
-                  <span className="sr-only">Go to FAQ</span>
-                  <span className="normal-case">FAQ</span>
-                  <ChevronDown className="-rotate-90" />
-                </button>
-              </Link>
+              {process.env.NEXT_PUBLIC_FAQ_PATH && (
+                <Link href={`/faq`} passHref>
+                  <button
+                    className="flex items-center justify-between border-b border-gray-200 py-2 w-full"
+                    onClick={close}
+                  >
+                    <span className="sr-only">Go to FAQ</span>
+                    <span className="normal-case">FAQ</span>
+                    <ChevronDown className="-rotate-90" />
+                  </button>
+                </Link>
+              )}
+              {process.env.NEXT_PUBLIC_ABOUT_PATH && (
+                <Link href={`/about`} passHref>
+                  <button
+                    className="flex items-center justify-between border-b border-gray-200 py-2 w-full"
+                    onClick={close}
+                  >
+                    <span className="sr-only">About Us</span>
+                    <span className="normal-case">About</span>
+                    <ChevronDown className="-rotate-90" />
+                  </button>
+                </Link>
+              )}
             </div>
 
             {!customer ? (
