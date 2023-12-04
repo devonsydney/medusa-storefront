@@ -35,7 +35,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
               const children = Array.isArray(props.children) ? props.children : [""];
               const lastChild = children[children.length - 1];
               if (lastChild === `\\`) {
-                const newChildren = [...children.slice(0, -1), <p>&nbsp;</p>];
+                const newChildren = [...children.slice(0, -1), <p key={children.length - 1}>&nbsp;</p>];
                 return <>{newChildren}</>;
               }
               return <p {...props} />;
