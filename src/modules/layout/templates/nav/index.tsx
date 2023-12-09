@@ -95,9 +95,16 @@ const Nav = () => {
               <Link href={`mailto:${process.env.NEXT_PUBLIC_STORE_EMAIL}`}>
                 Contact
               </Link>
-              <Link href="/faq">
-                FAQ
-              </Link>
+              {process.env.NEXT_PUBLIC_FAQ_PATH && (
+                <Link href="/faq">
+                  FAQ
+                </Link>
+              )}
+              {process.env.NEXT_PUBLIC_ABOUT_PATH && (
+                <Link href="/about">
+                  About
+                </Link> 
+              )}
               {process.env.FEATURE_SEARCH_ENABLED && <DesktopSearchModal />}
               <Link href="/account">
                 Account
