@@ -81,11 +81,11 @@ const Nav = () => {
                 <Image
                   src={process.env.NEXT_PUBLIC_STORE_LOGO}
                   alt="Logo"
-                  width={40}
+                  width={65}
                   height={40}
                 />
               )}
-              <div className="text-xl-semi uppercase">
+              <div className="hidden small:flex text-xl-semi uppercase">
                 {process.env.NEXT_PUBLIC_STORE_NAME}
               </div>
             </div>
