@@ -24,9 +24,9 @@ const FooterNav = () => {
                     height={40}
                   />
                 )}
-                <div className="text-xl-semi uppercase" style={{ whiteSpace: "nowrap" }}>
+                {/* <div className="text-xl-semi uppercase" style={{ whiteSpace: "nowrap" }}>
                   {process.env.NEXT_PUBLIC_STORE_NAME}
-                </div>
+                </div> */}
               </div>
             </Link>
         </div>
