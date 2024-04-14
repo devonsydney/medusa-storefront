@@ -39,7 +39,7 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
   return (
     <div className="flex flex-col gap-y-3">
       <span className="text-base-semi">Select {title}</span>
-      <div className="grid grid-cols-3 lg:grid-cols-6 gap-2">
+      <div className="grid grid-cols-3 lg:grid-cols-4 gap-2">
         {sortedOptions.map((v) => {
           const lowStock =  v.inventory_quantity !== undefined && v.inventory_quantity > 0 && v.inventory_quantity < 20
           return (
