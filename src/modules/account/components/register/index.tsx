@@ -98,7 +98,8 @@ const Register = () => {
             </span>
           </div>
         )}
-        <span className="text-center text-gray-700 text-small-regular mt-6">
+        {/* TODO: Add in actual privacy policy and terms of use pages. */}
+        {/* <span className="text-center text-gray-700 text-small-regular mt-6">
           By creating an account, you agree to {process.env.NEXT_PUBLIC_STORE_NAME}&apos;s{" "}
           <Link href="/content/privacy-policy" className="underline">
             Privacy Policy
@@ -108,7 +109,7 @@ const Register = () => {
             Terms of Use
           </Link>
           .
-        </span>
+        </span> */}
         <Button className="mt-6">Join</Button>
       </form>
       <span className="text-center text-gray-700 text-small-regular mt-6">
