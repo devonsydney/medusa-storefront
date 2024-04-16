@@ -16,7 +16,7 @@ const Store: NextPageWithLayout = () => {
     <>
       <Head title="Store" description="Explore all of our products." />
       <div className="flex flex-col small:flex-row small:items-start py-6">
-        <RefinementList refinementList={params} setRefinementList={setParams} />
+        {process.env.NEXT_PUBLIC_FF_FILTERS && <RefinementList refinementList={params} setRefinementList={setParams} /> }
         <InfiniteProducts refinementList={params}/>
       </div>
     </>
