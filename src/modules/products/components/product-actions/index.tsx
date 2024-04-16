@@ -70,19 +70,19 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, addToCartRef }
           onClick={decreaseQuantity}
           disabled={quantity === 1}
           className={clsx(
-            "border-gray-200 border text-xsmall-regular h-[25px] w-[25px] transition-all duration-200",
+            "border-gray-200 border text-large-regular h-[40px] w-[40px] transition-all duration-200",
             { "border-gray-900": quantity === 1 },
             { "bg-gray-200": quantity === 1 }
           )}
         >
           -
         </button>
-        <span> {quantity} </span>
+        <span className="text-large-semi" >{quantity} </span>
         <button
           onClick={increaseQuantity}
           disabled={quantity === Math.min(8, (variant?.inventory_quantity ?? 1 ) - 1 || 0)}
           className={clsx(
-            "border-gray-200 border text-xsmall-regular h-[25px] w-[25px] transition-all duration-200",
+            "border-gray-200 border text-large-regular h-[40px] w-[40px] transition-all duration-200",
             { "border-gray-900": quantity === Math.min(8, (variant?.inventory_quantity ?? 1 ) - 1 || 0) },
             { "bg-gray-200": quantity === Math.min(8, (variant?.inventory_quantity ?? 1 ) - 1 || 0) }
           )}
