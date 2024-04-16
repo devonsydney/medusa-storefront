@@ -85,7 +85,7 @@ const Nav = () => {
                   height={65}
                 />
               )}
-              <div className="hidden small:flex text-xl-semi uppercase">
+              <div className="hidden small:flex text-xl-semi">
                 {process.env.NEXT_PUBLIC_STORE_NAME}
               </div>
             </div>

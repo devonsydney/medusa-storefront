@@ -35,7 +35,7 @@ const CheckoutTemplate = () => {
                     height={65}
                   />
                 )}
-                <Link href="/" className="text-xl-semi uppercase">
+                <Link href="/" className="text-xl-semi">
                   {process.env.NEXT_PUBLIC_STORE_NAME}
                 </Link>
               </div>
