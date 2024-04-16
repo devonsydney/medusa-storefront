@@ -42,7 +42,7 @@ const CategoryPage: NextPageWithLayout<PrefetchedPageProps> = ({
 
   const { data: categoryProducts } = useQuery(
     [`category-products-${handle}`, region, handle],
-    () => fetchCategoryProducts(region!, handle!)
+    () => fetchCategoryProducts(region!, handle!,process.env.NEXT_PUBLIC_STORE_PRODUCTS_ORDER)
   )
   if (notFound) {
     if (IS_BROWSER) {
@@ -102,7 +102,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   // prefetch page-specific params
   await queryClient.prefetchQuery([`category-products-${handle}`, region, handle], () =>
-    fetchCategoryProducts(region, handle)
+    fetchCategoryProducts(region, handle,process.env.NEXT_PUBLIC_STORE_PRODUCTS_ORDER)
   )
 
   // if no collection found, return not found

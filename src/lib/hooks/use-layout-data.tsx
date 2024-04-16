@@ -198,6 +198,7 @@ export const useNavigationCategories = (levels: number = Infinity) => {
 export const fetchCategoryProducts = async (
   region: Region,
   handle: string,
+  sortOrder: string | undefined,
   ): Promise<ProductPreviewType[]> => {
   // retrieve the category by its handle
   const categories = await medusaClient.productCategories.list({ handle })
@@ -208,6 +209,7 @@ export const fetchCategoryProducts = async (
   const { products } = await medusaClient.products.list({
     category_id: [categoryId],
     region_id: region.id,
+    order: sortOrder,
   })
 
   return formatProducts(products, region)
