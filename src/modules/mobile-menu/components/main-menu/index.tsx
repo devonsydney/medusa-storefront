@@ -45,8 +45,8 @@ const MainMenu = () => {
               <Image
                 src={process.env.NEXT_PUBLIC_STORE_LOGO}
                 alt="Logo"
-                width={40}
-                height={40}
+                width={65}
+                height={65}
               />
             )}
             <h1 className="text-xl-semi uppercase">{process.env.NEXT_PUBLIC_STORE_NAME}</h1>

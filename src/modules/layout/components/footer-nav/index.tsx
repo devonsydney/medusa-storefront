@@ -20,8 +20,8 @@ const FooterNav = () => {
                   <Image
                     src={process.env.NEXT_PUBLIC_STORE_LOGO}
                     alt="Logo"
-                    width={40}
-                    height={40}
+                    width={65}
+                    height={65}
                   />
                 )}
                 {/* <div className="text-xl-semi uppercase" style={{ whiteSpace: "nowrap" }}>

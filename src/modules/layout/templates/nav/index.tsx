@@ -82,7 +82,7 @@ const Nav = () => {
                   src={process.env.NEXT_PUBLIC_STORE_LOGO}
                   alt="Logo"
                   width={65}
-                  height={40}
+                  height={65}
                 />
               )}
               <div className="hidden small:flex text-xl-semi uppercase">
