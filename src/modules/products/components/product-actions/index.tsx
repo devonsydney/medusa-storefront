@@ -7,6 +7,7 @@ import clsx from "clsx"
 import Link from "next/link"
 import React, { useMemo } from "react"
 import MarkdownContent from "@modules/common/components/markdown-content"
+import pluralize from "pluralize"
 
 type ProductActionsProps = {
   product: PricedProduct
@@ -121,7 +122,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, addToCartRef }
       </div>
 
       <Button onClick={addToCart}>
-        {!inStock ? "Out of stock" : `Add ${quantity} ${Object.values(options).join(', ')}${quantity > 1 ? `s` : ``} to cart`}
+        {!inStock ? "Out of stock" : `Add ${quantity} ${pluralize(Object.values(options).join(', '), quantity)} to cart`}
       </Button>
     </div>
   )
