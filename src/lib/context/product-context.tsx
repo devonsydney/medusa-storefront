@@ -107,10 +107,10 @@ export const ProductProvider = ({
     }
   }, [variants, variantRecord])
 
-  // if the a selected variant has inventory_quantity < quantity selected, reduce quantity selected
+  // if the selected variant has inventory_quantity < quantity selected, reduce quantity selected
   useEffect(() => {
-    if (variant && quantity >= variant.inventory_quantity) {
-      setQuantity(variant.inventory_quantity - 1);
+    if (variant && quantity > variant.inventory_quantity) {
+      setQuantity(variant.inventory_quantity);
     }
   }, [variant, quantity]);
 
@@ -152,7 +152,7 @@ export const ProductProvider = ({
   const increaseQuantity = () => {
     const maxQuantity = variant?.inventory_quantity || 0
 
-    if (maxQuantity > quantity + 1) {
+    if (maxQuantity > quantity) {
       setQuantity(quantity + 1)
     } else {
       setMaxQuantityMet(true)
