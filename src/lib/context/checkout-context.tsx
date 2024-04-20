@@ -21,6 +21,7 @@ import { useRouter } from "next/router"
 import React, { createContext, useContext, useEffect, useMemo, useCallback } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import { useStore } from "./store-context"
+import pluralize from "pluralize"
 
 type AddressValues = {
   first_name: string
@@ -53,7 +54,7 @@ interface CheckoutContext {
   setSavedAddress: (address: Address) => void
   setShippingOption: (soId: string) => void
   setPaymentSession: (providerId: string) => void
-  onPaymentCompleted: () => void
+  onPaymentCompleted: (callback?: (errorMessage: string | null) => void) => void
 }
 
 const CheckoutContext = createContext<CheckoutContext | null>(null)
@@ -325,16 +326,43 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   }
 
   /**
-   * Method to complete the checkout process. This is called when the user clicks the "Complete Checkout" button.
+   * Method to complete the checkout process. This is called when the user clicks the "Checkout" button.
    */
-  const onPaymentCompleted = () => {
+  const onPaymentCompleted = useCallback((callback?: (errorMessage: string | null) => void) => {
     complete(undefined, {
       onSuccess: ({ data }) => {
         resetCart()
         push(`/order/confirmed/${data.id}`)
+        if (callback) callback(null) // No error
       },
-    })
-  }
+      onError: (error) => {
+        // Default error message
+        let errorMessage = "An unknown error occurred during checkout. Please try again.";
+
+        // Accessing the specific error details
+        const errorDetails = (error as any)?.response?.data?.errors?.[0];
+        if (errorDetails) {
+          const { message, type, code } = errorDetails;
+
+          if (code == "insufficient_inventory") {
+            // Extract variant ID from the message
+            const variantIdMatch = message.match(/id: (\w+)/);
+            const variantId = variantIdMatch ? variantIdMatch[1] : null;
+            // Find the variant in the cart
+            const variant = variantId ? cart?.items?.find(item => item.variant.id === variantId)?.variant : "a variant";
+            errorMessage = `Insufficient inventory. Only ${variant.inventory_quantity}x ${variant.title} ${pluralize(variant.product.title, variant.inventory_quantity)} in stock. Please adjust your cart and try again.`
+          }
+          else {
+            errorMessage = `An error occurred during checkout. Error type: ${type}. Code: ${code}. Please try again.`
+          }
+        }
+        console.error("Checkout error:", error)
+        console.log("Error details",errorDetails)
+
+        if (callback) callback(errorMessage) // Pass the error message to the callback
+      }
+    });
+  }, [complete, resetCart, push]);
 
   return (
     <FormProvider {...methods}>

@@ -224,21 +224,31 @@ const PayPalPaymentButton = ({
 
 const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
   const [submitting, setSubmitting] = useState(false)
-
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const { onPaymentCompleted } = useCheckout()
 
   const handlePayment = () => {
     setSubmitting(true)
-
-    onPaymentCompleted()
-
+    setErrorMessage(null)
+    onPaymentCompleted((error: string | null) => {
+      if (error) {
+        setErrorMessage(error)
+      }
+    })
     setSubmitting(false)
   }
 
   return (
-    <Button disabled={submitting || notReady} onClick={handlePayment}>
-      {submitting ? <Spinner /> : "Checkout"}
-    </Button>
+    <>
+      <Button disabled={submitting || notReady} onClick={handlePayment}>
+        {submitting ? <Spinner /> : "Checkout"}
+      </Button>
+      {errorMessage && (
+        <div className="text-red-500 text-small-regular mt-2">
+          {errorMessage}
+        </div>
+      )}
+    </>
   )
 }
 
