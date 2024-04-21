@@ -18,7 +18,7 @@ function App({
   const getLayout = Component.getLayout ?? ((page) => page)
 
   return (
-    <PlausibleProvider domain={process.env.NEXT_PUBLIC_STORE_URL}>
+    <PlausibleProvider domain={process.env.NEXT_PUBLIC_STORE_URL || 'no-domain.com'}>
       <MedusaProvider
         baseUrl={MEDUSA_BACKEND_URL}
         publishableApiKey={process.env.NEXT_PUBLIC_MEDUSA_API_KEY}
