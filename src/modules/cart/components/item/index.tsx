@@ -27,21 +27,19 @@ const Item = ({ item, region }: ItemProps) => {
           </div>
           <NativeSelect
             value={item.quantity}
+            disabled={item.variant.inventory_quantity == 0}
+            placeholder = {item.variant.inventory_quantity > 0 ? "Select..." : "Out-of-Stock"}
             onChange={(value) =>
               updateItem({
                 lineId: item.id,
                 quantity: parseInt(value.target.value),
               })
             }
-            className="max-h-[35px] w-[75px]"
+            className={`max-h-[35px] 2xsmall:w-[75px] small:w-[150px] ${item.quantity > item.variant.inventory_quantity ? "text-red-500" : ""}`}
           >
             {Array.from(
               [
-                ...Array(
-                  item.variant.inventory_quantity > 0
-                    ? item.variant.inventory_quantity
-                    : 10
-                ),
+                ...Array(item.variant.inventory_quantity),
               ].keys()
             )
               .slice(0, 10)
