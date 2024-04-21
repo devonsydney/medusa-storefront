@@ -345,12 +345,13 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
           const { message, type, code } = errorDetails;
 
           if (code == "insufficient_inventory") {
-            // Extract variant ID from the message
+            // Extract variant
             const variantIdMatch = message.match(/id: (\w+)/);
             const variantId = variantIdMatch ? variantIdMatch[1] : null;
-            // Find the variant in the cart
             const variant = variantId ? cart?.items?.find(item => item.variant.id === variantId)?.variant : "a variant";
-            errorMessage = `Insufficient inventory. Only ${variant.inventory_quantity}x ${variant.title} ${pluralize(variant.product.title, variant.inventory_quantity)} in stock. Please adjust your cart and try again.`
+            // TODO: Pull variant inventory_quantity from the backend OR force-refresh the cart object before pulling variant inventory_quantity.
+            // errorMessage = `Insufficient inventory. Only ${variant.inventory_quantity}x ${variant.title} ${pluralize(variant.product.title, variant.inventory_quantity)} in stock. Please adjust your cart and try again.`
+            errorMessage = `Insufficient inventory for ${variant.title} ${pluralize(variant.product.title, 2)} in stock. Please remove from your cart, re-add, and try again.`
           }
           else {
             errorMessage = `An error occurred during checkout. Error type: ${type}. Code: ${code}. Please try again.`
