@@ -10,7 +10,7 @@ import { fetchCollectionData, fetchRegionsData, fetchCategoryData } from "@lib/h
 const Cart: NextPageWithLayout = () => {
   return (
     <>
-      <Head title="Shopping Bag" description="View your shopping bag" />
+      <Head title="Shopping Cart" description="View your shopping cart" />
       <CartTemplate />
     </>
   )
