@@ -13,6 +13,8 @@ type ItemProps = {
 
 const Item = ({ item, region }: ItemProps) => {
   const { updateItem, deleteItem } = useStore()
+  console.log("item.quantity",item.quantity)
+  console.log("item.variant.inventory_quantity",item.variant.inventory_quantity)
 
   return (
     <div className="grid grid-cols-[122px_1fr] gap-x-4">
@@ -25,33 +27,43 @@ const Item = ({ item, region }: ItemProps) => {
             <span>{item.title}</span>
             <LineItemOptions variant={item.variant} />
           </div>
-          <NativeSelect
-            value={item.quantity}
-            disabled={item.variant.inventory_quantity == 0}
-            placeholder = {item.variant.inventory_quantity > 0 ? "Select..." : "Out-of-Stock"}
-            onChange={(value) =>
-              updateItem({
-                lineId: item.id,
-                quantity: parseInt(value.target.value),
-              })
+          <div className="flex flex-col items-end">
+            <NativeSelect
+              value={item.quantity}
+              disabled={item.variant.inventory_quantity == 0}
+              onChange={(value) =>
+                updateItem({
+                  lineId: item.id,
+                  quantity: parseInt(value.target.value),
+                })
+              }
+              className={`max-h-[35px] 2xsmall:w-[75px] small:w-[150px] ${item.quantity > item.variant.inventory_quantity ? "text-red-500" : ""}`}
+            >
+              {Array.from(
+                [
+                  ...Array(item.variant.inventory_quantity),
+                ].keys()
+              )
+                .slice(0, 10)
+                .map((i) => {
+                  const value = i + 1
+                  return (
+                    <option value={value} key={i}>
+                      {value}
+                    </option>
+                  )
+                })}
+            </NativeSelect>
+            { item.quantity > item.variant.inventory_quantity && (item.variant.inventory_quantity == 0 ?
+              <div className="text-red-500 text-small-regular mt-2 text-right">
+                Out-of-Stock<br/><b>Remove Item</b>
+              </div>
+              :
+              <div className="text-red-500 text-small-regular mt-2 text-right">
+                Low Stock<br/><b>Reduce Items</b>
+              </div>)
             }
-            className={`max-h-[35px] 2xsmall:w-[75px] small:w-[150px] ${item.quantity > item.variant.inventory_quantity ? "text-red-500" : ""}`}
-          >
-            {Array.from(
-              [
-                ...Array(item.variant.inventory_quantity),
-              ].keys()
-            )
-              .slice(0, 10)
-              .map((i) => {
-                const value = i + 1
-                return (
-                  <option value={value} key={i}>
-                    {value}
-                  </option>
-                )
-              })}
-          </NativeSelect>
+          </div>
         </div>
         <div className="flex items-end justify-between text-small-regular flex-1">
           <div>

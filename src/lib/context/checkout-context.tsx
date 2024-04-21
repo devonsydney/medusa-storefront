@@ -350,8 +350,8 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
             const variantId = variantIdMatch ? variantIdMatch[1] : null;
             const variant = variantId ? cart?.items?.find(item => item.variant.id === variantId)?.variant : "a variant";
             // TODO: Pull variant inventory_quantity from the backend OR force-refresh the cart object before pulling variant inventory_quantity.
-            // errorMessage = `Insufficient inventory. Only ${variant.inventory_quantity}x ${variant.title} ${pluralize(variant.product.title, variant.inventory_quantity)} in stock. Please adjust your cart and try again.`
-            errorMessage = `Insufficient inventory for ${variant.title} ${pluralize(variant.product.title, 2)} in stock. Please refresh your browser, return to cart and adjust item amounts.`
+            // errorMessage = `Insufficient stock. Only ${variant.inventory_quantity}x ${variant.title} ${pluralize(variant.product.title, variant.inventory_quantity)} in stock. Please adjust your cart and try again.`
+            errorMessage = `Insufficient stock for ${variant.title} ${pluralize(variant.product.title, 2)}. Refresh your browser and return to cart for instructions.`
           }
           else {
             errorMessage = `An error occurred during checkout. Error type: ${type}. Code: ${code}. Please try again.`
