@@ -8,6 +8,9 @@ import { NextPageWithLayout } from "types/global"
 import { GetStaticProps } from "next"
 import { dehydrate, QueryClient } from "@tanstack/react-query"
 import { fetchCollectionData, fetchRegionsData, fetchCategoryData, fetchAllProducts } from "@lib/hooks/use-layout-data"
+import fs from 'fs'
+import path from 'path'
+import { ProductPreviewType } from "types/global"
 
 const Store: NextPageWithLayout = () => {
   const [params, setParams] = useState<StoreGetProductsParams>({})
@@ -45,6 +48,34 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   // prefetch page-specific params
   await queryClient.prefetchQuery(["all_products"], () => fetchAllProducts(region,process.env.NEXT_PUBLIC_STORE_PRODUCTS_ORDER))
+
+  // Generate JSON file
+  const products = queryClient.getQueryData<ProductPreviewType[]>(["all_products"])
+  if (products) {
+    const formattedProducts = products.map(product => {
+      const cheapestPrice = product.cheapestPrice?.calculated_price || 'N/A'
+      const mostExpensivePrice = product.mostExpensivePrice?.calculated_price || 'N/A'
+
+      let description = ''
+      if (cheapestPrice === mostExpensivePrice) {
+        description = `${cheapestPrice}`
+      } else {
+        description = `${cheapestPrice} - ${mostExpensivePrice}`
+      }
+
+      return {
+        id: product.id,
+        title: product.title,
+        link: `${process.env.NEXT_PUBLIC_STORE_URL}/products/${product.handle}`,
+        description: description,
+        image_link: product.thumbnail || '',
+      }
+    })
+
+    const jsonContent = JSON.stringify(formattedProducts, null, 2)
+    const filePath = path.join(process.cwd(), 'public', 'products.json')
+    fs.writeFileSync(filePath, jsonContent)
+  }
 
   return {
     props: {
