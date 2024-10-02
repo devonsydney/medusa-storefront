@@ -10,6 +10,7 @@
 **/dist
 **/.yarn*/
 **/z_*/
+public/products.json
 
 # environment variable files
 **/.env*
