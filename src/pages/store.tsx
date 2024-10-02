@@ -63,11 +63,16 @@ export const getStaticProps: GetStaticProps = async (context) => {
         description = `${cheapestPrice} - ${mostExpensivePrice}`
       }
 
+      const price = product.mostExpensivePrice
+        ? parseFloat(product.mostExpensivePrice.calculated_price.replace(/[^0-9.]/g, ''))
+        : null
+
       return {
         id: product.id,
         title: product.title,
         link: `${process.env.NEXT_PUBLIC_STORE_URL}/products/${product.handle}`,
         description: description,
+        price: price,
         image_link: product.thumbnail || '',
       }
     })
