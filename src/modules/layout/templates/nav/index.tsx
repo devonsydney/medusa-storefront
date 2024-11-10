@@ -81,12 +81,12 @@ const Nav = () => {
                 <Image
                   src={process.env.NEXT_PUBLIC_STORE_LOGO}
                   alt="Logo"
-                  width={65}
-                  height={65}
+                  width={Number(process.env.NEXT_PUBLIC_STORE_LOGO_WIDTH) || 120}
+                  height={1}
                 />
               )}
               <div className="hidden small:flex text-xl-semi">
-                {process.env.NEXT_PUBLIC_STORE_NAME}
+                {process.env.NEXT_PUBLIC_STORE_HEADER_TEXT}
               </div>
             </div>
           </Link>
