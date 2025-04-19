@@ -11,6 +11,10 @@ const Hero = () => {
         <p className="text-base-regular max-w-[32rem] mb-6 drop-shadow-md shadow-black">
           {process.env.NEXT_PUBLIC_STORE_HERO_TEXT}
         </p>
+        {process.env.NEXT_PUBLIC_HERO_CTA_LINK && (
+            <UnderlineLink href={process.env.NEXT_PUBLIC_HERO_CTA_LINK}>{process.env.NEXT_PUBLIC_HERO_CTA_LINK_TEXT}</UnderlineLink>
+          )
+        }
         <UnderlineLink href="/store">Explore products</UnderlineLink>
       </div>
       <Image
